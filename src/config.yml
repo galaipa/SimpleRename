@@ -1,0 +1,16 @@
+#Config file Simple Rename
+#Messages:
+1: SimpleRename disabled
+2: SimpleRename enabled!
+3: Use /command + name 
+4: You need to have an item in your hand
+5: Item renamed / relored suscesfully!
+6: You don't have permission to do that!
+7: You don`t have permission to use color codes!
+8: You don't have enough money!
+9: Price
+#Economy support (If you set it to "true" yo need to have Vault installed)
+Economy: false
+#Price to rename items (Need economy enabled)
+Nprice: 10 
+Lprice: 10
