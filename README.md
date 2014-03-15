@@ -1,4 +1,4 @@
-simplerename
+simplerename (Development)
 ============
 
-Github repository for "SimpleRename" plugin Bukkit
+Github repository for "SimpleRename" plugin Bukkit.
