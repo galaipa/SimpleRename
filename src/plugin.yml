@@ -27,3 +27,6 @@ permissions:
   sr.color:
     description: Perm to use color codes
     default: op
+  sr.free:
+    description: Perm to use the commands for free
+    default: false

@@ -107,6 +107,24 @@ public class Main extends JavaPlugin {
              }return true;
 //Economy on             
             }else if ((getConfig().getBoolean("Economy"))) {
+                if (player.hasPermission("sr.free")) {
+                    StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < args.length; i++){
+                        sb.append(args[i]).append(" ");
+                        }
+
+                        String allArgs = sb.toString().trim();
+                        ItemStack item = player.getItemInHand();
+
+                        ItemMeta itemStackMeta = item.getItemMeta();
+                        itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));
+
+
+                        item.setItemMeta(itemStackMeta);
+
+                        sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + ("0") + ("$") );
+                        return true;
+                }
                 if (player.hasPermission("sr.color")) {
                    int Nprecio = this.getConfig().getInt("Nprice"); 
                    int cantidad = player.getInventory().getItemInHand().getAmount();
@@ -241,6 +259,29 @@ public class Main extends JavaPlugin {
              }return true;
 //Economy on             
             }else if ((getConfig().getBoolean("Economy"))) {
+                if (player.hasPermission("sr.free")) {
+                    ItemStack itemStack = player.getItemInHand();
+
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < args.length; i++){
+                        sb.append(args[i]).append(" ");
+                        }
+
+                        String loretxoa = sb.toString().trim();
+
+
+                        List<String> lore = new ArrayList();
+
+                            lore.add(ChatColor.translateAlternateColorCodes('&', loretxoa));
+
+                        ItemMeta itemStackMeta = itemStack.getItemMeta();
+                        itemStackMeta.setLore(lore);
+
+                        itemStack.setItemMeta(itemStackMeta);
+
+                        sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + ("0") + ("$") );
+                        return true;
+                }
                 if (player.hasPermission("sr.color")) { 
                    int Lprecio = this.getConfig().getInt("Lprice");
                    int cantidad = player.getInventory().getItemInHand().getAmount();
