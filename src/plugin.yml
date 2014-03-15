@@ -2,7 +2,7 @@ name: SimpleRename
 main: mjs.minecraft.plugin.hello.Main
 version: 0.1
 author: Galaipa
-description: Simple plugin para renombrar items atraves de comandos
+description: Simple plugin to rename and relore items
 softdepend: [Vault]
 
 commands:
@@ -16,7 +16,7 @@ commands:
     usage: /<command>
     permission: sr.lore  
     aliases: [setlore]
-
+    
 permissions:
   sr.name:
     description: Perm to use /rename /setname
