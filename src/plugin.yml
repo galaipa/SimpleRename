@@ -1,5 +1,5 @@
 name: SimpleRename
-main: mjs.minecraft.plugin.hello.Main
+main: io.github.galaipa.sr.Main
 version: 0.1
 author: Galaipa
 description: Simple plugin to rename and relore items

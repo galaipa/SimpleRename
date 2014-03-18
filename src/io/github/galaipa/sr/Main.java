@@ -1,4 +1,4 @@
-package mjs.minecraft.plugin.hello;
+package io.github.galaipa.sr;
 
 
 
