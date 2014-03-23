@@ -14,3 +14,7 @@ Economy: false
 #Price to rename items (Need economy enabled)
 Nprice: 10 
 Lprice: 10
+#Enable or Disable Metrics
+Metrics: true
+#Enable or Disable the update notifier
+Updater: true

@@ -1,6 +1,6 @@
 name: SimpleRename
 main: io.github.galaipa.sr.Main
-version: 0.1
+version: 1.0
 author: Galaipa
 description: Simple plugin to rename and relore items
 softdepend: [Vault]
@@ -8,15 +8,15 @@ softdepend: [Vault]
 commands:
   rename:
     description: Name command for items
-    usage: /<command>
-    permission: sr.name  
+    usage: /<command>  
     aliases: [setname]
   relore:
     description: Lore command for items
-    usage: /<command>
-    permission: sr.lore  
+    usage: /<command> 
     aliases: [setlore]
-    
+  sr:
+    description: Command to update the plugin
+    usage: /<command>    
 permissions:
   sr.name:
     description: Perm to use /rename /setname
@@ -30,3 +30,6 @@ permissions:
   sr.free:
     description: Perm to use the commands for free
     default: false
+  sr.update:
+    description: Perm to use the /sr update
+    default: op

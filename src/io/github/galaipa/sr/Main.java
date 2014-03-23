@@ -2,6 +2,8 @@ package io.github.galaipa.sr;
 
 
 
+import io.github.galaipa.sr.Updater.ReleaseType;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -20,9 +22,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
     public static Economy econ = null;
-    
     public static final Logger log = Logger.getLogger("Minecraft");    
-
+    public static boolean update = false;
+    public static String name = "";
+    public static ReleaseType type = null;
+    public static String version = "";
+    public static String link = "";
     @Override
     public void onDisable() {
         PluginManager pluginManager = getServer().getPluginManager();
@@ -32,8 +37,8 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {        
         log.info(getConfig().getString("2"));
-        saveDefaultConfig();
-        
+        saveDefaultConfig();       
+        getServer().getPluginManager().registerEvents(new UpdateListener(), this);
         if ((getConfig().getBoolean("Economy"))){
             if (!setupEconomy()){
                 log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -42,7 +47,24 @@ public class Main extends JavaPlugin {
                 
             }
         }
-        
+        if ((getConfig().getBoolean("Updater"))){
+        Updater updater = new Updater(this, 75680, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
+        update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
+        name = updater.getLatestName(); // Get the latest name
+        version = updater.getLatestGameVersion(); // Get the latest game version
+        type = updater.getLatestType(); // Get the latest file's type
+        link = updater.getLatestFileLink(); // Get the latest link
+
+                }
+        //Metrics
+        if ((getConfig().getBoolean("Metrics"))){
+            try {
+                Metrics metrics = new Metrics(this);
+                metrics.start();
+            } catch (IOException e) {
+                // Failed to submit the stats :-(
+            }
+    }        
     }
     private boolean setupEconomy() {
         
@@ -59,8 +81,16 @@ public class Main extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         Player player = (Player)sender;
-        
-        if(cmd.getName().equalsIgnoreCase("rename")){
+        if (cmd.getName().equalsIgnoreCase("sr")) {
+            if (player.hasPermission("sr.update")) {
+                if (args[0].equalsIgnoreCase("update")) {
+                    Updater updater = new Updater(this, 75680, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true); // Go straight to downloading, and announce progress to console.
+                    sender.sendMessage(ChatColor.GREEN + "Update progress in the console");
+            }
+            }return true;
+            }
+ // NAME NAME NAME NAME NAME NAME       
+        else if(cmd.getName().equalsIgnoreCase("rename")){
             if (!player.hasPermission("sr.name")) {
                 sender.sendMessage(ChatColor.RED+(getConfig().getString("6")));
 
