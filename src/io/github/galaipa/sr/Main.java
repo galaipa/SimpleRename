@@ -81,148 +81,94 @@ public class Main extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         Player player = (Player)sender;
-        if (cmd.getName().equalsIgnoreCase("sr")) {
-            if (player.hasPermission("sr.update")) {
-                if (args[0].equalsIgnoreCase("update")) {
-                    Updater updater = new Updater(this, 75680, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true); // Go straight to downloading, and announce progress to console.
-                    sender.sendMessage(ChatColor.GREEN + "Update progress in the console");
+        //AL ARGS
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < args.length; i++){
+            sb.append(args[i]).append(" ");
+            }String allArgs = sb.toString().trim();
+            //CHARACTERS
+            allArgs = allArgs.replace("[<3]" , "\u2764");
+            allArgs = allArgs.replace("[ARROW]" , "\u279c");
+            allArgs = allArgs.replace("[TICK]" , "\u2714");
+            allArgs = allArgs.replace("[X]]" , "\u2716");
+            allArgs = allArgs.replace("[STAR]" , "\u2716");
+            allArgs = allArgs.replace("[HAND]" , "/u270C");
+            allArgs = allArgs.replace("[FLOWER]" , "\u273f");
+       //CHARACTERS
+
+        if (cmd.getName().equalsIgnoreCase("sr")){
+            sender.sendMessage(ChatColor.GREEN + "Simple Rename");
+            sender.sendMessage(ChatColor.BLUE + "Author:"+ " " + ChatColor.GREEN + "Galaipa");
+            sender.sendMessage(ChatColor.BLUE + "Version:"+ " " +ChatColor.GREEN + "2.0");
+            sender.sendMessage(ChatColor.BLUE + "BukkitDev:"+" " + ChatColor.GREEN + "http://dev.bukkit.org/bukkit-plugins/simple-rename/");
+            sender.sendMessage(ChatColor.BLUE + "Metrics:"+" " + ChatColor.GREEN + "http://mcstats.org/plugin/SimpleRename");
+            return true;
             }
-            }return true;
+  //UPDATE          
+        if (cmd.getName().equalsIgnoreCase("sr") && args[0].equalsIgnoreCase("update") && player.hasPermission("sr.update")) {
+            Updater updater = new Updater(this, 75680, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true); // Go straight to downloading, and announce progress to console.
+            sender.sendMessage(ChatColor.GREEN + "Update progress in the console");
+            return true;
             }
  // NAME NAME NAME NAME NAME NAME       
         else if(cmd.getName().equalsIgnoreCase("rename")){
             if (!player.hasPermission("sr.name")) {
                 sender.sendMessage(ChatColor.RED+(getConfig().getString("6")));
+                return true;
 
             }else if (args.length < 1) {
                 sender.sendMessage(ChatColor.RED+(getConfig().getString("3")));
-
+                return true;
                 
             }else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
                 sender.sendMessage(ChatColor.RED +(getConfig().getString("4")));
+                return true;                
+             }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
+                sender.sendMessage(ChatColor.RED +(getConfig().getString("7")));;
+                return true;
+
+
 
 //Economy off                
             }else if (!(getConfig().getBoolean("Economy"))){
-                if (player.hasPermission("sr.color")) { 
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < args.length; i++){
-            sb.append(args[i]).append(" ");
-            }
-
-            String allArgs = sb.toString().trim();
-              ItemStack item = player.getItemInHand();
-              
+              ItemStack item = player.getItemInHand();           
               ItemMeta itemStackMeta = item.getItemMeta();
-              itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));
+              itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));           
+              item.setItemMeta(itemStackMeta);        
+              sender.sendMessage(ChatColor.GREEN +(getConfig().getString("5"))); 
+              return true;
+           
 
-            
-              item.setItemMeta(itemStackMeta);
-              
-              sender.sendMessage(ChatColor.GREEN +(getConfig().getString("5")));
-
-            
-              
-                }else {
-                String name = args[0]; 
-              ItemStack item = player.getItemInHand();
-              
-              ItemMeta itemStackMeta = item.getItemMeta();
-              itemStackMeta.setDisplayName(name);
-            
-              item.setItemMeta(itemStackMeta);
-              
-              sender.sendMessage(ChatColor.GREEN +(getConfig().getString("5")));
-            
-             }return true;
 //Economy on             
             }else if ((getConfig().getBoolean("Economy"))) {
                 if (player.hasPermission("sr.free")) {
-                    StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < args.length; i++){
-                        sb.append(args[i]).append(" ");
-                        }
-
-                        String allArgs = sb.toString().trim();
-                        ItemStack item = player.getItemInHand();
-
-                        ItemMeta itemStackMeta = item.getItemMeta();
-                        itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));
-
-
-                        item.setItemMeta(itemStackMeta);
-
-                        sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + ("0") + ("$") );
+              ItemStack item = player.getItemInHand();           
+              ItemMeta itemStackMeta = item.getItemMeta();
+              itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));           
+              item.setItemMeta(itemStackMeta); 
+              sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + ("0") + ("$") );
                         return true;
                 }
-                if (player.hasPermission("sr.color")) {
+                else  {
                    int Nprecio = this.getConfig().getInt("Nprice"); 
                    int cantidad = player.getInventory().getItemInHand().getAmount();
                    int precio = cantidad * Nprecio ;
                    EconomyResponse r = econ.withdrawPlayer(player.getName(), Nprecio * cantidad);                    
                     if (r.transactionSuccess()){
-
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < args.length; i++){
-                        sb.append(args[i]).append(" ");
-                        }
-
-                        String allArgs = sb.toString().trim();
                         ItemStack item = player.getItemInHand();
-
                         ItemMeta itemStackMeta = item.getItemMeta();
                         itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));
-
-
                         item.setItemMeta(itemStackMeta);
-
                         sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precio + ("$") );
                         return true;
-
                     }else{
                         sender.sendMessage(ChatColor.RED + (getConfig().getString("8"))+ ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precio + ("$") );
                         return true;
                     }             
-                }else{
-                   int Nprecio = this.getConfig().getInt("Nprice"); 
-                   int cantidad = player.getInventory().getItemInHand().getAmount();
-                   int precio = cantidad * Nprecio ;
-                   EconomyResponse r = econ.withdrawPlayer(player.getName(), Nprecio * cantidad);                    
-                    if (r.transactionSuccess()){
-
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < args.length; i++){
-                        sb.append(args[i]).append(" ");
-                        }
-
-                        String allArgs = sb.toString().trim();
-                        ItemStack item = player.getItemInHand();
-
-                        ItemMeta itemStackMeta = item.getItemMeta();
-                        itemStackMeta.setDisplayName(allArgs);
-
-
-                        item.setItemMeta(itemStackMeta);
-
-                        sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precio + ("$") );
-                        return true;
-
-                    }else{
-                        sender.sendMessage(ChatColor.RED + (getConfig().getString("8"))+ ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precio + ("$") );
-                        return true;
-                    }
-                } 
-                   
-                
-            
-         
-        
-
-		
+                }		
 } 
             
 //LORE LORE LORE LORE LORE LORE LORE LORE LORE LORE LORE LORE
-
 
 } else if (cmd.getName().equalsIgnoreCase("relore"));{
             if (!player.hasPermission("sr.lore")) {
@@ -234,110 +180,45 @@ public class Main extends JavaPlugin {
                 
             }else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
                 sender.sendMessage(ChatColor.RED +(getConfig().getString("4")));
+             }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
+                sender.sendMessage(ChatColor.RED +(getConfig().getString("7")));;
+                return true;
 
 //Economy off                
-            }else if (!(getConfig().getBoolean("Economy"))){
-                if (player.hasPermission("sr.color")) { 
-                    
+            }else if (!(getConfig().getBoolean("Economy"))){    
             ItemStack itemStack = player.getItemInHand();
-            
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < args.length; i++){
-            sb.append(args[i]).append(" ");
-            }
-
-            String loretxoa = sb.toString().trim();
-
-            
             List<String> lore = new ArrayList();
-
-              lore.add(ChatColor.translateAlternateColorCodes('&', loretxoa));
-
+            lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
             ItemMeta itemStackMeta = itemStack.getItemMeta();
             itemStackMeta.setLore(lore);
-            
             itemStack.setItemMeta(itemStackMeta);
-              
-              sender.sendMessage(ChatColor.GREEN +(getConfig().getString("5")));
+            sender.sendMessage(ChatColor.GREEN +(getConfig().getString("5")));
+            return true;                  
 
-            
-              
-                }else {
-
-              
-            ItemStack itemStack = player.getItemInHand();
-            
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < args.length; i++){
-            sb.append(args[i]).append(" ");
-            }
-
-            String loretxoa = sb.toString().trim();
-
-            
-            List<String> lore = new ArrayList();
-
-              lore.add(loretxoa);
-
-            ItemMeta itemStackMeta = itemStack.getItemMeta();
-            itemStackMeta.setLore(lore);
-            
-            itemStack.setItemMeta(itemStackMeta);
-              
-              sender.sendMessage(ChatColor.GREEN +(getConfig().getString("5")));
-            
-             }return true;
 //Economy on             
             }else if ((getConfig().getBoolean("Economy"))) {
                 if (player.hasPermission("sr.free")) {
                     ItemStack itemStack = player.getItemInHand();
-
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < args.length; i++){
-                        sb.append(args[i]).append(" ");
-                        }
-
-                        String loretxoa = sb.toString().trim();
-
-
                         List<String> lore = new ArrayList();
-
-                            lore.add(ChatColor.translateAlternateColorCodes('&', loretxoa));
-
+                        lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
                         ItemMeta itemStackMeta = itemStack.getItemMeta();
                         itemStackMeta.setLore(lore);
-
                         itemStack.setItemMeta(itemStackMeta);
-
                         sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + ("0") + ("$") );
                         return true;
                 }
-                if (player.hasPermission("sr.color")) { 
+                else { 
                    int Lprecio = this.getConfig().getInt("Lprice");
                    int cantidad = player.getInventory().getItemInHand().getAmount();
                    int precioa = cantidad * Lprecio ;
                    EconomyResponse r = econ.withdrawPlayer(player.getName(), Lprecio * cantidad);                    
                     if (r.transactionSuccess()){
-
                         ItemStack itemStack = player.getItemInHand();
-
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < args.length; i++){
-                        sb.append(args[i]).append(" ");
-                        }
-
-                        String loretxoa = sb.toString().trim();
-
-
                         List<String> lore = new ArrayList();
-
-                            lore.add(ChatColor.translateAlternateColorCodes('&', loretxoa));
-
+                        lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
                         ItemMeta itemStackMeta = itemStack.getItemMeta();
                         itemStackMeta.setLore(lore);
-
                         itemStack.setItemMeta(itemStackMeta);
-
                         sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precioa + ("$") );
                         return true;
 
@@ -345,47 +226,15 @@ public class Main extends JavaPlugin {
                         sender.sendMessage(ChatColor.RED + (getConfig().getString("8"))+ ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precioa + ("$") );
                         return true;
                     }             
-                }else{
-                   int Lprecio = this.getConfig().getInt("Lprice"); 
-                   int cantidad = player.getInventory().getItemInHand().getAmount();
-                   int precioa = cantidad * Lprecio ;
-                   EconomyResponse r = econ.withdrawPlayer(player.getName(), Lprecio * cantidad);                       
-                    if (r.transactionSuccess()){
-
-                        ItemStack itemStack = player.getItemInHand();
-
-                        String loretxoa = args[0];
-
-
-                        List<String> lore = new ArrayList();
-
-                            lore.add(loretxoa);
-
-                        ItemMeta itemStackMeta = itemStack.getItemMeta();
-                        itemStackMeta.setLore(lore);
-
-                        itemStack.setItemMeta(itemStackMeta);
-                        sender.sendMessage(ChatColor.GREEN + (getConfig().getString("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precioa + ("$") );
-                        return true;
-
-                    }else{
-                        sender.sendMessage(ChatColor.RED + getConfig().getString(getConfig().getString("8"))+ ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precioa + ("$") );
-                        return true;
-                    }
-                } 
-                   
-                
-            
-         
-        
-
-		
-} return true;
+                }               
+            		
+        }
     
 }
 
-
-}}
+return true;
+}
+}
 
     
 
