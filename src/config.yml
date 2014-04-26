@@ -1,20 +1,16 @@
-#Config file Simple Rename
-#Messages:
-1: SimpleRename disabled
-2: SimpleRename enabled!
-3: Use /command + name 
-4: You need to have an item in your hand
-5: Item renamed / relored suscesfully!
-6: You don't have permission to do that!
-7: You don`t have permission to use color codes!
-8: You don't have enough money!
-9: Price
-#Economy support (If you set it to "true" yo need to have Vault installed)
+# CONFIG FILE SIMPLE-RENAME
+#
+#Language (en , es, eu, custom)
+#METRICS: Enable or Disable Metrics
+#UPDATER: Enable or Disable the update notifier
+#ECONOMY:(If you set it to "true" yo need to have Vault installed)
+#PRICES: Price to rename and relore items 
+Language: en
+Metrics: true
+Updater: true
+#ECONOMY (VAULT NEEDED)
 Economy: false
-#Price to rename items (Need economy enabled)
 Nprice: 10 
 Lprice: 10
-#Enable or Disable Metrics
-Metrics: true
-#Enable or Disable the update notifier
-Updater: true
+
+#THIS CONFIG FILE WAS CREATED BY SIMPLE-RENAME (v2.5)
