@@ -1,16 +1,15 @@
 # CONFIG FILE SIMPLE-RENAME
 #
-#Language (en , es, eu, custom)
-#METRICS: Enable or Disable Metrics
-#UPDATER: Enable or Disable the update notifier
-#ECONOMY:(If you set it to "true" yo need to have Vault installed)
-#PRICES: Price to rename and relore items 
+#Language (en , es, eu, nl, custom)
 Language: en
+#METRICS: Enable or Disable Metrics
 Metrics: true
+#UPDATER: Enable or Disable the update notifier
 Updater: true
-#ECONOMY (VAULT NEEDED)
+#ECONOMY:(If you set it to "true" yo need to have Vault installed)
 Economy: false
+#PRICES: Price to rename and relore items 
 Nprice: 10 
 Lprice: 10
 
-#THIS CONFIG FILE WAS CREATED BY SIMPLE-RENAME (v2.5)
+#THIS CONFIG FILE WAS CREATED BY SIMPLE-RENAME (v3.0)

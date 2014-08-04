@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,7 +22,6 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -36,7 +36,7 @@ public class Main extends JavaPlugin {
     public static final Logger log = Logger.getLogger("Minecraft");    
     public static boolean update = false;
     public static String name = "";
-    public static ReleaseType type = null;
+    public static Updater.ReleaseType type = null;
     public static String version = "";
     public static String link = "";
     public static String translation;
@@ -59,6 +59,7 @@ public class Main extends JavaPlugin {
                 copyTranslation("eu");
                 copyTranslation("custom");
                 copyTranslation("nl");
+                copyTranslation("fr");
                 //Copy english
                 translation = getConfig().getString("Language"); //Get translations from config
  
@@ -86,12 +87,12 @@ public class Main extends JavaPlugin {
             }
         }
         if ((getConfig().getBoolean("Updater"))){
-        Updater updater = new Updater(this, 75680, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
-        update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
-        name = updater.getLatestName(); // Get the latest name
-        version = updater.getLatestGameVersion(); // Get the latest game version
-        type = updater.getLatestType(); // Get the latest file's type
-        link = updater.getLatestFileLink(); // Get the latest link
+            Updater updater = new Updater(this, 75680, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+            update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+            name = updater.getLatestName();
+            version = updater.getLatestGameVersion();
+            type = updater.getLatestType();
+            link = updater.getLatestFileLink();
 
                 }
         //Metrics
@@ -148,7 +149,7 @@ public class Main extends JavaPlugin {
         if (cmd.getName().equalsIgnoreCase("sr")&& (args.length < 1) ){
             sender.sendMessage(ChatColor.GREEN + "Simple Rename");
             sender.sendMessage(ChatColor.BLUE + "Author:"+ " " + ChatColor.GREEN + "Galaipa");
-            sender.sendMessage(ChatColor.BLUE + "Version:"+ " " +ChatColor.GREEN + Main.version);
+            sender.sendMessage(ChatColor.BLUE + "Version:"+ " " +ChatColor.GREEN + "3.0");
             sender.sendMessage(ChatColor.BLUE + "BukkitDev:"+" " + ChatColor.GREEN + "http://dev.bukkit.org/bukkit-plugins/simple-rename/");
             sender.sendMessage(ChatColor.BLUE + "Metrics:"+" " + ChatColor.GREEN + "http://mcstats.org/plugin/SimpleRename");
             return true;
@@ -247,10 +248,33 @@ public class Main extends JavaPlugin {
             }}
   //UPDATE          
         else if (cmd.getName().equalsIgnoreCase("sr") && args[0].equalsIgnoreCase("update") && player.hasPermission("sr.update")) {
-            Updater updater = new Updater(this, 75680, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true); // Go straight to downloading, and announce progress to console.
-            sender.sendMessage(ChatColor.GREEN + "Update progress in the console");
+        Updater updater = new Updater(this, 75680, getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+        sender.sendMessage(ChatColor.GREEN + "Update progress in the console");
             return true;
             }
+   //ADD LORE
+        else if (cmd.getName().equalsIgnoreCase("addlore")){
+                if (!player.hasPermission("sr.lore")) {
+                sender.sendMessage(ChatColor.RED+(getTranslation("6")));
+                return true;
+            }
+            else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
+                 sender.sendMessage(ChatColor.RED +(getTranslation("4")));
+                 return true;
+            }
+            else {
+            ItemStack itemStack = player.getItemInHand();
+            List<String> lore = new ArrayList();
+            lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
+            ItemMeta itemStackMeta = itemStack.getItemMeta();
+            lore.add("abc");
+            itemStackMeta.setLore(lore);
+            itemStack.setItemMeta(itemStackMeta);
+            sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+            return true;
+            }
+            
+        }
  // NAME NAME NAME NAME NAME NAME       
         else if(cmd.getName().equalsIgnoreCase("rename")){
             if (!player.hasPermission("sr.name")) {
@@ -329,7 +353,6 @@ public class Main extends JavaPlugin {
             ItemStack itemStack = player.getItemInHand();
             List<String> lore = new ArrayList();
             lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
-
             ItemMeta itemStackMeta = itemStack.getItemMeta();
             itemStackMeta.setLore(lore);
             itemStack.setItemMeta(itemStackMeta);
