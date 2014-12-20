@@ -1,4 +1,4 @@
-#LANGUAGE‏ FILE SIMPLE RENAME (ESPAÑOL)
+#LANGUAGE? FILE SIMPLE RENAME (ESPANOL)
 3: Usa /rename + nombre que le quieras poner al item
 4: Debes tener un item en la mano para poder renombralo
 5: Item renombrado con exito!
@@ -10,3 +10,4 @@
 11: Has copiado el nombre / lore. Ahora usa "/sr paste" para pegar
 12: El nombre y lore han sido pegados !
 13: El item ha sido limpiado correctamente
+14: Palabra prohibida

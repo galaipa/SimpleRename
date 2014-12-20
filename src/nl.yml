@@ -1,4 +1,4 @@
-#LANGUAGE‏ FILE SIMPLE RENAME (DUTCH)
+#LANGUAGE? FILE SIMPLE RENAME (DUTCH)
 3: Gebruik /commando + naam
 4: Je moet een Item in je hand hebben
 5: Item succesvol vernoemt / verlored!
@@ -9,3 +9,5 @@
 10: Item succesvol verdubbelt!
 11: Item naam en lore gekopieerd. Gebruik "/sr paste' om het te plakken
 12: Item naam en lore succesvol geplakt!
+13: Item leeggemaakt!
+14: Verboden woord?

@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,13 +24,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
     public HashMap<String, ItemMeta > copy = new HashMap<String, ItemMeta>();
-
+    ArrayList<String> list = new ArrayList<String>();
     public static Economy econ = null;
     public static final Logger log = Logger.getLogger("Minecraft");    
     public static boolean update = false;
@@ -42,6 +42,7 @@ public class Main extends JavaPlugin {
     public static String translation;
     public static YamlConfiguration yaml;
     private File languageFile;
+   
     @Override
     public void onDisable() {
         PluginManager pluginManager = getServer().getPluginManager();
@@ -51,21 +52,20 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {        
         log.info("SimpleRename enabled!");
-        saveDefaultConfig(); 
+        getConfig().options().copyDefaults(true);
+        saveConfig();
         getServer().getPluginManager().registerEvents(new UpdateListener(), this);
 
+//TRANSLATION
                 copyTranslation("en");
                 copyTranslation("es");
                 copyTranslation("eu");
                 copyTranslation("custom");
                 copyTranslation("nl");
                 copyTranslation("fr");
-                //Copy english
-                translation = getConfig().getString("Language"); //Get translations from config
- 
-                // Load translation
+                translation = getConfig().getString("Language");
                 languageFile = new File(getDataFolder() + File.separator + "lang"
-                                + File.separator + translation + ".yml"); //Choose file
+                                + File.separator + translation + ".yml"); 
                 //Settings default if language in config isn't found
                 if (!languageFile.exists()) {
                         getLogger().info(
@@ -73,17 +73,20 @@ public class Main extends JavaPlugin {
                         translation = "en";
                 }
                 getLogger().info(translation);
-                //Load the configuration, you can translate now!
                 yaml = YamlConfiguration.loadConfiguration(languageFile);
-
-                //Load the configuration, you can translate now!
-                yaml = YamlConfiguration.loadConfiguration(languageFile);
-        if ((getConfig().getBoolean("Economy"))){
-            if (!setupEconomy()){
-                log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
-            return;
                 
+//BLACKLIST (4.0)  
+                  /* if (!getConfig().contains("BlackList")) {
+                        this.getConfig().set("BlackList", list);
+                        saveConfig();
+                        list.add("example");
+                        this.saveConfig();
+                        }*/
+        if ((getConfig().getBoolean("Economy"))){
+            if (!setupEconomy() ) {
+                log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+                getServer().getPluginManager().disablePlugin(this);
+                return;
             }
         }
         if ((getConfig().getBoolean("Updater"))){
@@ -103,10 +106,9 @@ public class Main extends JavaPlugin {
             } catch (IOException e) {
                 // Failed to submit the stats :-(
             }
-    }        
+    }
     }
     private boolean setupEconomy() {
-        
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
@@ -117,15 +119,22 @@ public class Main extends JavaPlugin {
         econ = rsp.getProvider();
         return econ != null;
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         Player player = (Player)sender;
+            PluginDescriptionFile pdfFile = this.getDescription();
+            String version1 = pdfFile.getVersion();
         //AL ARGS
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < args.length; i++){
             sb.append(args[i]).append(" ");
             }String allArgs = sb.toString().trim();
+//BLACLIST
+            List<String> ex = getConfig().getStringList("BlackList");
+
        //CHARACTERS
+            //v2.0
             //v2.0
             allArgs = allArgs.replace("[<3]" , "\u2764");
             allArgs = allArgs.replace("[ARROW]" , "\u279c");
@@ -143,19 +152,18 @@ public class Main extends JavaPlugin {
             allArgs = allArgs.replace("[SUIT]" , "\u2666");
             allArgs = allArgs.replace("[+]" , "\u2726");
             allArgs = allArgs.replace("[CIRCLE]" , "\u25CF");
-            allArgs = allArgs.replace("[SUN]" , "\u2739");           
-
-    //SR INFO
-        if (cmd.getName().equalsIgnoreCase("sr")&& (args.length < 1) ){
+            allArgs = allArgs.replace("[SUN]" , "\u2739");
+ 
+//SR INFO 1
+    if (cmd.getName().equalsIgnoreCase("sr")&& (args.length < 1) ){ 
             sender.sendMessage(ChatColor.GREEN + "Simple Rename");
-            sender.sendMessage(ChatColor.BLUE + "Author:"+ " " + ChatColor.GREEN + "Galaipa");
-            sender.sendMessage(ChatColor.BLUE + "Version:"+ " " +ChatColor.GREEN + "3.0");
+            sender.sendMessage(ChatColor.BLUE + "Author:"+ " " + ChatColor.GREEN + "Galaipa & EnergizerBEAST1");
+            sender.sendMessage(ChatColor.BLUE + "Version:"+ " " +ChatColor.GREEN + version1);
             sender.sendMessage(ChatColor.BLUE + "BukkitDev:"+" " + ChatColor.GREEN + "http://dev.bukkit.org/bukkit-plugins/simple-rename/");
             sender.sendMessage(ChatColor.BLUE + "Metrics:"+" " + ChatColor.GREEN + "http://mcstats.org/plugin/SimpleRename");
             return true;
-            }
-    //SR CHARACTERS
-        if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("characters") ||cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("character") ){
+//SR CHARACTERS
+    }else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("characters") ||cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("character") ){
             sender.sendMessage(ChatColor.GREEN + "Special Characters List (SimpleRename)");
             sender.sendMessage(ChatColor.BLUE + "[<3]"+ " " +   "----->" + ChatColor.WHITE +"\u2764");
             sender.sendMessage(ChatColor.BLUE + "[ARROW]"+ " " +   "----->" + ChatColor.WHITE +"\u279c");
@@ -175,6 +183,21 @@ public class Main extends JavaPlugin {
             sender.sendMessage(ChatColor.BLUE + "[SUN]"+ " " +   "----->" + ChatColor.WHITE +"\u2739");         
             return true;
             }
+    //RELOAD
+    else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload")) {
+        if (!player.hasPermission("sr.reload")) {
+                sender.sendMessage(ChatColor.RED+(getTranslation("6")));
+                return true;
+            }else{
+         reloadConfig();
+         translation = getConfig().getString("Language"); // LANGUAGE
+         languageFile = new File(getDataFolder() + File.separator + "lang"
+         + File.separator + translation + ".yml");
+         getLogger().info(translation);
+         yaml = YamlConfiguration.loadConfiguration(languageFile);
+         sender.sendMessage(ChatColor.BLUE + "SimpleRename reloaded");
+        }
+    }
     //DUPLICATE
         else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("duplicate")) {
             if (!player.hasPermission("sr.duplicate")) {
@@ -254,29 +277,46 @@ public class Main extends JavaPlugin {
             }
    //ADD LORE
         else if (cmd.getName().equalsIgnoreCase("addlore")){
+                for (String s : args) {
+                    if (ex.contains(s)&& !player.hasPermission("sr.blacklist") ) {
+                        sender.sendMessage(ChatColor.RED+(getTranslation("14")));
+                        return true;
+                    } }
                 if (!player.hasPermission("sr.lore")) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
-            }
-            else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
+            
+            }else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
                  sender.sendMessage(ChatColor.RED +(getTranslation("4")));
                  return true;
+            }else {
+                ItemStack itemStack = player.getItemInHand();
+                List<String> lore = itemStack.getItemMeta().getLore();
+                if (lore == null){
+                            
+                            List<String> lore2 = new ArrayList();
+                            lore2.add(ChatColor.translateAlternateColorCodes('&', allArgs));
+                            ItemMeta itemStackMeta = itemStack.getItemMeta();
+                            itemStackMeta.setLore(lore2);
+                            itemStack.setItemMeta(itemStackMeta);
+                            sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+                }else{
+                            lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
+                            ItemMeta itemStackMeta = itemStack.getItemMeta();
+                            itemStackMeta.setLore(lore);
+                            itemStack.setItemMeta(itemStackMeta);
+                            sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+                return true;
+                }
             }
-            else {
-            ItemStack itemStack = player.getItemInHand();
-            List<String> lore = new ArrayList();
-            lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
-            ItemMeta itemStackMeta = itemStack.getItemMeta();
-            lore.add("abc");
-            itemStackMeta.setLore(lore);
-            itemStack.setItemMeta(itemStackMeta);
-            sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
-            return true;
-            }
-            
         }
  // NAME NAME NAME NAME NAME NAME       
         else if(cmd.getName().equalsIgnoreCase("rename")){
+                for (String s : args) {
+                    if (ex.contains(s)&& !player.hasPermission("sr.blacklist") ) {
+                        sender.sendMessage(ChatColor.RED+(getTranslation("14")));
+                        return true;
+                    } }
             if (!player.hasPermission("sr.name")) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
@@ -289,11 +329,10 @@ public class Main extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED +(getTranslation("4")));
                 return true;                
              }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
-                sender.sendMessage(ChatColor.RED +(getTranslation("7")));;
+                sender.sendMessage(ChatColor.RED +(getTranslation("7")));
                 return true;
 
-
-
+               
 //Economy off                
             }else if (!(getConfig().getBoolean("Economy"))){
               ItemStack item = player.getItemInHand();           
@@ -335,7 +374,12 @@ public class Main extends JavaPlugin {
             
 //LORE LORE LORE LORE LORE LORE LORE LORE LORE LORE LORE LORE
 
-} else if (cmd.getName().equalsIgnoreCase("relore"));{
+} else if (cmd.getName().equalsIgnoreCase("relore")){
+                for (String s : args) {
+                    if (ex.contains(s)&& !player.hasPermission("sr.blacklist") ) {
+                        sender.sendMessage(ChatColor.RED+(getTranslation("14")));
+                        return true;
+                    } }
             if (!player.hasPermission("sr.lore")) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
 
@@ -347,6 +391,8 @@ public class Main extends JavaPlugin {
              }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
                 sender.sendMessage(ChatColor.RED +(getTranslation("7")));
                 return true;
+
+               
 
 //Economy off                
             }else if (!(getConfig().getBoolean("Economy"))){    
@@ -392,9 +438,18 @@ public class Main extends JavaPlugin {
                     }             
                 }               
             		
-        }
-    
+        } 
+    //SR INFO 2
+}else {
+            sender.sendMessage(ChatColor.GREEN + "Simple Rename");
+            sender.sendMessage(ChatColor.BLUE + "Author:"+ " " + ChatColor.GREEN + "Galaipa & EnergizerBEAST1");
+            sender.sendMessage(ChatColor.BLUE + "Version:"+ " " +ChatColor.GREEN + version1);
+            sender.sendMessage(ChatColor.BLUE + "BukkitDev:"+" " + ChatColor.GREEN + "http://dev.bukkit.org/bukkit-plugins/simple-rename/");
+            sender.sendMessage(ChatColor.BLUE + "Metrics:"+" " + ChatColor.GREEN + "http://mcstats.org/plugin/SimpleRename");
+            return true;
+            
 }
+
 
 
 
@@ -402,6 +457,10 @@ return true;
 }
     
     public static String getTranslation(String path) {
+        if((yaml.getString(path)) == null){
+        path = "Message missing in the lang file. Contact Admin";
+        return (path);
+        } else
                 return yaml.getString(path);
         }
  
@@ -428,6 +487,8 @@ return true;
                         copy(getResource(trans + ".yml"), file);
                 }
         }
+
+
 }
 //SIMPLE RENAME
 //AUTHOR: GALAIPA
