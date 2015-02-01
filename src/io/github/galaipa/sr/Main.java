@@ -20,6 +20,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -75,13 +76,6 @@ public class Main extends JavaPlugin {
                 getLogger().info(translation);
                 yaml = YamlConfiguration.loadConfiguration(languageFile);
                 
-//BLACKLIST (4.0)  
-                  /* if (!getConfig().contains("BlackList")) {
-                        this.getConfig().set("BlackList", list);
-                        saveConfig();
-                        list.add("example");
-                        this.saveConfig();
-                        }*/
         if ((getConfig().getBoolean("Economy"))){
             if (!setupEconomy() ) {
                 log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -122,7 +116,11 @@ public class Main extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-        Player player = (Player)sender;
+        if(sender instanceof ConsoleCommandSender){
+            sender.sendMessage("[SimpleRename]" + "Commands can only be run by players");
+            return true;
+        }
+            Player player = (Player)sender;
             PluginDescriptionFile pdfFile = this.getDescription();
             String version1 = pdfFile.getVersion();
         //AL ARGS
@@ -185,7 +183,7 @@ public class Main extends JavaPlugin {
             }
     //RELOAD
     else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload")) {
-        if (!player.hasPermission("sr.reload")) {
+            if (!player.hasPermission("sr.reload")) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
             }else{
@@ -196,17 +194,33 @@ public class Main extends JavaPlugin {
          getLogger().info(translation);
          yaml = YamlConfiguration.loadConfiguration(languageFile);
          sender.sendMessage(ChatColor.BLUE + "SimpleRename reloaded");
+         return true;
         }
-    }
+          //UPDATE          
+    }else if (cmd.getName().equalsIgnoreCase("sr") && args[0].equalsIgnoreCase("update") && player.hasPermission("sr.update")) {
+        Updater updater = new Updater(this, 75680, getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+        sender.sendMessage(ChatColor.GREEN + "Update progress in the console");
+            return true;
+            
+//SECURITY CHECK
+        
+    }else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
+                 sender.sendMessage(ChatColor.RED +(getTranslation("4")));
+                 return true;
+            }
+       
+            for (String sab : getConfig().getStringList("BlackListID")) {
+                    if (Material.matchMaterial(sab) == player.getItemInHand().getType()&& !player.hasPermission("sr.blacklist") ) {
+                        sender.sendMessage(ChatColor.RED+(getTranslation("15")));
+                        return true;
+                    }
+            }
+
     //DUPLICATE
-        else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("duplicate")) {
+        if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("duplicate")) {
             if (!player.hasPermission("sr.duplicate")) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
-            }
-            else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
-                 sender.sendMessage(ChatColor.RED +(getTranslation("4")));
-                 return true;
             }
             else {
              ItemStack item = player.getItemInHand();      
@@ -220,10 +234,6 @@ public class Main extends JavaPlugin {
             if (!player.hasPermission("sr.copy")) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
-            }
-            else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
-                 sender.sendMessage(ChatColor.RED +(getTranslation("4")));
-                 return true;
             }
             else {
             ItemStack item = player.getItemInHand();
@@ -241,9 +251,6 @@ public class Main extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
             }
-            if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
-                 sender.sendMessage(ChatColor.RED +(getTranslation("4")));
-            }
             else {
             ItemStack item = player.getItemInHand();
              ItemMeta meta = item.getItemMeta();
@@ -255,10 +262,10 @@ public class Main extends JavaPlugin {
 
     //PASTE
         else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("paste") && player.hasPermission("sr.copy")) {
-            if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
-                 sender.sendMessage(ChatColor.RED +(getTranslation("4")));
-            }
-            else {
+            if (!player.hasPermission("sr.copy")) {
+                sender.sendMessage(ChatColor.RED+(getTranslation("6")));
+                return true;
+            }else{
             ItemStack item1 = player.getItemInHand();
             int slot = player.getInventory().getHeldItemSlot();
             ItemMeta MetaData = copy.get(player.getName());  
@@ -269,12 +276,7 @@ public class Main extends JavaPlugin {
                 sender.sendMessage(ChatColor.GREEN+(getTranslation("12")));
                 return true;
             }}
-  //UPDATE          
-        else if (cmd.getName().equalsIgnoreCase("sr") && args[0].equalsIgnoreCase("update") && player.hasPermission("sr.update")) {
-        Updater updater = new Updater(this, 75680, getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
-        sender.sendMessage(ChatColor.GREEN + "Update progress in the console");
-            return true;
-            }
+
    //ADD LORE
         else if (cmd.getName().equalsIgnoreCase("addlore")){
                 for (String s : args) {
@@ -286,9 +288,6 @@ public class Main extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
             
-            }else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
-                 sender.sendMessage(ChatColor.RED +(getTranslation("4")));
-                 return true;
             }else {
                 ItemStack itemStack = player.getItemInHand();
                 List<String> lore = itemStack.getItemMeta().getLore();
@@ -324,14 +323,10 @@ public class Main extends JavaPlugin {
             }else if (args.length < 1) {
                 sender.sendMessage(ChatColor.RED +(getTranslation("3")));
                 return true;
-                
-            }else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
-                sender.sendMessage(ChatColor.RED +(getTranslation("4")));
-                return true;                
+                               
              }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
                 sender.sendMessage(ChatColor.RED +(getTranslation("7")));
                 return true;
-
                
 //Economy off                
             }else if (!(getConfig().getBoolean("Economy"))){
@@ -386,8 +381,6 @@ public class Main extends JavaPlugin {
             }else if (args.length < 1) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("3")));
 
-            }else if (player.getItemInHand().getType() == Material.AIR || player.getItemInHand() == null) {
-                sender.sendMessage(ChatColor.RED +(getTranslation("4")));
              }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
                 sender.sendMessage(ChatColor.RED +(getTranslation("7")));
                 return true;
@@ -457,11 +450,14 @@ return true;
 }
     
     public static String getTranslation(String path) {
-        if((yaml.getString(path)) == null){
-        path = "Message missing in the lang file. Contact Admin";
-        return (path);
-        } else
-                return yaml.getString(path);
+            if (yaml.getString(path) == null)
+            {
+            path = "Message missing in the lang file. Contact Admin";
+            return path;
+            }
+            String msg = yaml.getString(path);
+            String color = ChatColor.translateAlternateColorCodes('&', msg);
+            return color;
         }
  
         private void copy(InputStream in, File file) {

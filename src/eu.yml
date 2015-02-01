@@ -1,13 +1,14 @@
 #LANGUAGE? FILE SIMPLE RENAME (EUSKARA)
 3: Erabili /komandoa + izena
 4: Eskua ezin duzu hutsik izan
-5: SimpleRename prozesua burutu da
+5: Item-a ondo berrizendatu duzu
 6: Ez daukazu hori egiteko baimenik
 7: Ez daukazu koloreak erabiltzeko baimenik
-8: Ez daukazu nahikoa diru
+8: Ez daukazu nahikoa dirurik
 9: Prezioa
-10: Item bikoizketa burutu da
+10: Item-a bikoiztu duzu
 11: Item-aren izena eta deskribapena kopiatu duzu. Orain erabili "/sr paste" itsasteko
-12: Item-arem izena eta deskribapena itsasi dituzu!
+12: Item-aren izena eta deskribapena itsasi dituzu!
 13: Item-a garbitu duzu
 14: Hitz debekatu bat erabili duzu
+15: Ez daukazu item hori editatzeko baimenik

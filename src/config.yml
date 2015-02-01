@@ -1,6 +1,6 @@
 # CONFIG FILE SIMPLE-RENAME
-# THIS CONFIG FILE WAS CREATED BY SIMPLE-RENAME (v4.0)
-#Language (en , es, eu, nl, fr custom)
+# THIS CONFIG FILE WAS CREATED BY SIMPLE-RENAME (v5.0)
+#Language (en , es, eu, nl, fr, custom)
 Language: en
 #METRICS: Enable or Disable Metrics
 Metrics: true
@@ -11,7 +11,11 @@ Economy: false
 #PRICES: Price to rename and relore items 
 Nprice: 10 
 Lprice: 10
+#Blacklisted words
 BlackList:
   - blaclistedwords
+#Blaclisted items / blocks. Use names, NOT IDs 
+BlackListID:
+  - air
 
 
