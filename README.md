@@ -5,3 +5,6 @@ A very simple but useful plugin. With this plugin you can rename items and add t
 More info: http://dev.bukkit.org/bukkit-plugins/simple-rename/
 
 
+![Alt text](https://i.creativecommons.org/l/by-sa/4.0/88x31.png "License")
+
+
