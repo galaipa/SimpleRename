@@ -4,7 +4,6 @@ package io.github.galaipa.sr;
 // DO NOT COPY WITH OUT PERMISSION PLEASE
 
 
-import io.github.galaipa.sr.Updater.ReleaseType;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,6 +23,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -43,7 +43,7 @@ public class Main extends JavaPlugin {
     public static String translation;
     public static YamlConfiguration yaml;
     private File languageFile;
-   
+
     @Override
     public void onDisable() {
         PluginManager pluginManager = getServer().getPluginManager();
@@ -229,6 +229,42 @@ public class Main extends JavaPlugin {
             return true;
             }
             }
+// BOOKS
+        else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("book") ){
+            if(player.getItemInHand().getType() != Material.WRITTEN_BOOK){
+                sender.sendMessage(getTranslation("16"));
+                return true;
+            }
+            else if (!player.hasPermission("sr.book")){
+                sender.sendMessage(getTranslation("6"));
+            }
+            else if(args[1].equalsIgnoreCase("setauthor")){
+              ItemStack liburua = player.getItemInHand();
+              BookMeta meta = (BookMeta) liburua.getItemMeta();
+              meta.setAuthor(args[2]);
+              liburua.setItemMeta(meta);
+              sender.sendMessage(getTranslation("5"));
+              return true;
+            }
+            else if(args[1].equalsIgnoreCase("settitle")){
+              ItemStack liburua = player.getItemInHand();
+              BookMeta meta = (BookMeta) liburua.getItemMeta();
+              meta.setTitle(args[2]);
+              liburua.setItemMeta(meta);
+              sender.sendMessage(getTranslation("5"));
+              return true;
+            }
+            else if(args[1].equalsIgnoreCase("unsing") ){
+              ItemStack liburua = player.getItemInHand();
+              BookMeta metaZaharra = (BookMeta) liburua.getItemMeta();
+              ItemStack sinatugabea = new ItemStack(Material.BOOK_AND_QUILL, 1);
+              BookMeta metaBerria = (BookMeta) sinatugabea.getItemMeta();
+              metaBerria.setPages(metaZaharra.getPages());
+              sinatugabea.setItemMeta(metaBerria);
+              player.getInventory().setItem(player.getInventory().getHeldItemSlot(),sinatugabea);
+              sender.sendMessage(getTranslation("5"));
+              return true;
+        }}
     //CLEAR
         else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("clear")) {
             if (!player.hasPermission("sr.copy")) {
@@ -287,26 +323,10 @@ public class Main extends JavaPlugin {
                 if (!player.hasPermission("sr.lore")) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
-            
             }else {
-                ItemStack itemStack = player.getItemInHand();
-                List<String> lore = itemStack.getItemMeta().getLore();
-                if (lore == null){
-                            
-                            List<String> lore2 = new ArrayList();
-                            lore2.add(ChatColor.translateAlternateColorCodes('&', allArgs));
-                            ItemMeta itemStackMeta = itemStack.getItemMeta();
-                            itemStackMeta.setLore(lore2);
-                            itemStack.setItemMeta(itemStackMeta);
-                            sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
-                }else{
-                            lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
-                            ItemMeta itemStackMeta = itemStack.getItemMeta();
-                            itemStackMeta.setLore(lore);
-                            itemStack.setItemMeta(itemStackMeta);
-                            sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+                addLore(player,allArgs);
+                sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
                 return true;
-                }
             }
         }
  // NAME NAME NAME NAME NAME NAME       
@@ -326,27 +346,19 @@ public class Main extends JavaPlugin {
                                
              }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
                 sender.sendMessage(ChatColor.RED +(getTranslation("7")));
-                return true;
-               
+                return true; 
 //Economy off                
             }else if (!(getConfig().getBoolean("Economy"))){
-              ItemStack item = player.getItemInHand();           
-              ItemMeta itemStackMeta = item.getItemMeta();
-              itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));           
-              item.setItemMeta(itemStackMeta);        
+              ItemStack item = player.getItemInHand();  
+              setName(player,allArgs);
               sender.sendMessage(ChatColor.GREEN +(getTranslation("5"))); 
               return true;
-           
-
 //Economy on             
             }else if ((getConfig().getBoolean("Economy"))) {
-                if (player.hasPermission("sr.free")) {
-              ItemStack item = player.getItemInHand();           
-              ItemMeta itemStackMeta = item.getItemMeta();
-              itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));           
-              item.setItemMeta(itemStackMeta); 
+              if (player.hasPermission("sr.free")) { 
+              setName(player,allArgs);
               sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + ("0") + ("$") );
-                        return true;
+              return true;
                 }
                 else  {
                    int Nprecio = this.getConfig().getInt("Nprice"); 
@@ -354,10 +366,7 @@ public class Main extends JavaPlugin {
                    int precio = cantidad * Nprecio ;
                    EconomyResponse r = econ.withdrawPlayer(player.getName(), Nprecio * cantidad);                    
                     if (r.transactionSuccess()){
-                        ItemStack item = player.getItemInHand();
-                        ItemMeta itemStackMeta = item.getItemMeta();
-                        itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', allArgs));
-                        item.setItemMeta(itemStackMeta);
+                        setName(player,allArgs);
                         sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precio + ("$") );
                         return true;
                     }else{
@@ -385,30 +394,18 @@ public class Main extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED +(getTranslation("7")));
                 return true;
 
-               
-
 //Economy off                
             }else if (!(getConfig().getBoolean("Economy"))){    
-            ItemStack itemStack = player.getItemInHand();
-            List<String> lore = new ArrayList();
-            lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
-            ItemMeta itemStackMeta = itemStack.getItemMeta();
-            itemStackMeta.setLore(lore);
-            itemStack.setItemMeta(itemStackMeta);
-            sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
-            return true;                  
+                setLore(player,allArgs);
+                sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+                return true;         
 
 //Economy on             
             }else if ((getConfig().getBoolean("Economy"))) {
                 if (player.hasPermission("sr.free")) {
-                    ItemStack itemStack = player.getItemInHand();
-                        List<String> lore = new ArrayList();
-                        lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
-                        ItemMeta itemStackMeta = itemStack.getItemMeta();
-                        itemStackMeta.setLore(lore);
-                        itemStack.setItemMeta(itemStackMeta);
-                        sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + ("0") + ("$") );
-                        return true;
+                    setLore(player,allArgs);
+                    sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + ("0") + ("$") );
+                    return true;
                 }
                 else { 
                    int Lprecio = this.getConfig().getInt("Lprice");
@@ -416,12 +413,7 @@ public class Main extends JavaPlugin {
                    int precioa = cantidad * Lprecio ;
                    EconomyResponse r = econ.withdrawPlayer(player.getName(), Lprecio * cantidad);                    
                     if (r.transactionSuccess()){
-                        ItemStack itemStack = player.getItemInHand();
-                        List<String> lore = new ArrayList();
-                        lore.add(ChatColor.translateAlternateColorCodes('&', allArgs));
-                        ItemMeta itemStackMeta = itemStack.getItemMeta();
-                        itemStackMeta.setLore(lore);
-                        itemStack.setItemMeta(itemStackMeta);
+                        setLore(player,allArgs);
                         sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + precioa + ("$") );
                         return true;
 
@@ -442,9 +434,6 @@ public class Main extends JavaPlugin {
             return true;
             
 }
-
-
-
 
 return true;
 }
@@ -483,7 +472,39 @@ return true;
                         copy(getResource(trans + ".yml"), file);
                 }
         }
-
+        public void setName(Player player, String name){
+              ItemStack item = player.getItemInHand(); 
+              ItemMeta itemStackMeta = item.getItemMeta();
+              itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));           
+              item.setItemMeta(itemStackMeta);
+        }
+        public void setLore(Player player, String name){
+            String[] splittedName = name.split("/n");    
+            ItemStack itemStack = player.getItemInHand();
+            List<String> lore = new ArrayList();
+            for(String s : splittedName){
+            lore.add(ChatColor.translateAlternateColorCodes('&', s));
+            }
+            ItemMeta itemStackMeta = itemStack.getItemMeta();
+            itemStackMeta.setLore(lore);
+            itemStack.setItemMeta(itemStackMeta);
+        }
+        public void addLore(Player player, String name){
+            String[] splittedName = name.split("/n");    
+            ItemStack itemStack = player.getItemInHand();
+            List<String> lore = itemStack.getItemMeta().getLore();
+            if(lore == null){
+                setLore(player, name);
+            }
+            else {
+            for(String s : splittedName){
+            lore.add(ChatColor.translateAlternateColorCodes('&', s));
+            }
+            ItemMeta itemStackMeta = itemStack.getItemMeta();
+            itemStackMeta.setLore(lore);
+            itemStack.setItemMeta(itemStackMeta);
+            }
+        }
 
 }
 //SIMPLE RENAME
