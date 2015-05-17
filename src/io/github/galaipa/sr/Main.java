@@ -1,7 +1,7 @@
 package io.github.galaipa.sr;
 //SIMPLE RENAME MAIN CLASS
 //AUTHOR: GALAIPA
-// DO NOT COPY WITH OUT PERMISSION PLEASE
+
 
 
 import java.io.File;
@@ -124,34 +124,13 @@ public class Main extends JavaPlugin {
             PluginDescriptionFile pdfFile = this.getDescription();
             String version1 = pdfFile.getVersion();
         //AL ARGS
-            StringBuilder sb = new StringBuilder();
+           /* StringBuilder sb = new StringBuilder();
             for (int i = 0; i < args.length; i++){
             sb.append(args[i]).append(" ");
-            }String allArgs = sb.toString().trim();
+            }String allArgs = sb.toString().trim();*/
 //BLACLIST
             List<String> ex = getConfig().getStringList("BlackList");
 
-       //CHARACTERS
-            //v2.0
-            //v2.0
-            allArgs = allArgs.replace("[<3]" , "\u2764");
-            allArgs = allArgs.replace("[ARROW]" , "\u279c");
-            allArgs = allArgs.replace("[TICK]" , "\u2714");
-            allArgs = allArgs.replace("[X]" , "\u2716");
-            allArgs = allArgs.replace("[STAR]" , "\u2605");
-            allArgs = allArgs.replace("[POINT]" , "\u25Cf");
-            allArgs = allArgs.replace("[FLOWER]" , "\u273f");
-            //v2.1
-            allArgs = allArgs.replace("[XD]" , "\u263b");
-            allArgs = allArgs.replace("[DANGER]" , "\u26a0");
-            allArgs = allArgs.replace("[MAIL]" , "\u2709");
-            allArgs = allArgs.replace("[ARROW2]" , "\u27a4");
-            allArgs = allArgs.replace("[ROUND_STAR]" , "\u2730");
-            allArgs = allArgs.replace("[SUIT]" , "\u2666");
-            allArgs = allArgs.replace("[+]" , "\u2726");
-            allArgs = allArgs.replace("[CIRCLE]" , "\u25CF");
-            allArgs = allArgs.replace("[SUN]" , "\u2739");
- 
 //SR INFO 1
     if (cmd.getName().equalsIgnoreCase("sr")&& (args.length < 1) ){ 
             sender.sendMessage(ChatColor.GREEN + "Simple Rename");
@@ -232,29 +211,29 @@ public class Main extends JavaPlugin {
 // BOOKS
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("book") ){
             if(player.getItemInHand().getType() != Material.WRITTEN_BOOK){
-                sender.sendMessage(getTranslation("16"));
+                sender.sendMessage(ChatColor.RED +getTranslation("16"));
                 return true;
             }
             else if (!player.hasPermission("sr.book")){
-                sender.sendMessage(getTranslation("6"));
+                sender.sendMessage(ChatColor.RED+ getTranslation("6"));
             }
             else if(args[1].equalsIgnoreCase("setauthor")){
               ItemStack liburua = player.getItemInHand();
               BookMeta meta = (BookMeta) liburua.getItemMeta();
-              meta.setAuthor(args[2]);
+              meta.setAuthor(Args(2,args));
               liburua.setItemMeta(meta);
-              sender.sendMessage(getTranslation("5"));
+              sender.sendMessage(ChatColor.GREEN+ getTranslation("5"));
               return true;
             }
             else if(args[1].equalsIgnoreCase("settitle")){
               ItemStack liburua = player.getItemInHand();
               BookMeta meta = (BookMeta) liburua.getItemMeta();
-              meta.setTitle(args[2]);
+              meta.setTitle(Args(2,args));
               liburua.setItemMeta(meta);
-              sender.sendMessage(getTranslation("5"));
+              sender.sendMessage(ChatColor.GREEN+ getTranslation("5"));
               return true;
             }
-            else if(args[1].equalsIgnoreCase("unsing") ){
+            else if(args[1].equalsIgnoreCase("unsign") ){
               ItemStack liburua = player.getItemInHand();
               BookMeta metaZaharra = (BookMeta) liburua.getItemMeta();
               ItemStack sinatugabea = new ItemStack(Material.BOOK_AND_QUILL, 1);
@@ -262,7 +241,7 @@ public class Main extends JavaPlugin {
               metaBerria.setPages(metaZaharra.getPages());
               sinatugabea.setItemMeta(metaBerria);
               player.getInventory().setItem(player.getInventory().getHeldItemSlot(),sinatugabea);
-              sender.sendMessage(getTranslation("5"));
+              sender.sendMessage(ChatColor.GREEN+ getTranslation("5"));
               return true;
         }}
     //CLEAR
@@ -324,7 +303,7 @@ public class Main extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED+(getTranslation("6")));
                 return true;
             }else {
-                addLore(player,allArgs);
+                addLore(player,(Args(0,args)));
                 sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
                 return true;
             }
@@ -344,19 +323,18 @@ public class Main extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED +(getTranslation("3")));
                 return true;
                                
-             }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
+             }else if((Args(0,args)).contains("&") && !player.hasPermission("sr.color")) {
                 sender.sendMessage(ChatColor.RED +(getTranslation("7")));
                 return true; 
 //Economy off                
             }else if (!(getConfig().getBoolean("Economy"))){
-              ItemStack item = player.getItemInHand();  
-              setName(player,allArgs);
+              setName(player,(Args(0,args)));
               sender.sendMessage(ChatColor.GREEN +(getTranslation("5"))); 
               return true;
 //Economy on             
             }else if ((getConfig().getBoolean("Economy"))) {
               if (player.hasPermission("sr.free")) { 
-              setName(player,allArgs);
+              setName(player,(Args(0,args)));
               sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + ("0") + ("$") );
               return true;
                 }
@@ -366,7 +344,7 @@ public class Main extends JavaPlugin {
                    int precio = cantidad * Nprecio ;
                    EconomyResponse r = econ.withdrawPlayer(player.getName(), Nprecio * cantidad);                    
                     if (r.transactionSuccess()){
-                        setName(player,allArgs);
+                        setName(player,(Args(0,args)));
                         sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getConfig().getString("9")) + (":") + (" ") + precio + ("$") );
                         return true;
                     }else{
@@ -390,20 +368,20 @@ public class Main extends JavaPlugin {
             }else if (args.length < 1) {
                 sender.sendMessage(ChatColor.RED+(getTranslation("3")));
 
-             }else if(allArgs.contains("&") && !player.hasPermission("sr.color")) {
+             }else if((Args(0,args)).contains("&") && !player.hasPermission("sr.color")) {
                 sender.sendMessage(ChatColor.RED +(getTranslation("7")));
                 return true;
 
 //Economy off                
             }else if (!(getConfig().getBoolean("Economy"))){    
-                setLore(player,allArgs);
+                setLore(player,(Args(0,args)));
                 sender.sendMessage(ChatColor.GREEN +(getTranslation("5")));
                 return true;         
 
 //Economy on             
             }else if ((getConfig().getBoolean("Economy"))) {
                 if (player.hasPermission("sr.free")) {
-                    setLore(player,allArgs);
+                    setLore(player,(Args(0,args)));
                     sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + ("0") + ("$") );
                     return true;
                 }
@@ -413,7 +391,7 @@ public class Main extends JavaPlugin {
                    int precioa = cantidad * Lprecio ;
                    EconomyResponse r = econ.withdrawPlayer(player.getName(), Lprecio * cantidad);                    
                     if (r.transactionSuccess()){
-                        setLore(player,allArgs);
+                        setLore(player,(Args(0,args)));
                         sender.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + precioa + ("$") );
                         return true;
 
@@ -504,9 +482,34 @@ return true;
             itemStackMeta.setLore(lore);
             itemStack.setItemMeta(itemStackMeta);
             }
+            }
+        public static String Args(int nondik, String[] args) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = nondik; i < args.length; i++){
+            sb.append(args[i]).append(" ");
+            }String allArgs = sb.toString().trim();
+            allArgs = ChatColor.translateAlternateColorCodes('&', allArgs);
+            //CHARACTERS
+            allArgs = allArgs.replace("[<3]" , "\u2764");
+            allArgs = allArgs.replace("[ARROW]" , "\u279c");
+            allArgs = allArgs.replace("[TICK]" , "\u2714");
+            allArgs = allArgs.replace("[X]" , "\u2716");
+            allArgs = allArgs.replace("[STAR]" , "\u2605");
+            allArgs = allArgs.replace("[POINT]" , "\u25Cf");
+            allArgs = allArgs.replace("[FLOWER]" , "\u273f");
+            //v2.1
+            allArgs = allArgs.replace("[XD]" , "\u263b");
+            allArgs = allArgs.replace("[DANGER]" , "\u26a0");
+            allArgs = allArgs.replace("[MAIL]" , "\u2709");
+            allArgs = allArgs.replace("[ARROW2]" , "\u27a4");
+            allArgs = allArgs.replace("[ROUND_STAR]" , "\u2730");
+            allArgs = allArgs.replace("[SUIT]" , "\u2666");
+            allArgs = allArgs.replace("[+]" , "\u2726");
+            allArgs = allArgs.replace("[CIRCLE]" , "\u25CF");
+            allArgs = allArgs.replace("[SUN]" , "\u2739");
+            return allArgs;
+         }
         }
-
-}
 //SIMPLE RENAME
 //AUTHOR: GALAIPA
 // DO NOT COPY WITH OUT PERMISSION PLEASE
