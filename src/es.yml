@@ -2,9 +2,9 @@
 3: Usa /rename + nombre que le quieras poner al item
 4: Debes tener un item en la mano para poder renombralo
 5: Item renombrado con exito!
-6: No tienes el permiso para renombrar items
+6: No tienes permiso para renombrar items
 7: No tienes permisos para renombrar con codigos de colores!
-8: No tienes suficiente dinero!
+8: No tienes suficiente dinero o experiencia!
 9: Coste
 10: Has duplicado el item
 11: Has copiado el nombre / lore. Ahora usa "/sr paste" para pegar

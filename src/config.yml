@@ -1,5 +1,5 @@
 # CONFIG FILE SIMPLE-RENAME
-# THIS CONFIG FILE WAS CREATED BY SIMPLE-RENAME (v5.0)
+# THIS CONFIG FILE WAS CREATED BY SIMPLE-RENAME (v7.0)
 #Language (en , es, eu, nl, fr, custom)
 Language: en
 #METRICS: Enable or Disable Metrics
@@ -9,8 +9,19 @@ Updater: true
 #ECONOMY:(If you set it to "true" yo need to have Vault installed)
 Economy: false
 #PRICES: Price to rename and relore items 
-Nprice: 10 
-Lprice: 10
+Prices:
+  Nprice: 10 
+  Lprice: 10
+  BookPrice: 10
+  ClearPrice: 10
+  PastePrice: 10
+XPprices:
+  Enable: false
+  NameXP: 5
+  LoreXP: 5
+  BookXP: 5
+  ClearXP: 5
+  PasteXP: 5
 #Blacklisted words
 BlackList:
   - blaclistedwords
