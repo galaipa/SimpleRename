@@ -151,6 +151,7 @@ public class Methods {
             sender.sendMessage(ChatColor.BLUE + "/sr characters");
             sender.sendMessage(ChatColor.BLUE + "/sr clear");
             sender.sendMessage(ChatColor.BLUE + "/sr duplicate");
+            sender.sendMessage(ChatColor.BLUE + "/sr getamount");
             sender.sendMessage(ChatColor.BLUE + "/sr reload");
     }
     //Get Skull

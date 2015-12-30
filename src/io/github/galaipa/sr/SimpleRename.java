@@ -69,8 +69,8 @@ public class SimpleRename extends JavaPlugin{
             } catch (IOException e) {
                 // Failed to submit the stats :-(
             }
-        utils = new Utils(this);
     }
+        utils = new Utils(this);
     }
     public Utils utils;
     
