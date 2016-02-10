@@ -45,6 +45,10 @@ public class SimpleRename extends JavaPlugin{
         getConfig().options().copyDefaults(true);
         saveConfig();
         getServer().getPluginManager().registerEvents(new Listeners(), this);
+        Enable();
+        utils = new Utils(this);
+    }
+    public void Enable(){
         loadTranslations();
         if ((getConfig().getBoolean("Economy"))){
             if (!Utils.setupEconomy() ) {
@@ -70,7 +74,6 @@ public class SimpleRename extends JavaPlugin{
                 // Failed to submit the stats :-(
             }
     }
-        utils = new Utils(this);
     }
     public Utils utils;
     
@@ -188,8 +191,9 @@ public class SimpleRename extends JavaPlugin{
             return true;
         //Reload
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
-            if(utils.SecurityCheck(player, null, "sr.reload", 0, false)){
-                Methods.reloadPlugin();
+            if(utils.SecurityCheck(player, null, "sr.reload", 1, false)){
+                reloadConfig();
+                Enable();
                 player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded");
                 return true;
             }

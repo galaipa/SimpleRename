@@ -32,24 +32,26 @@ public class Utils {
         }else if(message.split(" ").length  < size) {
             p.sendMessage(ChatColor.RED +(getTranslation("3")));
             return false;
-        }else if(message.contains("&") && !p.hasPermission("sr.color")) {
-            p.sendMessage(ChatColor.RED +(getTranslation("7")));
-            return false;
         }
         List<String> ex = plugin.getConfig().getStringList("BlackList");
        for (String s : message.split(" ")) {
         List<String> ex2 = new ArrayList<String>();
-                if(s.contains("&")){
-                    s= ChatColor.translateAlternateColorCodes('&', s);
-                    s = ChatColor.stripColor(s);
-                }
-                for(String a : ex){
-                    ex2.add(a.toLowerCase());
-                }
-                s = s.replaceAll("[^a-zA-Z0-9]+", "");
-                if (ex2.contains(s.toLowerCase())&& !p.hasPermission("sr.blacklist") ) {
-                    p.sendMessage(ChatColor.RED+(getTranslation("14")) + ": " + s);
-                    return false;
+        if(s.contains("&")){
+            if(!p.hasPermission("sr.color")) {
+                p.sendMessage(ChatColor.RED +(getTranslation("7")));
+                return false;
+            }else{
+                s= ChatColor.translateAlternateColorCodes('&', s);
+                s = ChatColor.stripColor(s);
+            }
+        }
+        for(String a : ex){
+            ex2.add(a.toLowerCase());
+        }
+        s = s.replaceAll("[^a-zA-Z0-9]+", "");
+        if (ex2.contains(s.toLowerCase())&& !p.hasPermission("sr.blacklist") ) {
+            p.sendMessage(ChatColor.RED+(getTranslation("14")) + ": " + s);
+            return false;
        }
                }
        if(item){
@@ -136,7 +138,6 @@ protected static void setXP (Player p, int amount) {
         for (int i = nondik; i < args.length; i++){
         sb.append(args[i]).append(" ");
         }String allArgs = sb.toString().trim();
-        allArgs = ChatColor.translateAlternateColorCodes('&', allArgs);
         //CHARACTERS
         allArgs = allArgs.replace("[<3]" , "\u2764");
         allArgs = allArgs.replace("[ARROW]" , "\u279c");

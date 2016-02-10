@@ -1,8 +1,11 @@
 package io.github.galaipa.sr;
 
 
+import static io.github.galaipa.sr.SimpleRename.translation;
+import static io.github.galaipa.sr.SimpleRename.yaml;
 import static io.github.galaipa.sr.Utils.getTranslation;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -125,15 +128,6 @@ public class Methods {
         item1.setItemMeta(MetaData);
         player.getInventory().removeItem(item1);
         player.getInventory().setItem(slot, item1);
-    }
-    //Reload
-    public static void reloadPlugin(){
-        plugin.reloadConfig();
-        plugin.translation = plugin.getConfig().getString("Language"); 
-        plugin.languageFile = new File(plugin.getDataFolder() + File.separator + "lang"
-         + File.separator + plugin.translation + ".yml");
-         plugin.getLogger().info(plugin.translation);
-         plugin.yaml = YamlConfiguration.loadConfiguration(plugin.languageFile);
     }
     //Update
     public static void updatePlugin(){
