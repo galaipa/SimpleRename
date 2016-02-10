@@ -82,8 +82,15 @@ public class SimpleRename extends JavaPlugin{
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         //Block console commands
         if(sender instanceof ConsoleCommandSender){
-            sender.sendMessage("[SimpleRename]" + "Commands can only be run by players");
-            return true;
+            if(args.length == 1 && cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
+                reloadConfig();
+                Enable();
+                sender.sendMessage("[SimpleRename]" + "Plugin reloaded");
+                return true;
+            }else{
+                sender.sendMessage("[SimpleRename]" + "Commands can only be run by players");
+                return true; 
+            }
         }
         Player player = (Player)sender;
         if(args.length <1){
@@ -194,7 +201,7 @@ public class SimpleRename extends JavaPlugin{
             if(utils.SecurityCheck(player, null, "sr.reload", 1, false)){
                 reloadConfig();
                 Enable();
-                player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded");
+                player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded"); //OTHER RELOAD COMMAND FOR CONSOLE
                 return true;
             }
             return true;
