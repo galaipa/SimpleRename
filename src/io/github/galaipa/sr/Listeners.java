@@ -2,6 +2,7 @@
 package io.github.galaipa.sr;
 
 
+import static io.github.galaipa.sr.Utils.Args;
 import static io.github.galaipa.sr.Utils.getTranslation;
 import java.util.HashMap;
 import org.bukkit.ChatColor;
@@ -35,7 +36,7 @@ public void AnvilListener(InventoryClickEvent event){
                             }else{return;}
                             ItemMeta b = a.getItemMeta();
                             String c = b.getDisplayName();
-                             if(c.contains("&")){
+                           /*  if(c.contains("&")){
                               if(p.hasPermission("sr.color")){
                                   c = ChatColor.translateAlternateColorCodes('&', c);
                                   b.setDisplayName(c);
@@ -43,7 +44,12 @@ public void AnvilListener(InventoryClickEvent event){
                                   event.setCurrentItem(a);
                               }else{
                                   p.sendMessage(ChatColor.GREEN + "[SimpleRename] " + ChatColor.RED + getTranslation("7"));
-                              }
+                              }*/
+                           if(Utils.SecurityCheck((Player) p, c, "sr.name", 1,a)){
+                                c = ChatColor.translateAlternateColorCodes('&', c);
+                                b.setDisplayName(c);
+                                a.setItemMeta(b);
+                                event.setCurrentItem(a);
                           }
                     }
                 }

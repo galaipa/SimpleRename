@@ -18,13 +18,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
 public class SimpleRename extends JavaPlugin{
     public static Economy econ = null;
     public static final Logger log = Logger.getLogger("Minecraft");    
-    public static boolean update = false;
+    public static boolean update = false,economy,xp;
     public static String name = "";
     public static Updater.ReleaseType type = null;
     public static String version = "";
@@ -51,11 +52,15 @@ public class SimpleRename extends JavaPlugin{
     public void Enable(){
         loadTranslations();
         if ((getConfig().getBoolean("Economy"))){
-            if (!Utils.setupEconomy() ) {
+            if (!setupEconomy() ) {
                 log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
                 getServer().getPluginManager().disablePlugin(this);
                 return;
+            }else{
+                economy = true;
             }
+        }if ((getConfig().getBoolean("XPprices.Enable"))){
+            xp = true;
         }
         if ((getConfig().getBoolean("Updater"))){
             Updater updater = new Updater(this, 75680, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
@@ -101,7 +106,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Item Rename
         if(cmd.getName().equalsIgnoreCase("rename")){
-           if(utils.SecurityCheck(player, Args(0,args), "sr.name", 1, true)){
+           if(utils.SecurityCheck(player, Args(0,args), "sr.name", 1,player.getItemInHand())){
                if (Utils.ordainketa(player,"Nprice","5","NameXP")){
                     Methods.setName(player,(Args(0,args)));
                        }
@@ -110,7 +115,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Add Lore
         else if (cmd.getName().equalsIgnoreCase("addlore")){
-           if(utils.SecurityCheck(player, Args(0,args), "sr.lore", 1, true)){
+           if(utils.SecurityCheck(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
                if (Utils.ordainketa(player,"Lprice","5", "LoreXP")){
                     Methods.addLore(player,(Args(0,args)));
                        }
@@ -119,7 +124,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Set Lore (One line)
         else if (cmd.getName().equalsIgnoreCase("relore")){
-           if(utils.SecurityCheck(player, Args(0,args), "sr.lore", 1, true)){
+           if(utils.SecurityCheck(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
                if (Utils.ordainketa(player,"Lprice","5", "LoreXP")){
                     Methods.setLore(player,(Args(0,args)));
                        }
@@ -130,7 +135,7 @@ public class SimpleRename extends JavaPlugin{
             if(player.getItemInHand().getType() != Material.WRITTEN_BOOK){
                 sender.sendMessage(ChatColor.RED + getTranslation("16"));
                 return true;
-            }else if(utils.SecurityCheck(player, Args(2,args), "sr.book", 0, false)){
+            }else if(utils.SecurityCheck(player, Args(2,args), "sr.book", 0, null)){
                 if(Utils.ordainketa(player,"BookPrice","5","BookXP")){
                     if(args[1].toLowerCase().equalsIgnoreCase("setauthor")){
                         Methods.setBookAuthor(player, Args(2,args));
@@ -147,7 +152,7 @@ public class SimpleRename extends JavaPlugin{
     }
         // Clear
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("clear") ){
-           if(utils.SecurityCheck(player, null, "sr.clear", 0, true)){
+           if(utils.SecurityCheck(player, null, "sr.clear", 0, player.getItemInHand())){
                if (Utils.ordainketa(player,"ClearPrice","13","ClearXP")){
                     Methods.clearItem(player);
                        }
@@ -156,7 +161,7 @@ public class SimpleRename extends JavaPlugin{
             }
         // Duplicate
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("duplicate") ){
-           if(utils.SecurityCheck(player, null, "sr.duplicate", 0, true)){
+           if(utils.SecurityCheck(player, null, "sr.duplicate", 0, player.getItemInHand())){
                if(args.length >= 2 && utils.isInt(args[1])){
                    Methods.duplicateItem(player,Integer.parseInt(args[1]));
                    return true;
@@ -170,7 +175,7 @@ public class SimpleRename extends JavaPlugin{
             }
         // Get Amount
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("getAmount") ){
-           if(utils.SecurityCheck(player, null, "sr.duplicate", 0, true)){
+           if(utils.SecurityCheck(player, null, "sr.duplicate", 0, player.getItemInHand())){
                if(args.length >= 2 && utils.isInt(args[1])){
                    Methods.getAmount(player,Integer.parseInt(args[1]));
                    return true;
@@ -182,14 +187,14 @@ public class SimpleRename extends JavaPlugin{
             }
         //Copy
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("copy") ){
-            if(utils.SecurityCheck(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1, true)){
+            if(utils.SecurityCheck(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1, player.getItemInHand())){
                 Methods.copyMeta(player);
             }
             return true;
         }
         //Paste
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("paste") ){
-            if(utils.SecurityCheck(player, null, "sr.copy", 1, true)){
+            if(utils.SecurityCheck(player, null, "sr.copy", 1, player.getItemInHand())){
                 if (Utils.ordainketa(player,"PastePrice","12","PasteXP")){
                     Methods.pasteMeta(player);
                     return true;
@@ -198,7 +203,7 @@ public class SimpleRename extends JavaPlugin{
             return true;
         //Reload
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
-            if(utils.SecurityCheck(player, null, "sr.reload", 1, false)){
+            if(utils.SecurityCheck(player, null, "sr.reload", 1, null)){
                 reloadConfig();
                 Enable();
                 player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded"); //OTHER RELOAD COMMAND FOR CONSOLE
@@ -207,13 +212,13 @@ public class SimpleRename extends JavaPlugin{
             return true;
         //Get Skull
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("getskull") ){
-            if(utils.SecurityCheck(player, Args(0,args), "sr.skull", 2, false)){
+            if(utils.SecurityCheck(player, Args(0,args), "sr.skull", 2, null)){
                     Methods.getSkull(player, args[1]);
                     return true;
                 }
          // Rename mobs
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("mob") ){
-            if(utils.SecurityCheck(player, Args(0,args), "sr.mob", 2, false)){
+            if(utils.SecurityCheck(player, Args(0,args), "sr.mob", 2, null)){
                 Methods.renameMobs(player,args[1]);
             }
         // Info 
@@ -281,6 +286,17 @@ public class SimpleRename extends JavaPlugin{
                         Utils.copy(getResource(trans + ".yml"), file);
                 }
         }
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
 
 
 }

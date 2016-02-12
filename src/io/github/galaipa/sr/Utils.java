@@ -9,12 +9,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.inventory.ItemStack;
 
 
 public class Utils {
@@ -22,7 +21,7 @@ public class Utils {
     public Utils(SimpleRename instance) {
         plugin = instance;
     } 
-    public static boolean SecurityCheck(Player p, String message, String perm, int size, Boolean item){
+    public static boolean SecurityCheck(Player p, String message, String perm, int size, ItemStack item){
         if(message == null){
             message = "";
         }
@@ -54,13 +53,13 @@ public class Utils {
             return false;
        }
                }
-       if(item){
-           if(p.getItemInHand().getType().equals(Material.AIR)){
+       if(item != null){
+           if(item.getType().equals(Material.AIR)){
                p.sendMessage(ChatColor.RED+(getTranslation("4")));
                return false;
            }
             for (String sab : plugin.getConfig().getStringList("BlackListID")) {
-                    if (Material.matchMaterial(sab) == p.getItemInHand().getType()&& !p.hasPermission("sr.blacklist") ) {
+                    if (Material.matchMaterial(sab) == item.getType()&& !p.hasPermission("sr.blacklist") ) {
                         p.sendMessage(ChatColor.RED+(getTranslation("15")));
                         return false;
                     }
@@ -75,14 +74,14 @@ public class Utils {
                     player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)));
                     return true;
                 }
-              else if ((plugin.getConfig().getBoolean("Economy"))) {
+              else if ((plugin.economy && plugin.xp)) {
                    int Kantitatea = player.getInventory().getItemInHand().getAmount();
                    int XPprezioa = plugin.getConfig().getInt("XPprices."+ zer2);
                    int Prezioa = plugin.getConfig().getInt("Prices."+ zer);
                    int Guztira= Kantitatea * Prezioa ;
                    int XPGuztira= Kantitatea * XPprezioa ;
                    EconomyResponse r = plugin.econ.withdrawPlayer(player, Guztira); 
-                    if ((!r.transactionSuccess()) && (player.getTotalExperience() < XPGuztira)){
+                    if ((!r.transactionSuccess()) || (player.getTotalExperience() < XPGuztira)){
                         player.sendMessage(ChatColor.RED + (getTranslation("8"))+ (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + Guztira + ("$")+ (" & ") + XPGuztira + ("XP"));
                         return false;
                     }else{
@@ -90,7 +89,7 @@ public class Utils {
                         setXP(player, player.getTotalExperience() - XPGuztira);
                         return true;
                     }  
-            }else if ((plugin.getConfig().getBoolean("XPprices.Enable"))) {
+            }else if (plugin.xp) {
                         int XPprezioa = plugin.getConfig().getInt("XPprices."+ zer2);
                         int Kantitatea = player.getInventory().getItemInHand().getAmount();
                         int XPGuztira= Kantitatea * XPprezioa ;
@@ -100,6 +99,18 @@ public class Utils {
                     }else{
                         player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + XPGuztira + ("XP"));
                         setXP(player, player.getTotalExperience() - XPGuztira);
+                        return true;
+                    } 
+            }else if (plugin.economy) {
+                    int Prezioa = plugin.getConfig().getInt("Prices."+ zer);
+                    int Kantitatea = player.getInventory().getItemInHand().getAmount();
+                    int Guztira= Kantitatea * Prezioa ;
+                    EconomyResponse r = plugin.econ.withdrawPlayer(player, Guztira);    
+                    if (!r.transactionSuccess()){
+                        player.sendMessage(ChatColor.RED + (getTranslation("8"))+ (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + Guztira + ("$"));
+                        return false;
+                    }else{
+                        player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + Guztira + ("$"));
                         return true;
                     } 
             } else{
@@ -158,17 +169,6 @@ protected static void setXP (Player p, int amount) {
         allArgs = allArgs.replace("[SUN]" , "\u2739");
         return allArgs;
          }
-    public static boolean setupEconomy() {
-        if (plugin.getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        plugin.econ = rsp.getProvider();
-        return plugin.econ != null;
-    }
     public static String getTranslation(String path) {
         if (yaml.getString(path) == null){
         String msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
