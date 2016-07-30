@@ -12,7 +12,9 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,10 +29,10 @@ public class Methods {
     }
     //Rename
     public static void setName(Player player, String name){
-          ItemStack item = player.getItemInHand(); 
-          ItemMeta itemStackMeta = item.getItemMeta();
-          itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));           
-          item.setItemMeta(itemStackMeta);
+      ItemStack item = player.getItemInHand(); 
+      ItemMeta itemStackMeta = item.getItemMeta();
+      itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));           
+      item.setItemMeta(itemStackMeta);
     }
     //Set a one line lore
     public static void setLore(Player player, String name){
@@ -162,6 +164,15 @@ public class Methods {
     public static void renameMobs(Player p, String name){
         Listeners.mobs.put(p, name);
         p.sendMessage(ChatColor.GREEN+(getTranslation("17")));
+    }
+    public static void glowItem(Player p){
+      ItemStack item = p.getItemInHand(); 
+      ItemMeta itemStackMeta = item.getItemMeta(); 
+      Glow glow = new Glow(80);
+      itemStackMeta.addEnchant(glow, 1, true);
+      item.setItemMeta(itemStackMeta);
+      p.updateInventory();
+      p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
     }
     
     

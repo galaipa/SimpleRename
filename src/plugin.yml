@@ -30,6 +30,7 @@ permissions:
             sr.copy: true
             sr.clear: true
             sr.book: true
+            sr.glow: true
   sr.user:
         description: Gives access to all user commands
         children:
@@ -51,6 +52,7 @@ permissions:
             sr.clear: true
             sr.skull: true
             sr.mob: true
+            sr.glow: true
   sr.name:
     description: Perm to use /rename /setname
     default: op
@@ -86,4 +88,7 @@ permissions:
     default: op
   sr.skull:
     description: Perm to use /sr skull command
+    default: op
+  sr.glow:
+    description: Perm to use /sr glow command
     default: op

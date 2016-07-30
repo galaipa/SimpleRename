@@ -79,6 +79,8 @@ public class SimpleRename extends JavaPlugin{
                 // Failed to submit the stats :-(
             }
     }
+        // Glow effect
+        Utils.registerGlow();
     }
     public Utils utils;
     
@@ -220,6 +222,12 @@ public class SimpleRename extends JavaPlugin{
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("mob") ){
             if(utils.SecurityCheck(player, Args(0,args), "sr.mob", 2, null)){
                 Methods.renameMobs(player,args[1]);
+            }
+         // Add glow effect
+        }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("glow") ){
+            if(utils.SecurityCheck(player, null, "sr.glow", 1, player.getItemInHand())){
+                Methods.glowItem(player);
+                return true;
             }
         // Info 
         }else if (cmd.getName().equalsIgnoreCase("sr")&& (args.length < 1)||cmd.getName().equalsIgnoreCase("sr") && args[0].equalsIgnoreCase("info") ){ 

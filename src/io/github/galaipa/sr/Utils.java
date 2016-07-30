@@ -7,11 +7,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -201,6 +203,25 @@ protected static void setXP (Player p, int amount) {
         }
         return true;
     }
+    public static void registerGlow() {
+            try {
+                Field f = Enchantment.class.getDeclaredField("acceptingNew");
+                f.setAccessible(true);
+                f.set(null, true);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                Glow glow = new Glow(80);
+                Enchantment.registerEnchantment(glow);
+            }
+            catch (IllegalArgumentException e){
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 
 }
 
