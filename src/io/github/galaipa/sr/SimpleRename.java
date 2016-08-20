@@ -33,6 +33,7 @@ public class SimpleRename extends JavaPlugin{
     public static String translation;
     public static YamlConfiguration yaml;
     File languageFile;
+    public static int CharacterLimit;
     
     @Override
     public void onDisable() {
@@ -81,6 +82,7 @@ public class SimpleRename extends JavaPlugin{
     }
         // Glow effect
         Utils.registerGlow();
+        CharacterLimit = getConfig().getInt("CharacterLimit");
     }
     public Utils utils;
     

@@ -1,6 +1,6 @@
 #LANGUAGE? FILE SIMPLE RENAME (ESPANOL)
 3: Usa /rename + nombre que le quieras poner al item
-4: Debes tener un item en la mano para poder renombralo
+4: Debes tener un item en la mano para poder renombrarlo
 5: Exito!
 6: No tienes permiso para renombrar items
 7: No tienes permisos para renombrar con codigos de colores!
@@ -15,3 +15,4 @@
 16: Debes tener un libro en la mano
 17: Haz click derecho en el mob que quieres renombrar
 18: Tienes que especificar el dueño
+19: 'El mensaje es demasiado largo. Numero máximo de carácteres:'

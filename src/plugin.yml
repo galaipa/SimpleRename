@@ -1,6 +1,6 @@
 name: SimpleRename
 main: io.github.galaipa.sr.SimpleRename
-version: 9.1
+version: 9.5
 author: Galaipa & EnergizerBEAST1
 description: Simple plugin to rename and relore items
 softdepend: [Vault]

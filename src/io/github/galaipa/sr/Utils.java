@@ -34,6 +34,10 @@ public class Utils {
             p.sendMessage(ChatColor.RED +(getTranslation("3")));
             return false;
         }
+        if(plugin.CharacterLimit != 0 && message.length() > plugin.CharacterLimit){
+            p.sendMessage(ChatColor.RED +(getTranslation("19")) + plugin.CharacterLimit);
+            return false;
+        }
         List<String> ex = plugin.getConfig().getStringList("BlackList");
        for (String s : message.split(" ")) {
         List<String> ex2 = new ArrayList<String>();

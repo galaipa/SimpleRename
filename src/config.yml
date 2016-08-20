@@ -28,5 +28,7 @@ BlackList:
 #Blaclisted items / blocks. Use names, NOT IDs 
 BlackListID:
   - air
+#Max characters
+CharacterLimit: 0
 
 
