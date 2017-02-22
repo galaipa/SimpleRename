@@ -2,8 +2,6 @@
 package io.github.galaipa.sr;
 
 
-import static io.github.galaipa.sr.Utils.Args;
-import static io.github.galaipa.sr.Utils.getTranslation;
 import java.util.HashMap;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -60,7 +58,7 @@ public void UpdateListener(PlayerJoinEvent event){
   Player player = event.getPlayer();
   if(player.hasPermission("sr.update") && SimpleRename.update){
     player.sendMessage(ChatColor.GREEN + "An update is available: " + ChatColor.YELLOW + SimpleRename.name + ChatColor.GREEN +  " for " + SimpleRename.version + " available at " +  ChatColor.YELLOW + "http://goo.gl/hAf1QV");
-    player.sendMessage(ChatColor.RED + "Type /sr update if you would like to update it automatically.");
+    //player.sendMessage(ChatColor.RED + "Type /sr update if you would like to update it automatically.");
   }
     }
 // Animal renaming
