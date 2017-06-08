@@ -4,11 +4,17 @@ package io.github.galaipa.sr;
 
 import static io.github.galaipa.sr.Utils.Args;
 import static io.github.galaipa.sr.Utils.getTranslation;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.logging.Logger;
+
 import net.milkbowl.vault.economy.Economy;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CharSequenceReader;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -286,7 +292,15 @@ public class SimpleRename extends JavaPlugin{
                 yaml = YamlConfiguration.loadConfiguration(languageFile);
             }else{
                 InputStream defaultStream = getResource(translation +".yml");
-                yaml =  YamlConfiguration.loadConfiguration(defaultStream);
+                Reader r;
+				try {
+					r = this.getReaderFromStream(defaultStream);
+					yaml =  YamlConfiguration.loadConfiguration(r);
+	                r.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+                
             }
         }
          private void copyTranslation(String trans) {
@@ -296,6 +310,14 @@ public class SimpleRename extends JavaPlugin{
                         Utils.copy(getResource(trans + ".yml"), file);
                 }
         }
+         
+	 public Reader getReaderFromStream(InputStream initialStream) 
+		  throws IOException {
+		     
+		    byte[] buffer = IOUtils.toByteArray(initialStream);
+		    Reader targetReader = new CharSequenceReader(new String(buffer));
+		    return targetReader;
+		}
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
