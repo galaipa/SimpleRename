@@ -131,19 +131,20 @@ public class Methods {
     }
     //Help info
     public static void helpInfo(Player sender, String version1){
-        sender.sendMessage(ChatColor.GREEN + "Simple Rename Commands" + " v" + ChatColor.GREEN + version1);
+        sender.sendMessage(ChatColor.YELLOW + "Simple Rename Commands" + " v" + ChatColor.GREEN + version1);
         sender.sendMessage(ChatColor.BLUE + "/rename or /setname");
-        sender.sendMessage(ChatColor.BLUE + "/relore or /setlore");
+        sender.sendMessage(ChatColor.BLUE + "/relore or /setlore");     
         sender.sendMessage(ChatColor.BLUE + "/addlore");
+        sender.sendMessage(ChatColor.BLUE + "/sr characters");
+        sender.sendMessage(ChatColor.BLUE + "/sr clear");
         sender.sendMessage(ChatColor.BLUE + "/sr book setAuthor/setTitle/unSign");
         sender.sendMessage(ChatColor.BLUE + "/sr getskull");
         sender.sendMessage(ChatColor.BLUE + "/sr copy/paste");
-        sender.sendMessage(ChatColor.BLUE + "/sr characters");
-        sender.sendMessage(ChatColor.BLUE + "/sr clear");
         sender.sendMessage(ChatColor.BLUE + "/sr duplicate");
         sender.sendMessage(ChatColor.BLUE + "/sr getamount");
         sender.sendMessage(ChatColor.BLUE + "/sr reload");
-        sender.sendMessage(ChatColor.BLUE + "/sr hideflags");
+        sender.sendMessage(ChatColor.BLUE + "/removelore <lineN>"+ ChatColor.RED + " NEW!");
+        sender.sendMessage(ChatColor.BLUE + "/sr hideflags" + ChatColor.RED + " NEW!");
     }
     //Get Skull
     public  static void getSkull(Player p,String owner){
@@ -175,6 +176,22 @@ public class Methods {
       itemStackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
       itemStackMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
       itemStackMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+      item.setItemMeta(itemStackMeta);
+      p.updateInventory();
+      p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
+    }
+    public static void removeLore(Player p, int n){
+      ItemStack item = p.getItemInHand(); 
+      ItemMeta itemStackMeta = item.getItemMeta(); 
+      if(itemStackMeta.hasLore() && (n != -1)){
+        List<String> list =itemStackMeta.getLore();
+        if(list.size() >= (n +1)){
+            list.remove(n);
+            itemStackMeta.setLore(list);
+        } 
+      }else{
+          itemStackMeta.setLore(null);
+      }
       item.setItemMeta(itemStackMeta);
       p.updateInventory();
       p.sendMessage(ChatColor.GREEN+(getTranslation("5")));

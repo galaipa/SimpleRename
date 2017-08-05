@@ -1,6 +1,6 @@
 name: SimpleRename
 main: io.github.galaipa.sr.SimpleRename
-version: 9.8
+version: 10.0
 authors: [Galaipa, EnergizerBEAST1, ScarabCoder]
 description: Simple plugin to rename and relore items
 softdepend: [Vault]
@@ -16,6 +16,9 @@ commands:
   addlore:
     description: Add multiple lore lines
     usage: /<command> 
+  removelore:
+    description: Remove lore lines
+    usage: /<command> <line>
   sr:
     description: SimpleRename main command
     usage: /<command>    
@@ -31,11 +34,14 @@ permissions:
             sr.clear: true
             sr.book: true
             sr.glow: true
+            sr.hide: true
+            sr.removeLore: true
   sr.user:
         description: Gives access to all user commands
         children:
             sr.name: true
             sr.lore: true
+            sr.removeLore: true
             sr.book: true
   sr.*:
         description: Gives access to all commands
@@ -53,6 +59,8 @@ permissions:
             sr.skull: true
             sr.mob: true
             sr.glow: true
+            sr.hide: true
+            sr.removeLore: true
   sr.name:
     description: Perm to use /rename /setname
     default: op
@@ -91,4 +99,10 @@ permissions:
     default: op
   sr.glow:
     description: Perm to use /sr glow command
+    default: op
+  sr.hide:
+    description: Perm to use /sr hideflags command
+    default: op
+sr.removeLore:
+    description: Perm to use /sr removelore command
     default: op

@@ -7,13 +7,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -180,7 +178,7 @@ protected static void setXP (Player p, int amount) {
         String msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
         return msg;
         }else{
-        String msg = ChatColor.translateAlternateColorCodes('&', yaml.getString(path));
+        String msg = "[SimpleRename] " + ChatColor.translateAlternateColorCodes('&', yaml.getString(path));
         return msg;
         }
     }

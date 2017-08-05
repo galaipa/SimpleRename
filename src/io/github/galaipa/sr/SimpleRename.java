@@ -99,7 +99,15 @@ public class SimpleRename extends JavaPlugin{
             }
         }
         Player player = (Player)sender;
-        if(args.length <1){
+        if(cmd.getName().equalsIgnoreCase("removelore")){
+            if(utils.SecurityCheck(player, null, "sr.removeLore", 0, player.getItemInHand())){
+                if(args.length != 0 && utils.isInt(args[0])){
+                    Methods.removeLore(player, Integer.parseInt(args[0])-1);
+                }else Methods.removeLore(player, -1);
+                return true;
+            }
+        }
+        else if(args.length <1){
             PluginDescriptionFile pdfFile = this.getDescription();
             String version1 = pdfFile.getVersion();
             Methods.helpInfo(player,version1);
@@ -230,10 +238,10 @@ public class SimpleRename extends JavaPlugin{
             }
          // Hide flags
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("hideflags") ){
-            if(utils.SecurityCheck(player, null, "sr.glow", 1, player.getItemInHand())){
+            if(utils.SecurityCheck(player, null, "sr.hide", 1, player.getItemInHand())){
                 Methods.hideFlags(player);
                 return true;
-            }
+            } 
         // Info 
         }else if (cmd.getName().equalsIgnoreCase("sr")&& (args.length < 1)||cmd.getName().equalsIgnoreCase("sr") && args[0].equalsIgnoreCase("info") ){ 
             PluginDescriptionFile pdfFile = this.getDescription();
