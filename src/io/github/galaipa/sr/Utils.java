@@ -207,25 +207,7 @@ protected static void setXP (Player p, int amount) {
         }
         return true;
     }
-    public static void registerGlow() {
-            try {
-                Field f = Enchantment.class.getDeclaredField("acceptingNew");
-                f.setAccessible(true);
-                f.set(null, true);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                Glow glow = new Glow(80);
-                Enchantment.registerEnchantment(glow);
-            }
-            catch (IllegalArgumentException e){
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }
+
 
 }
 

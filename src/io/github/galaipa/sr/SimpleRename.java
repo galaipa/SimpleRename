@@ -86,8 +86,6 @@ public class SimpleRename extends JavaPlugin{
                 // Failed to submit the stats :-(
             }
     }
-        // Glow effect
-        Utils.registerGlow();
         CharacterLimit = getConfig().getInt("CharacterLimit");
     }
     public Utils utils;

@@ -1,25 +1,19 @@
 package io.github.galaipa.sr;
 
 
-import static io.github.galaipa.sr.SimpleRename.translation;
-import static io.github.galaipa.sr.SimpleRename.yaml;
 import static io.github.galaipa.sr.Utils.getTranslation;
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.enchantments.Enchantment;
 
 
 public class Methods {
@@ -167,9 +161,9 @@ public class Methods {
     }
     public static void glowItem(Player p){
       ItemStack item = p.getItemInHand(); 
-      ItemMeta itemStackMeta = item.getItemMeta(); 
-      Glow glow = new Glow(80);
-      itemStackMeta.addEnchant(glow, 1, true);
+     ItemMeta itemStackMeta = item.getItemMeta(); 
+      itemStackMeta.addEnchant(Enchantment.LURE, 0, true);
+      itemStackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
       item.setItemMeta(itemStackMeta);
       p.updateInventory();
       p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
