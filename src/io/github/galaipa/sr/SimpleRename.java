@@ -23,7 +23,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,7 +42,6 @@ public class SimpleRename extends JavaPlugin{
     
     @Override
     public void onDisable() {
-        PluginManager pluginManager = getServer().getPluginManager();
         log.info("SimpleRename disabled!");
     }
     
@@ -78,13 +76,8 @@ public class SimpleRename extends JavaPlugin{
             link = updater.getLatestFileLink();
                 }
         //Metrics
-        if ((getConfig().getBoolean("Metrics"))){
-            try {
-                Metrics metrics = new Metrics(this);
-                metrics.start();
-            } catch (IOException e) {
-                // Failed to submit the stats :-(
-            }
+        if (getConfig().getBoolean("Metrics")){
+           MetricsLite metrics = new MetricsLite(this); 
     }
         CharacterLimit = getConfig().getInt("CharacterLimit");
     }
@@ -282,40 +275,40 @@ public class SimpleRename extends JavaPlugin{
         return true;
 }
 
-        private void loadTranslations(){
-            copyTranslation("custom");
-            translation = getConfig().getString("Language");
-            if(translation.equalsIgnoreCase("custom")){
-                languageFile = new File(getDataFolder() + File.separator + "lang"+ File.separator + translation + ".yml");
-                yaml = YamlConfiguration.loadConfiguration(languageFile);
-            }else{
-                InputStream defaultStream = getResource(translation +".yml");
-                Reader r;
-				try {
-					r = this.getReaderFromStream(defaultStream);
-					yaml =  YamlConfiguration.loadConfiguration(r);
-	                r.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-                
+    private void loadTranslations(){
+        copyTranslation("custom");
+        translation = getConfig().getString("Language");
+        if(translation.equalsIgnoreCase("custom")){
+            languageFile = new File(getDataFolder() + File.separator + "lang"+ File.separator + translation + ".yml");
+            yaml = YamlConfiguration.loadConfiguration(languageFile);
+        }else{
+            InputStream defaultStream = getResource(translation +".yml");
+            Reader r;
+                            try {
+                                    r = this.getReaderFromStream(defaultStream);
+                                    yaml =  YamlConfiguration.loadConfiguration(r);
+                    r.close();
+                            } catch (IOException e) {
+                                    e.printStackTrace();
+                            }
+
+        }
+    }
+     private void copyTranslation(String trans) {
+            File file = new File(getDataFolder().getAbsolutePath() + File.separator + "lang" + File.separator + trans + ".yml");
+            if (!file.exists()) {
+                    file.getParentFile().mkdirs();
+                    Utils.copy(getResource(trans + ".yml"), file);
             }
-        }
-         private void copyTranslation(String trans) {
-                File file = new File(getDataFolder().getAbsolutePath() + File.separator + "lang" + File.separator + trans + ".yml");
-                if (!file.exists()) {
-                        file.getParentFile().mkdirs();
-                        Utils.copy(getResource(trans + ".yml"), file);
-                }
-        }
-         
-	 public Reader getReaderFromStream(InputStream initialStream) 
-		  throws IOException {
-		     
-		    byte[] buffer = IOUtils.toByteArray(initialStream);
-		    Reader targetReader = new CharSequenceReader(new String(buffer));
-		    return targetReader;
-		}
+    }
+
+     public Reader getReaderFromStream(InputStream initialStream) 
+              throws IOException {
+
+                byte[] buffer = IOUtils.toByteArray(initialStream);
+                Reader targetReader = new CharSequenceReader(new String(buffer));
+                return targetReader;
+            }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
