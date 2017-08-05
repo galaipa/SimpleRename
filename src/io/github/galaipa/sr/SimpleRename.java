@@ -228,6 +228,12 @@ public class SimpleRename extends JavaPlugin{
                 Methods.glowItem(player);
                 return true;
             }
+         // Hide flags
+        }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("hideflags") ){
+            if(utils.SecurityCheck(player, null, "sr.glow", 1, player.getItemInHand())){
+                Methods.hideFlags(player);
+                return true;
+            }
         // Info 
         }else if (cmd.getName().equalsIgnoreCase("sr")&& (args.length < 1)||cmd.getName().equalsIgnoreCase("sr") && args[0].equalsIgnoreCase("info") ){ 
             PluginDescriptionFile pdfFile = this.getDescription();

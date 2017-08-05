@@ -131,18 +131,19 @@ public class Methods {
     }
     //Help info
     public static void helpInfo(Player sender, String version1){
-            sender.sendMessage(ChatColor.GREEN + "Simple Rename Commands" + " v" + ChatColor.GREEN + version1);
-            sender.sendMessage(ChatColor.BLUE + "/rename or /setname");
-            sender.sendMessage(ChatColor.BLUE + "/relore or /setlore");
-            sender.sendMessage(ChatColor.BLUE + "/addlore");
-            sender.sendMessage(ChatColor.BLUE + "/sr book setAuthor/setTitle/unSign");
-            sender.sendMessage(ChatColor.BLUE + "/sr getskull");
-            sender.sendMessage(ChatColor.BLUE + "/sr copy/paste");
-            sender.sendMessage(ChatColor.BLUE + "/sr characters");
-            sender.sendMessage(ChatColor.BLUE + "/sr clear");
-            sender.sendMessage(ChatColor.BLUE + "/sr duplicate");
-            sender.sendMessage(ChatColor.BLUE + "/sr getamount");
-            sender.sendMessage(ChatColor.BLUE + "/sr reload");
+        sender.sendMessage(ChatColor.GREEN + "Simple Rename Commands" + " v" + ChatColor.GREEN + version1);
+        sender.sendMessage(ChatColor.BLUE + "/rename or /setname");
+        sender.sendMessage(ChatColor.BLUE + "/relore or /setlore");
+        sender.sendMessage(ChatColor.BLUE + "/addlore");
+        sender.sendMessage(ChatColor.BLUE + "/sr book setAuthor/setTitle/unSign");
+        sender.sendMessage(ChatColor.BLUE + "/sr getskull");
+        sender.sendMessage(ChatColor.BLUE + "/sr copy/paste");
+        sender.sendMessage(ChatColor.BLUE + "/sr characters");
+        sender.sendMessage(ChatColor.BLUE + "/sr clear");
+        sender.sendMessage(ChatColor.BLUE + "/sr duplicate");
+        sender.sendMessage(ChatColor.BLUE + "/sr getamount");
+        sender.sendMessage(ChatColor.BLUE + "/sr reload");
+        sender.sendMessage(ChatColor.BLUE + "/sr hideflags");
     }
     //Get Skull
     public  static void getSkull(Player p,String owner){
@@ -161,9 +162,19 @@ public class Methods {
     }
     public static void glowItem(Player p){
       ItemStack item = p.getItemInHand(); 
-     ItemMeta itemStackMeta = item.getItemMeta(); 
+      ItemMeta itemStackMeta = item.getItemMeta(); 
       itemStackMeta.addEnchant(Enchantment.LURE, 0, true);
       itemStackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+      item.setItemMeta(itemStackMeta);
+      p.updateInventory();
+      p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
+    }
+    public static void hideFlags(Player p){
+      ItemStack item = p.getItemInHand(); 
+      ItemMeta itemStackMeta = item.getItemMeta(); 
+      itemStackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+      itemStackMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+      itemStackMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
       item.setItemMeta(itemStackMeta);
       p.updateInventory();
       p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
