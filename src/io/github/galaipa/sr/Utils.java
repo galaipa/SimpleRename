@@ -32,8 +32,8 @@ public class Utils {
             p.sendMessage(ChatColor.RED +(getTranslation("3")));
             return false;
         }
-        if(plugin.CharacterLimit != 0 && message.length() > plugin.CharacterLimit){
-            p.sendMessage(ChatColor.RED +(getTranslation("19")) + plugin.CharacterLimit);
+        if(plugin.characterLimit != 0 && message.length() > plugin.characterLimit){
+            p.sendMessage(ChatColor.RED +(getTranslation("19")) + plugin.characterLimit);
             return false;
         }
         List<String> ex = plugin.getConfig().getStringList("BlackList");
@@ -178,7 +178,8 @@ protected static void setXP (Player p, int amount) {
         String msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
         return msg;
         }else{
-        String msg = "[SimpleRename] " + ChatColor.translateAlternateColorCodes('&', yaml.getString(path));
+        String msg = SimpleRename.prefix + " " + yaml.getString(path);
+        msg = ChatColor.translateAlternateColorCodes('&', msg);
         return msg;
         }
     }

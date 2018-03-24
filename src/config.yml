@@ -30,5 +30,5 @@ BlackListID:
   - air
 #Max characters
 CharacterLimit: 0
-
+Prefix: '[SimpleRename]'
 

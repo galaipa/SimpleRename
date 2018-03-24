@@ -38,7 +38,8 @@ public class SimpleRename extends JavaPlugin{
     public static String translation;
     public static YamlConfiguration yaml;
     File languageFile;
-    public static int CharacterLimit;
+    public static int characterLimit;
+    public static String prefix;
     
     @Override
     public void onDisable() {
@@ -79,7 +80,8 @@ public class SimpleRename extends JavaPlugin{
         if (getConfig().getBoolean("Metrics")){
            MetricsLite metrics = new MetricsLite(this); 
     }
-        CharacterLimit = getConfig().getInt("CharacterLimit");
+        characterLimit = getConfig().getInt("CharacterLimit");
+        prefix = getConfig().getString("Prefix");
     }
     public Utils utils;
     
