@@ -10,8 +10,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
@@ -21,37 +20,36 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Listeners implements Listener {
     public static HashMap<Player, String> mobs = new HashMap<Player, String>();
-//AnvilListener
+    
     @EventHandler
-public void AnvilListener(InventoryClickEvent event){
-        HumanEntity p = event.getWhoClicked();
-        Inventory inv = event.getInventory();
-          if(inv.getType().equals(InventoryType.ANVIL)){
-                    if (event.getSlotType() == InventoryType.SlotType.RESULT && event.getCurrentItem() != null) {
-                            ItemStack a = event.getCurrentItem();
-                            if(a.hasItemMeta() && a.getItemMeta().hasDisplayName()){
-                                
-                            }else{return;}
-                            ItemMeta b = a.getItemMeta();
-                            String c = b.getDisplayName();
-                           /*  if(c.contains("&")){
-                              if(p.hasPermission("sr.color")){
-                                  c = ChatColor.translateAlternateColorCodes('&', c);
-                                  b.setDisplayName(c);
-                                  a.setItemMeta(b);
-                                  event.setCurrentItem(a);
-                              }else{
-                                  p.sendMessage(ChatColor.GREEN + "[SimpleRename] " + ChatColor.RED + getTranslation("7"));
-                              }*/
-                           if(Utils.SecurityCheck((Player) p, c, "sr.name", 1,a)){
-                                c = ChatColor.translateAlternateColorCodes('&', c);
-                                b.setDisplayName(c);
-                                a.setItemMeta(b);
-                                event.setCurrentItem(a);
-                          }
-                    }
+   public void AnvilListener(PrepareAnvilEvent event){
+       Inventory inv = event.getInventory();
+       try{
+            HumanEntity p = event.getViewers().get(0);
+            
+            String oldName = inv.getItem(0).getItemMeta().getDisplayName();
+            ItemStack newItem = event.getResult();
+            ItemMeta newMeta = newItem.getItemMeta();
+            String newName = newMeta.getDisplayName();
+            
+            if(oldName.equals("§" + newName)) {
+                 newMeta.setDisplayName(oldName);
+            }else{
+                if(oldName.startsWith("§") && newName.startsWith(oldName.substring(1))) //recover lost color code
+                    newName = "&" + newName;
+                if(Utils.SecurityCheck((Player) p, newName, null, 1,newItem)){
+                    newName = ChatColor.translateAlternateColorCodes('&', newName);
+                    newMeta.setDisplayName(newName);
                 }
-          }
+            }
+            
+            newItem.setItemMeta(newMeta);
+            event.setResult(newItem);
+            
+       }catch (NullPointerException e){
+               
+        }
+   }
 //Updater
     @EventHandler
 public void UpdateListener(PlayerJoinEvent event){

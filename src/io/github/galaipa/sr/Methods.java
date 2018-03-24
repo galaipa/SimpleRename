@@ -196,8 +196,8 @@ public class Methods {
       p.updateInventory();
       p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
     }
+   
     
     
-    
-    
+     
 }

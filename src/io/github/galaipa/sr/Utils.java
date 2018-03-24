@@ -25,7 +25,7 @@ public class Utils {
         if(message == null){
             message = "";
         }
-        if(!p.hasPermission(perm)){
+        if(perm != null && !p.hasPermission(perm)){
             p.sendMessage(ChatColor.RED+(getTranslation("6")));
             return false;
         }else if(message.split(" ").length  < size) {
