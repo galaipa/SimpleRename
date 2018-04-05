@@ -3,6 +3,8 @@ package io.github.galaipa.sr;
 
 
 import static io.github.galaipa.sr.Utils.Args;
+import io.github.galaipa.sr.anvilListeners.AnvilListener;
+import io.github.galaipa.sr.anvilListeners.AnvilListenerAlternative;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
@@ -42,7 +45,8 @@ public class SimpleRename extends JavaPlugin{
     public static String language;
     public static YamlConfiguration messages;
     
-    
+    public static List<String> nameBlackList, itemBlackList;
+       
     @Override
     public void onDisable() {
         log.info("SimpleRename disabled!");
@@ -54,7 +58,7 @@ public class SimpleRename extends JavaPlugin{
         getConfig().options().copyDefaults(true);
         saveConfig();
         // Register events
-        getServer().getPluginManager().registerEvents(new Listeners(), this);
+        registerEvents();
         //Load translations
         language = getConfig().getString("Language");
         messages = loadTranslation(language);
@@ -80,7 +84,8 @@ public class SimpleRename extends JavaPlugin{
             log.info("[SimpleRename] XP price support has been temporaly disabled. Feature will be back in next version");
         characterLimit = getConfig().getInt("CharacterLimit");
         prefix = getConfig().getString("Prefix");
-        
+        nameBlackList = getConfig().getStringList("BlackList");
+        itemBlackList = getConfig().getStringList("BlackListID");
         log.info("SimpleRename enabled!");
     }
     
@@ -432,6 +437,16 @@ public class SimpleRename extends JavaPlugin{
         return msg;
     }
     
+    
+    public void registerEvents(){
+        getServer().getPluginManager().registerEvents(new Listeners(), this);
+        if(getServer().getBukkitVersion().contains("1.8"))
+            getServer().getPluginManager().registerEvents(new AnvilListenerAlternative(), this);
+        else
+            getServer().getPluginManager().registerEvents(new AnvilListener(), this);
+        
+        
+    }
     
 
 }
