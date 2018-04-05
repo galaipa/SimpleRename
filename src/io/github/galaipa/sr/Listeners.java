@@ -37,12 +37,16 @@ public class Listeners implements Listener {
             }else{
                 if(oldName.startsWith("§") && newName.startsWith(oldName.substring(1))) //recover lost color code
                     newName = "&" + newName;
-                if(Utils.SecurityCheck((Player) p, newName, null, 1,newItem)){
+                if(Utils.checkEverything((Player) p, newName, null, 1,newItem)){
                     newName = ChatColor.translateAlternateColorCodes('&', newName);
                     newMeta.setDisplayName(newName);
+                }else{
+                    p.closeInventory();
                 }
+                newName = ChatColor.translateAlternateColorCodes('&', newName);
+                newMeta.setDisplayName(newName);
             }
-            
+
             newItem.setItemMeta(newMeta);
             event.setResult(newItem);
             

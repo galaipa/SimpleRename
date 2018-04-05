@@ -102,12 +102,13 @@ public class SimpleRename extends JavaPlugin{
         }
         Player player = (Player)sender;
         if(cmd.getName().equalsIgnoreCase("removelore")){
-            if(utils.SecurityCheck(player, null, "sr.removeLore", 0, player.getItemInHand())){
+            if(utils.checkEverything(player, null, "sr.removeLore", 0, player.getItemInHand())){
                 if(args.length != 0 && utils.isInt(args[0])){
                     Methods.removeLore(player, Integer.parseInt(args[0])-1);
                 }else Methods.removeLore(player, -1);
                 return true;
             }
+            return true;
         }
         else if(args.length <1){
             PluginDescriptionFile pdfFile = this.getDescription();
@@ -117,7 +118,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Item Rename
         if(cmd.getName().equalsIgnoreCase("rename")){
-           if(utils.SecurityCheck(player, Args(0,args), "sr.name", 1,player.getItemInHand())){
+           if(utils.checkEverything(player, Args(0,args), "sr.name", 1,player.getItemInHand())){
                if (Utils.ordainketa(player,"Nprice","5","NameXP")){
                     Methods.setName(player,(Args(0,args)));
                        }
@@ -126,7 +127,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Add Lore
         else if (cmd.getName().equalsIgnoreCase("addlore")){
-           if(utils.SecurityCheck(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
+           if(utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
                if (Utils.ordainketa(player,"Lprice","5", "LoreXP")){
                     Methods.addLore(player,(Args(0,args)));
                        }
@@ -135,7 +136,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Set Lore (One line)
         else if (cmd.getName().equalsIgnoreCase("relore")){
-           if(utils.SecurityCheck(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
+           if(utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
                if (Utils.ordainketa(player,"Lprice","5", "LoreXP")){
                     Methods.setLore(player,(Args(0,args)));
                        }
@@ -146,7 +147,7 @@ public class SimpleRename extends JavaPlugin{
             if(player.getItemInHand().getType() != Material.WRITTEN_BOOK){
                 sender.sendMessage(ChatColor.RED + getTranslation("16"));
                 return true;
-            }else if(utils.SecurityCheck(player, Args(2,args), "sr.book", 0, null)){
+            }else if(utils.checkEverything(player, Args(2,args), "sr.book", 0, null)){
                 if(Utils.ordainketa(player,"BookPrice","5","BookXP")){
                     if(args[1].toLowerCase().equalsIgnoreCase("setauthor")){
                         Methods.setBookAuthor(player, Args(2,args));
@@ -163,7 +164,7 @@ public class SimpleRename extends JavaPlugin{
     }
         // Clear
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("clear") ){
-           if(utils.SecurityCheck(player, null, "sr.clear", 0, player.getItemInHand())){
+           if(utils.checkEverything(player, null, "sr.clear", 0, player.getItemInHand())){
                if (Utils.ordainketa(player,"ClearPrice","13","ClearXP")){
                     Methods.clearItem(player);
                        }
@@ -172,7 +173,7 @@ public class SimpleRename extends JavaPlugin{
             }
         // Duplicate
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("duplicate") ){
-           if(utils.SecurityCheck(player, null, "sr.duplicate", 0, player.getItemInHand())){
+           if(utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
                if(args.length >= 2 && utils.isInt(args[1])){
                    Methods.duplicateItem(player,Integer.parseInt(args[1]));
                    return true;
@@ -186,7 +187,7 @@ public class SimpleRename extends JavaPlugin{
             }
         // Get Amount
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("getAmount") ){
-           if(utils.SecurityCheck(player, null, "sr.duplicate", 0, player.getItemInHand())){
+           if(utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
                if(args.length >= 2 && utils.isInt(args[1])){
                    Methods.getAmount(player,Integer.parseInt(args[1]));
                    return true;
@@ -198,14 +199,14 @@ public class SimpleRename extends JavaPlugin{
             }
         //Copy
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("copy") ){
-            if(utils.SecurityCheck(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1, player.getItemInHand())){
+            if(utils.checkEverything(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1, player.getItemInHand())){
                 Methods.copyMeta(player);
             }
             return true;
         }
         //Paste
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("paste") ){
-            if(utils.SecurityCheck(player, null, "sr.copy", 1, player.getItemInHand())){
+            if(utils.checkEverything(player, null, "sr.copy", 1, player.getItemInHand())){
                 if (Utils.ordainketa(player,"PastePrice","12","PasteXP")){
                     Methods.pasteMeta(player);
                     return true;
@@ -214,7 +215,7 @@ public class SimpleRename extends JavaPlugin{
             return true;
         //Reload
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
-            if(utils.SecurityCheck(player, null, "sr.reload", 1, null)){
+            if(utils.checkEverything(player, null, "sr.reload", 1, null)){
                 reloadConfig();
                 Enable();
                 player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded"); //OTHER RELOAD COMMAND FOR CONSOLE
@@ -223,24 +224,24 @@ public class SimpleRename extends JavaPlugin{
             return true;
         //Get Skull
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("getskull") ){
-            if(utils.SecurityCheck(player, Args(0,args), "sr.skull", 2, null)){
+            if(utils.checkEverything(player, Args(0,args), "sr.skull", 2, null)){
                     Methods.getSkull(player, args[1]);
                     return true;
                 }
          // Rename mobs
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("mob") ){
-            if(utils.SecurityCheck(player, Args(0,args), "sr.mob", 2, null)){
+            if(utils.checkEverything(player, Args(0,args), "sr.mob", 2, null)){
                 Methods.renameMobs(player,args[1]);
             }
          // Add glow effect
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("glow") ){
-            if(utils.SecurityCheck(player, null, "sr.glow", 1, player.getItemInHand())){
+            if(utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())){
                 Methods.glowItem(player);
                 return true;
             }
          // Hide flags
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("hideflags") ){
-            if(utils.SecurityCheck(player, null, "sr.hide", 1, player.getItemInHand())){
+            if(utils.checkEverything(player, null, "sr.hide", 1, player.getItemInHand())){
                 Methods.hideFlags(player);
                 return true;
             } 
