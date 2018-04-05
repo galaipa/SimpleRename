@@ -1,7 +1,7 @@
 package io.github.galaipa.sr;
 
 
-import static io.github.galaipa.sr.Utils.getTranslation;
+import static io.github.galaipa.sr.SimpleRename.getTranslation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

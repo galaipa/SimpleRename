@@ -3,11 +3,12 @@ package io.github.galaipa.sr;
 
 
 import static io.github.galaipa.sr.Utils.Args;
-import static io.github.galaipa.sr.Utils.getTranslation;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.util.logging.Logger;
 
@@ -28,18 +29,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 public class SimpleRename extends JavaPlugin{
-    public static Economy econ = null;
-    public static final Logger log = Logger.getLogger("Minecraft");    
-    public static boolean update = false,economy,xp;
-    public static String name = "";
-    public static Updater.ReleaseType type = null;
-    public static String version = "";
-    public static String link = "";
-    public static String translation;
-    public static YamlConfiguration yaml;
-    File languageFile;
+    public static final Logger log = Logger.getLogger("Minecraft");
+    public static Updater updater;
+
+    public static Economy econ;
+    public static boolean econEn, xpEn;
+    
     public static int characterLimit;
     public static String prefix;
+    
+    
+    public static String language;
+    public static YamlConfiguration messages;
+    
     
     @Override
     public void onDisable() {
@@ -47,43 +49,37 @@ public class SimpleRename extends JavaPlugin{
     }
     
     @Override
-    public void onEnable() {        
-        log.info("SimpleRename enabled!");
+    public void onEnable() {    
+        //Load configuration file
         getConfig().options().copyDefaults(true);
         saveConfig();
+        // Register events
         getServer().getPluginManager().registerEvents(new Listeners(), this);
-        Enable();
-        utils = new Utils(this);
-    }
-    public void Enable(){
-        loadTranslations();
-        if ((getConfig().getBoolean("Economy"))){
-            if (!setupEconomy() ) {
-                log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-                getServer().getPluginManager().disablePlugin(this);
-                return;
-            }else{
-                economy = true;
-            }
-        }if ((getConfig().getBoolean("XPprices.Enable"))){
-            xp = true;
-        }
-        if ((getConfig().getBoolean("Updater"))){
-            Updater updater = new Updater(this, 75680, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-            update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-            name = updater.getLatestName();
-            version = updater.getLatestGameVersion();
-            type = updater.getLatestType();
-            link = updater.getLatestFileLink();
-                }
-        //Metrics
-        if (getConfig().getBoolean("Metrics")){
-           MetricsLite metrics = new MetricsLite(this); 
-    }
+        //Load translations
+        language = getConfig().getString("Language");
+        messages = loadTranslation(language);
+        // Load economy
+        econEn = getConfig().getBoolean("Economy");
+        if (econEn){
+            if(!setupEconomy()){
+                econEn = false;
+                log.info("[SimpleRename] Economy disabled, Vault not found!");
+            }   
+        }             
+        // Load updater
+        if ((getConfig().getBoolean("Updater")))
+            updater = new Updater(this, 75680, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+            
+        // Load metrics
+         if (getConfig().getBoolean("Metrics"))
+            new MetricsLite(this); 
+        // Other config
+        xpEn = getConfig().getBoolean("XPprices.Enable");
         characterLimit = getConfig().getInt("CharacterLimit");
         prefix = getConfig().getString("Prefix");
+        
+        log.info("SimpleRename enabled!");
     }
-    public Utils utils;
     
     
     @Override
@@ -92,7 +88,7 @@ public class SimpleRename extends JavaPlugin{
         if(sender instanceof ConsoleCommandSender){
             if(args.length == 1 && cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
                 reloadConfig();
-                Enable();
+                onEnable();
                 sender.sendMessage("[SimpleRename]" + "Plugin reloaded");
                 return true;
             }else{
@@ -102,8 +98,8 @@ public class SimpleRename extends JavaPlugin{
         }
         Player player = (Player)sender;
         if(cmd.getName().equalsIgnoreCase("removelore")){
-            if(utils.checkEverything(player, null, "sr.removeLore", 0, player.getItemInHand())){
-                if(args.length != 0 && utils.isInt(args[0])){
+            if(Utils.checkEverything(player, null, "sr.removeLore", 0, player.getItemInHand())){
+                if(args.length != 0 && Utils.isInt(args[0])){
                     Methods.removeLore(player, Integer.parseInt(args[0])-1);
                 }else Methods.removeLore(player, -1);
                 return true;
@@ -118,7 +114,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Item Rename
         if(cmd.getName().equalsIgnoreCase("rename")){
-           if(utils.checkEverything(player, Args(0,args), "sr.name", 1,player.getItemInHand())){
+           if(Utils.checkEverything(player, Args(0,args), "sr.name", 1,player.getItemInHand())){
                if (Utils.ordainketa(player,"Nprice","5","NameXP")){
                     Methods.setName(player,(Args(0,args)));
                        }
@@ -127,7 +123,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Add Lore
         else if (cmd.getName().equalsIgnoreCase("addlore")){
-           if(utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
+           if(Utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
                if (Utils.ordainketa(player,"Lprice","5", "LoreXP")){
                     Methods.addLore(player,(Args(0,args)));
                        }
@@ -136,7 +132,7 @@ public class SimpleRename extends JavaPlugin{
                 }
         // Set Lore (One line)
         else if (cmd.getName().equalsIgnoreCase("relore")){
-           if(utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
+           if(Utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
                if (Utils.ordainketa(player,"Lprice","5", "LoreXP")){
                     Methods.setLore(player,(Args(0,args)));
                        }
@@ -147,7 +143,7 @@ public class SimpleRename extends JavaPlugin{
             if(player.getItemInHand().getType() != Material.WRITTEN_BOOK){
                 sender.sendMessage(ChatColor.RED + getTranslation("16"));
                 return true;
-            }else if(utils.checkEverything(player, Args(2,args), "sr.book", 0, null)){
+            }else if(Utils.checkEverything(player, Args(2,args), "sr.book", 0, null)){
                 if(Utils.ordainketa(player,"BookPrice","5","BookXP")){
                     if(args[1].toLowerCase().equalsIgnoreCase("setauthor")){
                         Methods.setBookAuthor(player, Args(2,args));
@@ -164,7 +160,7 @@ public class SimpleRename extends JavaPlugin{
     }
         // Clear
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("clear") ){
-           if(utils.checkEverything(player, null, "sr.clear", 0, player.getItemInHand())){
+           if(Utils.checkEverything(player, null, "sr.clear", 0, player.getItemInHand())){
                if (Utils.ordainketa(player,"ClearPrice","13","ClearXP")){
                     Methods.clearItem(player);
                        }
@@ -173,8 +169,8 @@ public class SimpleRename extends JavaPlugin{
             }
         // Duplicate
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("duplicate") ){
-           if(utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
-               if(args.length >= 2 && utils.isInt(args[1])){
+           if(Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
+               if(args.length >= 2 && Utils.isInt(args[1])){
                    Methods.duplicateItem(player,Integer.parseInt(args[1]));
                    return true;
                }else{
@@ -187,8 +183,8 @@ public class SimpleRename extends JavaPlugin{
             }
         // Get Amount
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("getAmount") ){
-           if(utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
-               if(args.length >= 2 && utils.isInt(args[1])){
+           if(Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
+               if(args.length >= 2 && Utils.isInt(args[1])){
                    Methods.getAmount(player,Integer.parseInt(args[1]));
                    return true;
                }else{
@@ -199,14 +195,14 @@ public class SimpleRename extends JavaPlugin{
             }
         //Copy
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("copy") ){
-            if(utils.checkEverything(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1, player.getItemInHand())){
+            if(Utils.checkEverything(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1, player.getItemInHand())){
                 Methods.copyMeta(player);
             }
             return true;
         }
         //Paste
         else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("paste") ){
-            if(utils.checkEverything(player, null, "sr.copy", 1, player.getItemInHand())){
+            if(Utils.checkEverything(player, null, "sr.copy", 1, player.getItemInHand())){
                 if (Utils.ordainketa(player,"PastePrice","12","PasteXP")){
                     Methods.pasteMeta(player);
                     return true;
@@ -215,33 +211,33 @@ public class SimpleRename extends JavaPlugin{
             return true;
         //Reload
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
-            if(utils.checkEverything(player, null, "sr.reload", 1, null)){
+            if(Utils.checkEverything(player, null, "sr.reload", 1, null)){
                 reloadConfig();
-                Enable();
+                onEnable();
                 player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded"); //OTHER RELOAD COMMAND FOR CONSOLE
                 return true;
             }
             return true;
         //Get Skull
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("getskull") ){
-            if(utils.checkEverything(player, Args(0,args), "sr.skull", 2, null)){
+            if(Utils.checkEverything(player, Args(0,args), "sr.skull", 2, null)){
                     Methods.getSkull(player, args[1]);
                     return true;
                 }
          // Rename mobs
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("mob") ){
-            if(utils.checkEverything(player, Args(0,args), "sr.mob", 2, null)){
+            if(Utils.checkEverything(player, Args(0,args), "sr.mob", 2, null)){
                 Methods.renameMobs(player,args[1]);
             }
          // Add glow effect
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("glow") ){
-            if(utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())){
+            if(Utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())){
                 Methods.glowItem(player);
                 return true;
             }
          // Hide flags
         }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("hideflags") ){
-            if(utils.checkEverything(player, null, "sr.hide", 1, player.getItemInHand())){
+            if(Utils.checkEverything(player, null, "sr.hide", 1, player.getItemInHand())){
                 Methods.hideFlags(player);
                 return true;
             } 
@@ -292,51 +288,90 @@ public class SimpleRename extends JavaPlugin{
         return true;
 }
 
-    private void loadTranslations(){
+    
+    public Economy loadEconomy(){ 
+        Economy econ;
+        try{ 
+            getServer().getPluginManager().getPlugin("Vault");
+            RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+            econ =  rsp.getProvider();
+            econEn = (econ != null);
+        }catch (NullPointerException e){
+            return null;
+        }
+        return econ;
+    }
+    
+    private boolean setupEconomy(){
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            econ = economyProvider.getProvider();
+        }
+
+        return (econ != null);
+    }
+    
+    // LANGUAGE RELATED
+    private YamlConfiguration loadTranslation(String language){
         copyTranslation("custom");
-        translation = getConfig().getString("Language");
-        if(translation.equalsIgnoreCase("custom")){
-            languageFile = new File(getDataFolder() + File.separator + "lang"+ File.separator + translation + ".yml");
+        YamlConfiguration yaml = null;
+        if(language.equalsIgnoreCase("custom")){
+            File languageFile = new File(getDataFolder() + File.separator + "lang"+ File.separator + language + ".yml");
             yaml = YamlConfiguration.loadConfiguration(languageFile);
         }else{
-            InputStream defaultStream = getResource(translation +".yml");
+            InputStream defaultStream = getResource(language +".yml");
             Reader r;
-                            try {
-                                    r = this.getReaderFromStream(defaultStream);
-                                    yaml =  YamlConfiguration.loadConfiguration(r);
-                    r.close();
-                            } catch (IOException e) {
-                                    e.printStackTrace();
-                            }
-
-        }
-    }
-     private void copyTranslation(String trans) {
-            File file = new File(getDataFolder().getAbsolutePath() + File.separator + "lang" + File.separator + trans + ".yml");
-            if (!file.exists()) {
-                    file.getParentFile().mkdirs();
-                    Utils.copy(getResource(trans + ".yml"), file);
+            try {
+                r = this.getReaderFromStream(defaultStream);
+                yaml =  YamlConfiguration.loadConfiguration(r);
+                r.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+        return yaml;
     }
-
-     public Reader getReaderFromStream(InputStream initialStream) 
-              throws IOException {
-
-                byte[] buffer = IOUtils.toByteArray(initialStream);
-                Reader targetReader = new CharSequenceReader(new String(buffer));
-                return targetReader;
+    
+    public Reader getReaderFromStream(InputStream initialStream) throws IOException {
+          byte[] buffer = IOUtils.toByteArray(initialStream);
+          Reader targetReader = new CharSequenceReader(new String(buffer));
+          return targetReader;
+    }
+    
+    private void copyTranslation(String trans) {
+        File file = new File(getDataFolder().getAbsolutePath() + File.separator + "lang" + File.separator + trans + ".yml");
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            copy(getResource(trans + ".yml"), file);
+        }
+    }
+    
+    public static void copy(InputStream in, File file) {
+        try {   
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
             }
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
+            out.close();
+            in.close();
+        } catch (Exception e) {
+                e.printStackTrace();
         }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        return econ != null;
     }
-
+    
+    public static String getTranslation(String path) {
+        String msg;
+        if (messages.getString(path) == null){
+            msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
+        }else{
+            msg = prefix + " " + messages.getString(path);
+            msg = ChatColor.translateAlternateColorCodes('&', msg);
+        }
+        return msg;
+    }
+    
+    
 
 }

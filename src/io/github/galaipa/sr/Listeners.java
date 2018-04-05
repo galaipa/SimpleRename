@@ -21,7 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Listeners implements Listener {
     public static HashMap<Player, String> mobs = new HashMap<Player, String>();
     
-    @EventHandler
+   @EventHandler
    public void AnvilListener(PrepareAnvilEvent event){
        Inventory inv = event.getInventory();
        try{
@@ -37,6 +37,7 @@ public class Listeners implements Listener {
             }else{
                 if(oldName.startsWith("§") && newName.startsWith(oldName.substring(1))) //recover lost color code
                     newName = "&" + newName;
+                
                 if(Utils.checkEverything((Player) p, newName, null, 1,newItem)){
                     newName = ChatColor.translateAlternateColorCodes('&', newName);
                     newMeta.setDisplayName(newName);
@@ -54,18 +55,18 @@ public class Listeners implements Listener {
                
         }
    }
-//Updater
+    //Updater
     @EventHandler
-public void UpdateListener(PlayerJoinEvent event){
-  Player player = event.getPlayer();
-  if(player.hasPermission("sr.update") && SimpleRename.update){
-    player.sendMessage(ChatColor.GREEN + "An update is available: " + ChatColor.YELLOW + SimpleRename.name + ChatColor.GREEN +  " for " + SimpleRename.version + " available at " +  ChatColor.YELLOW + "http://goo.gl/hAf1QV");
-    //player.sendMessage(ChatColor.RED + "Type /sr update if you would like to update it automatically.");
-  }
+    public void UpdateListener(PlayerJoinEvent event){
+      Player player = event.getPlayer();
+      if(player.hasPermission("sr.update") && (SimpleRename.updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE)){
+        player.sendMessage(ChatColor.GREEN + "An update is available: " + ChatColor.YELLOW + SimpleRename.updater.getLatestName() + ChatColor.GREEN +  " for " + SimpleRename.updater.getLatestGameVersion() + " available at " +  ChatColor.YELLOW + "http://goo.gl/hAf1QV");
+        //player.sendMessage(ChatColor.RED + "Type /sr update if you would like to update it automatically.");
+      }
     }
-// Animal renaming
+    // Animal renaming
     @EventHandler
-public void onEntityInteract(PlayerInteractEntityEvent event) {
+    public void onEntityInteract(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
         if (entity instanceof LivingEntity){
@@ -74,7 +75,7 @@ public void onEntityInteract(PlayerInteractEntityEvent event) {
                 mobs.remove(player);
             }
         }
-}
+    }
 
 }
 

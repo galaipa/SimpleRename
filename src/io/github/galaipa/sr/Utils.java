@@ -2,14 +2,10 @@
 package io.github.galaipa.sr;
 
 
-import static io.github.galaipa.sr.SimpleRename.yaml;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import static io.github.galaipa.sr.SimpleRename.getTranslation;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -115,39 +111,13 @@ public class Utils {
         return allArgs;
     }
     
-    public static String getTranslation(String path) {
-        String msg;
-        if (yaml.getString(path) == null){
-            msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
-        }else{
-            msg = SimpleRename.prefix + " " + yaml.getString(path);
-            msg = ChatColor.translateAlternateColorCodes('&', msg);
-        }
-        return msg;
-    }
     
-    public static void copy(InputStream in, File file) {
-        try {   
-            OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            out.close();
-            in.close();
-        } catch (Exception e) {
-                e.printStackTrace();
-        }
-    }
-    
-
         public static Boolean ordainketa(Player player, String zer,String mezua, String zer2){
               if (player.hasPermission("sr.free")) {
                     player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)));
                     return true;
                 }
-              else if ((plugin.economy && plugin.xp)) {
+              else if ((plugin.econEn && plugin.xpEn)) {
                    int Kantitatea = player.getInventory().getItemInHand().getAmount();
                    int XPprezioa = plugin.getConfig().getInt("XPprices."+ zer2);
                    int Prezioa = plugin.getConfig().getInt("Prices."+ zer);
@@ -162,7 +132,7 @@ public class Utils {
                         setXP(player, player.getTotalExperience() - XPGuztira);
                         return true;
                     }  
-            }else if (plugin.xp) {
+            }else if (plugin.xpEn) {
                         int XPprezioa = plugin.getConfig().getInt("XPprices."+ zer2);
                         int Kantitatea = player.getInventory().getItemInHand().getAmount();
                         int XPGuztira= Kantitatea * XPprezioa ;
@@ -174,7 +144,7 @@ public class Utils {
                         setXP(player, player.getTotalExperience() - XPGuztira);
                         return true;
                     } 
-            }else if (plugin.economy) {
+            }else if (plugin.econEn) {
                     int Prezioa = plugin.getConfig().getInt("Prices."+ zer);
                     int Kantitatea = player.getInventory().getItemInHand().getAmount();
                     int Guztira= Kantitatea * Prezioa ;
@@ -220,14 +190,14 @@ protected static void setXP (Player p, int amount) {
 
  
 
-    public static boolean isInt(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
+public static boolean isInt(String s) {
+    try {
+        Integer.parseInt(s);
+    } catch (NumberFormatException nfe) {
+        return false;
     }
+    return true;
+}
 
 
 }
