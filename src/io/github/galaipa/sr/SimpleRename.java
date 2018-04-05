@@ -61,10 +61,11 @@ public class SimpleRename extends JavaPlugin{
         // Load economy
         econEn = getConfig().getBoolean("Economy");
         if (econEn){
-            if(!setupEconomy()){
+            log.info("[SimpleRename] Economy support has been temporaly disabled. Feature will be back in next version ");
+            /*if(!setupEconomy()){
                 econEn = false;
                 log.info("[SimpleRename] Economy disabled, Vault not found!");
-            }   
+            }   */
         }             
         // Load updater
         if ((getConfig().getBoolean("Updater")))
@@ -75,16 +76,17 @@ public class SimpleRename extends JavaPlugin{
             new MetricsLite(this); 
         // Other config
         xpEn = getConfig().getBoolean("XPprices.Enable");
+        if(xpEn)
+            log.info("[SimpleRename] XP price support has been temporaly disabled. Feature will be back in next version");
         characterLimit = getConfig().getInt("CharacterLimit");
         prefix = getConfig().getString("Prefix");
         
         log.info("SimpleRename enabled!");
     }
     
-    
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-        //Block console commands
+        // Block console commands
         if(sender instanceof ConsoleCommandSender){
             if(args.length == 1 && cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
                 reloadConfig();
@@ -96,199 +98,257 @@ public class SimpleRename extends JavaPlugin{
                 return true; 
             }
         }
+        
         Player player = (Player)sender;
-        if(cmd.getName().equalsIgnoreCase("removelore")){
-            if(Utils.checkEverything(player, null, "sr.removeLore", 0, player.getItemInHand())){
-                if(args.length != 0 && Utils.isInt(args[0])){
-                    Methods.removeLore(player, Integer.parseInt(args[0])-1);
-                }else Methods.removeLore(player, -1);
-                return true;
-            }
-            return true;
-        }
-        else if(args.length <1){
-            PluginDescriptionFile pdfFile = this.getDescription();
-            String version1 = pdfFile.getVersion();
-            Methods.helpInfo(player,version1);
-            return true;
-                }
-        // Item Rename
-        if(cmd.getName().equalsIgnoreCase("rename")){
-           if(Utils.checkEverything(player, Args(0,args), "sr.name", 1,player.getItemInHand())){
-               if (Utils.ordainketa(player,"Nprice","5","NameXP")){
-                    Methods.setName(player,(Args(0,args)));
-                       }
-           }
-           return true;
-                }
-        // Add Lore
-        else if (cmd.getName().equalsIgnoreCase("addlore")){
-           if(Utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
-               if (Utils.ordainketa(player,"Lprice","5", "LoreXP")){
-                    Methods.addLore(player,(Args(0,args)));
-                       }
-           }
-           return true;
-                }
-        // Set Lore (One line)
-        else if (cmd.getName().equalsIgnoreCase("relore")){
-           if(Utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
-               if (Utils.ordainketa(player,"Lprice","5", "LoreXP")){
-                    Methods.setLore(player,(Args(0,args)));
-                       }
-           }return true;
-                }
-        // Books (SetAuthor,SetTitle and UnSign)
-        else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("book") ){
-            if(player.getItemInHand().getType() != Material.WRITTEN_BOOK){
-                sender.sendMessage(ChatColor.RED + getTranslation("16"));
-                return true;
-            }else if(Utils.checkEverything(player, Args(2,args), "sr.book", 0, null)){
-                if(Utils.ordainketa(player,"BookPrice","5","BookXP")){
-                    if(args[1].toLowerCase().equalsIgnoreCase("setauthor")){
-                        Methods.setBookAuthor(player, Args(2,args));
-                            }
-                    else if(args[1].toLowerCase().equalsIgnoreCase("settitle")){
-                        Methods.setBookTitle(player, Args(2,args));
-                    }
-                    else if(args[1].toLowerCase().equalsIgnoreCase("unsign")){
-                        Methods.unSignBook(player);
-                    }
-            }
-        }
-            return true;
-    }
-        // Clear
-        else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("clear") ){
-           if(Utils.checkEverything(player, null, "sr.clear", 0, player.getItemInHand())){
-               if (Utils.ordainketa(player,"ClearPrice","13","ClearXP")){
-                    Methods.clearItem(player);
-                       }
-           }
-           return true;
-            }
-        // Duplicate
-        else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("duplicate") ){
-           if(Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
-               if(args.length >= 2 && Utils.isInt(args[1])){
-                   Methods.duplicateItem(player,Integer.parseInt(args[1]));
-                   return true;
-               }else{
-                   Methods.duplicateItem(player,2);
-                   return true;
-               }
-
-           }
-           return true;
-            }
-        // Get Amount
-        else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("getAmount") ){
-           if(Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
-               if(args.length >= 2 && Utils.isInt(args[1])){
-                   Methods.getAmount(player,Integer.parseInt(args[1]));
-                   return true;
-               }else{
-                    Methods.getAmount(player,2);
-               }
-           }
-           return true;
-            }
-        //Copy
-        else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("copy") ){
-            if(Utils.checkEverything(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1, player.getItemInHand())){
-                Methods.copyMeta(player);
-            }
-            return true;
-        }
-        //Paste
-        else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("paste") ){
-            if(Utils.checkEverything(player, null, "sr.copy", 1, player.getItemInHand())){
-                if (Utils.ordainketa(player,"PastePrice","12","PasteXP")){
-                    Methods.pasteMeta(player);
-                    return true;
-                }
-             }
-            return true;
-        //Reload
-        }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
-            if(Utils.checkEverything(player, null, "sr.reload", 1, null)){
-                reloadConfig();
-                onEnable();
-                player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded"); //OTHER RELOAD COMMAND FOR CONSOLE
-                return true;
-            }
-            return true;
-        //Get Skull
-        }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("getskull") ){
-            if(Utils.checkEverything(player, Args(0,args), "sr.skull", 2, null)){
-                    Methods.getSkull(player, args[1]);
-                    return true;
-                }
-         // Rename mobs
-        }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("mob") ){
-            if(Utils.checkEverything(player, Args(0,args), "sr.mob", 2, null)){
-                Methods.renameMobs(player,args[1]);
-            }
-         // Add glow effect
-        }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("glow") ){
-            if(Utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())){
-                Methods.glowItem(player);
-                return true;
-            }
-         // Hide flags
-        }else if(cmd.getName().equalsIgnoreCase("sr")&& args[0].toLowerCase().equalsIgnoreCase("hideflags") ){
-            if(Utils.checkEverything(player, null, "sr.hide", 1, player.getItemInHand())){
-                Methods.hideFlags(player);
-                return true;
-            } 
-        // Info 
-        }else if (cmd.getName().equalsIgnoreCase("sr")&& (args.length < 1)||cmd.getName().equalsIgnoreCase("sr") && args[0].equalsIgnoreCase("info") ){ 
-            PluginDescriptionFile pdfFile = this.getDescription();
-            String version1 = pdfFile.getVersion();
-            sender.sendMessage(ChatColor.GREEN + "Simple Rename");
-            sender.sendMessage(ChatColor.BLUE + "Author:"+ " " + ChatColor.GREEN + "Galaipa & EnergizerBEAST1");
-            sender.sendMessage(ChatColor.BLUE + "Version:"+ " " +ChatColor.GREEN + version1);
-            sender.sendMessage(ChatColor.BLUE + "BukkitDev:"+" " + ChatColor.GREEN + "http://dev.bukkit.org/bukkit-plugins/simple-rename/");
-            sender.sendMessage(ChatColor.BLUE + "Metrics:"+" " + ChatColor.GREEN + "http://mcstats.org/plugin/SimpleRename");
-            return true;
-        //Characters list
-        }else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("characters") ||cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("character") ){
-            sender.sendMessage(ChatColor.GREEN + "Special Characters List (SimpleRename)");
-            sender.sendMessage(ChatColor.BLUE + "[<3]"+ " " +   "----->" + ChatColor.WHITE +"\u2764");
-            sender.sendMessage(ChatColor.BLUE + "[ARROW]"+ " " +   "----->" + ChatColor.WHITE +"\u279c");
-            sender.sendMessage(ChatColor.BLUE + "[TICK]"+ " " +   "----->" + ChatColor.WHITE +"\u2714");
-            sender.sendMessage(ChatColor.BLUE + "[X]"+ " " +   "----->" + ChatColor.WHITE +"\u2716");
-            sender.sendMessage(ChatColor.BLUE + "[STAR]"+ " " +   "----->" + ChatColor.WHITE +"\u2605");
-            sender.sendMessage(ChatColor.BLUE + "[POINT]"+ " " +   "----->" + ChatColor.WHITE +"\u25Cf");
-            sender.sendMessage(ChatColor.BLUE + "[FLOWER]"+ " " +   "----->" + ChatColor.WHITE +"\u273f");
-            sender.sendMessage(ChatColor.BLUE + "[XD]"+ " " +   "----->" + ChatColor.WHITE +"\u263b");
-            sender.sendMessage(ChatColor.BLUE + "[DANGER]"+ " " +   "----->" + ChatColor.WHITE +"\u26a0");
-            sender.sendMessage(ChatColor.BLUE + "[MAIL]"+ " " +   "----->" + ChatColor.WHITE +"\u2709");
-            sender.sendMessage(ChatColor.BLUE + "[ARROW2]"+ " " +   "----->" + ChatColor.WHITE +"\u27a4");
-            sender.sendMessage(ChatColor.BLUE + "[ROUND_STAR]"+ " " +   "----->" + ChatColor.WHITE +"\u2730");
-            sender.sendMessage(ChatColor.BLUE + "[SUIT]"+ " " +   "----->" + ChatColor.WHITE +"\u2666");
-            sender.sendMessage(ChatColor.BLUE + "[+]"+ " " +   "----->" + ChatColor.WHITE +"\u2726");
-            sender.sendMessage(ChatColor.BLUE + "[CIRCLE]"+ " " +   "----->" + ChatColor.WHITE +"\u25CF");
-            sender.sendMessage(ChatColor.BLUE + "[SUN]"+ " " +   "----->" + ChatColor.WHITE +"\u2739");         
-            return true;
-            }
-        //Help
-        else if (cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("help")  ){ 
-            PluginDescriptionFile pdfFile = this.getDescription();
-            String version1 = pdfFile.getVersion();
-            Methods.helpInfo(player,version1);
-            return true;
-        }
-        // Unknown command
-        else{
-            sender.sendMessage(ChatColor.GREEN + "[Simple Rename]" + ChatColor.RED + " Unknown command");
-            sender.sendMessage(ChatColor.GREEN + "[Simple Rename]" + ChatColor.RED + " Type '/sr help' to see all avaliable commands");
-            return true;
+        String command = cmd.getName();
+        switch (command) {
+            case "rename": 
+                cmdRename(player,args);
+                break;
+            case "addlore": 
+                cmdAddLore(player,args);
+                break;
+            case "removelore": 
+                cmdRemoveLore(player,args);
+                break;
+            case "relore":
+                cmdRelore(player,args);
+                break;
+            case "sr":
+                cmdSR(player,args);
+                break;
+            default:
+                cmdInvalid(player);
+                break;
         }
         return true;
-}
-
+    } 
     
+    public static void cmdRename(Player player, String[] args){
+        if(Utils.checkEverything(player, Args(0,args), "sr.name", 1,player.getItemInHand())){
+            Methods.setName(player,(Args(0,args)));
+            player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+        }
+    }
+    
+    public static void cmdAddLore(Player player, String[] args){
+        if(Utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
+            Methods.addLore(player,(Args(0,args)));
+            player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+        }
+    }
+    
+    public static void cmdRemoveLore(Player player, String[] args){
+        if(Utils.checkEverything(player, null, "sr.removeLore", 0, player.getItemInHand())){
+            if(args.length != 0 && Utils.isInt(args[0]))
+                Methods.removeLore(player, Integer.parseInt(args[0])-1);
+            else 
+                Methods.removeLore(player, -1);
+            player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+        }
+    }
+    
+    public static void cmdRelore(Player player, String[] args){
+        if(Utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
+            Methods.setLore(player,(Args(0,args)));
+            player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+        }
+    }
+    
+    public void cmdInvalid(Player player){
+       player.sendMessage(prefix + ChatColor.RED + " Unknown command. Type /sr help ");
+    }
+    
+    public void cmdHelp(Player player){
+        PluginDescriptionFile pdfFile = this.getDescription();
+        String version1 = pdfFile.getVersion();
+        Methods.helpInfo(player,version1);
+    }
+    
+    public void cmdSR(Player player, String[] args){
+        try{
+            switch(args[0].toLowerCase()){
+                case "book":
+                    cmdSR_Book(player,args);
+                    break;
+                case "clear":
+                    cmdSR_Clear(player);
+                    break;
+                case "duplicate":
+                    cmdSR_Duplicate(player,args);
+                    break;
+                case "getamount":
+                    cmdSR_GetAmount(player,args);
+                    break;
+                case "copy":
+                    cmdSR_Copy(player,args);
+                    break;
+                case "paste":
+                    cmdSR_Paste(player,args);
+                    break;
+                case "reload":
+                    cmdSR_Reload(player);
+                    break;
+                case "getskull":
+                    cmdSR_GetSkull(player,args);
+                    break;
+                case "glow":
+                    cmdSR_Glow(player);
+                    break;
+                case "mob":
+                    cmdSR_Mob(player,args);
+                    break;
+                case "hideflags":
+                    cmdSR_Hideflags(player);
+                    break;
+                case "characters":
+                case "character":
+                    cmdSR_Characters(player);
+                    break;
+                case "info":
+                    cmdSR_Info(player);
+                    break;
+                case "help":
+                    cmdHelp(player);
+                    break;
+                default:
+                    cmdInvalid(player);
+                    break;
+            }
+            
+            
+        }catch (NullPointerException | ArrayIndexOutOfBoundsException e){
+            cmdInvalid(player);
+        }
+    }
+    
+    public void cmdSR_Book(Player player, String[] args){
+        if(player.getItemInHand().getType() != Material.WRITTEN_BOOK){
+            player.sendMessage(ChatColor.RED + getTranslation("16"));
+        }else if (Utils.checkEverything(player, Args(2,args), "sr.book", 0, null)){
+            switch(args[1].toLowerCase()){
+                case "setauthor":
+                    Methods.setBookAuthor(player, Args(2,args));
+                    break;
+                case "settitle":
+                    Methods.setBookTitle(player, Args(2,args));
+                    break;
+                case "unsign":
+                    Methods.unSignBook(player);
+                    break;
+                default:
+                    cmdInvalid(player);
+                    break;
+            }
+        }
+        
+    }
+    
+    public void cmdSR_Clear(Player player){
+        if(Utils.checkEverything(player, null, "sr.clear", 0, player.getItemInHand())){
+            Methods.clearItem(player);
+            player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+        }
+    }
+    
+    public void cmdSR_Duplicate(Player player, String[] args){
+        if(Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
+            if(args.length >= 2 && Utils.isInt(args[1]))
+                Methods.duplicateItem(player,Integer.parseInt(args[1]));
+            else
+                Methods.duplicateItem(player,2);
+        }
+    }
+    
+    public void cmdSR_GetAmount(Player player, String[] args){
+        if(Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
+             if(args.length >= 2 && Utils.isInt(args[1]))
+                 Methods.getAmount(player,Integer.parseInt(args[1]));
+             else
+                 Methods.getAmount(player,2);
+        }
+    }
+    
+    public void cmdSR_Copy(Player player, String[] args){
+        if(Utils.checkEverything(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1, player.getItemInHand())){
+            Methods.copyMeta(player);
+        }
+    }
+    
+    public void cmdSR_Paste(Player player, String[] args){
+        if(Utils.checkEverything(player, null, "sr.copy", 1, player.getItemInHand())){
+            Methods.pasteMeta(player);
+         }
+    }
+    
+    public void cmdSR_Reload(Player player){
+        if(Utils.checkEverything(player, null, "sr.reload", 1, null)){
+            reloadConfig();
+            onEnable();
+            player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded");
+        }
+    }
+    
+    public void cmdSR_GetSkull(Player player, String[] args){
+        if(Utils.checkEverything(player, Args(0,args), "sr.skull", 2, null)){
+            Methods.getSkull(player, args[1]);
+        }
+    }
+    
+    public void cmdSR_Mob(Player player, String[] args){
+        if(Utils.checkEverything(player, Args(0,args), "sr.mob", 2, null)){
+             Methods.renameMobs(player,args[1]);
+        }
+    }
+    
+    public void cmdSR_Glow(Player player){
+        if(Utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())){
+            Methods.glowItem(player);
+        }
+    }
+    
+    public void cmdSR_Hideflags(Player player){
+        if(Utils.checkEverything(player, null, "sr.hide", 1, player.getItemInHand())){
+            Methods.hideFlags(player);
+        }
+    }
+    
+    public void cmdSR_Info(Player player){
+        PluginDescriptionFile pdfFile = this.getDescription();
+        String version1 = pdfFile.getVersion();
+        player.sendMessage(ChatColor.GREEN + "Simple Rename");
+        player.sendMessage(ChatColor.BLUE + "Author:"+ " " + ChatColor.GREEN + "Galaipa & EnergizerBEAST1");
+        player.sendMessage(ChatColor.BLUE + "Version:"+ " " +ChatColor.GREEN + version1);
+        player.sendMessage(ChatColor.BLUE + "BukkitDev:"+" " + ChatColor.GREEN + "http://dev.bukkit.org/bukkit-plugins/simple-rename/");
+        player.sendMessage(ChatColor.BLUE + "Metrics:"+" " + ChatColor.GREEN + "https://bstats.org/plugin/bukkit/SimpleRename");
+    }
+    
+    public void cmdSR_Characters(Player player){
+        player.sendMessage(ChatColor.GREEN + "Special Characters List (SimpleRename)");
+        player.sendMessage(ChatColor.BLUE + "[<3]"+ " " +   "----->" + ChatColor.WHITE +"\u2764");
+        player.sendMessage(ChatColor.BLUE + "[ARROW]"+ " " +   "----->" + ChatColor.WHITE +"\u279c");
+        player.sendMessage(ChatColor.BLUE + "[TICK]"+ " " +   "----->" + ChatColor.WHITE +"\u2714");
+        player.sendMessage(ChatColor.BLUE + "[X]"+ " " +   "----->" + ChatColor.WHITE +"\u2716");
+        player.sendMessage(ChatColor.BLUE + "[STAR]"+ " " +   "----->" + ChatColor.WHITE +"\u2605");
+        player.sendMessage(ChatColor.BLUE + "[POINT]"+ " " +   "----->" + ChatColor.WHITE +"\u25Cf");
+        player.sendMessage(ChatColor.BLUE + "[FLOWER]"+ " " +   "----->" + ChatColor.WHITE +"\u273f");
+        player.sendMessage(ChatColor.BLUE + "[XD]"+ " " +   "----->" + ChatColor.WHITE +"\u263b");
+        player.sendMessage(ChatColor.BLUE + "[DANGER]"+ " " +   "----->" + ChatColor.WHITE +"\u26a0");
+        player.sendMessage(ChatColor.BLUE + "[MAIL]"+ " " +   "----->" + ChatColor.WHITE +"\u2709");
+        player.sendMessage(ChatColor.BLUE + "[ARROW2]"+ " " +   "----->" + ChatColor.WHITE +"\u27a4");
+        player.sendMessage(ChatColor.BLUE + "[ROUND_STAR]"+ " " +   "----->" + ChatColor.WHITE +"\u2730");
+        player.sendMessage(ChatColor.BLUE + "[SUIT]"+ " " +   "----->" + ChatColor.WHITE +"\u2666");
+        player.sendMessage(ChatColor.BLUE + "[+]"+ " " +   "----->" + ChatColor.WHITE +"\u2726");
+        player.sendMessage(ChatColor.BLUE + "[CIRCLE]"+ " " +   "----->" + ChatColor.WHITE +"\u25CF");
+        player.sendMessage(ChatColor.BLUE + "[SUN]"+ " " +   "----->" + ChatColor.WHITE +"\u2739"); 
+    }
+    
+    public void cmdSR_Help(Player player){
+        PluginDescriptionFile pdfFile = this.getDescription();
+        String version1 = pdfFile.getVersion();
+        Methods.helpInfo(player,version1);
+    }
+            
     public Economy loadEconomy(){ 
         Economy econ;
         try{ 

@@ -142,9 +142,10 @@ public class Methods {
         sender.sendMessage(ChatColor.BLUE + "/sr copy/paste");
         sender.sendMessage(ChatColor.BLUE + "/sr duplicate");
         sender.sendMessage(ChatColor.BLUE + "/sr getamount");
+        sender.sendMessage(ChatColor.BLUE + "/sr mob <name>");
         sender.sendMessage(ChatColor.BLUE + "/sr reload");
-        sender.sendMessage(ChatColor.BLUE + "/removelore <lineN>"+ ChatColor.RED + " NEW!");
-        sender.sendMessage(ChatColor.BLUE + "/sr hideflags" + ChatColor.RED + " NEW!");
+        sender.sendMessage(ChatColor.BLUE + "/removelore <lineN>");
+        sender.sendMessage(ChatColor.BLUE + "/sr hideflags" );
     }
     //Get Skull
     public  static void getSkull(Player p,String owner){

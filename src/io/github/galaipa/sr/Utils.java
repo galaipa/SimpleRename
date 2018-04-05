@@ -6,7 +6,6 @@ import static io.github.galaipa.sr.SimpleRename.getTranslation;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -111,8 +110,31 @@ public class Utils {
         return allArgs;
     }
     
+    public static Boolean xpPay(Player player, String what){
+        if (player.hasPermission("sr.free")){
+            player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
+            return true;
+        }
+        if(SimpleRename.xpEn){
+            int XPprice = plugin.getConfig().getInt("XPprices."+ what);
+            int amount = player.getInventory().getItemInHand().getAmount();
+            int totalPrice = amount * XPprice ;
+            
+            if (player.getTotalExperience() < totalPrice){
+                player.sendMessage(ChatColor.RED + (getTranslation("8"))+ (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + totalPrice + ("XP"));
+                return false;
+            }else{
+                player.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + totalPrice + ("XP"));
+                setXP(player, player.getTotalExperience() - totalPrice);
+                return true;
+            } 
+        }
+        
+        return false;        
+    }
     
-        public static Boolean ordainketa(Player player, String zer,String mezua, String zer2){
+    
+     /*   public static Boolean ordainketa(Player player, String zer,String mezua, String zer2){
               if (player.hasPermission("sr.free")) {
                     player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)));
                     return true;
@@ -160,7 +182,7 @@ public class Utils {
                 player.sendMessage(ChatColor.GREEN +(getTranslation(mezua)));
                 return true;
             }
-        }
+        }*/
 protected static void setXP (Player p, int amount) {      
     p.setExp(0);
     p.setLevel(0);
