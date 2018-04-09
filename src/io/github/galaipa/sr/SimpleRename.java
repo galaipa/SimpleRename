@@ -57,6 +57,9 @@ public class SimpleRename extends JavaPlugin{
         //Load configuration file
         getConfig().options().copyDefaults(true);
         saveConfig();
+        // Load prefix from config and add a space
+        // so that messages will not be clumped with prefix
+        prefix = getConfig().getString("Prefix");
         // Register events
         registerEvents();
         //Load translations
@@ -65,10 +68,10 @@ public class SimpleRename extends JavaPlugin{
         // Load economy
         econEn = getConfig().getBoolean("Economy");
         if (econEn){
-            log.info("[SimpleRename] Economy support has been temporaly disabled. Feature will be back in next version ");
+            log.info(prefix + "Economy support has been temporaly disabled. Feature will be back in next version ");
             /*if(!setupEconomy()){
                 econEn = false;
-                log.info("[SimpleRename] Economy disabled, Vault not found!");
+                log.info(prefix + "Economy disabled, Vault not found!");
             }   */
         }             
         // Load updater
@@ -81,9 +84,9 @@ public class SimpleRename extends JavaPlugin{
         // Other config
         xpEn = getConfig().getBoolean("XPprices.Enable");
         if(xpEn)
-            log.info("[SimpleRename] XP price support has been temporaly disabled. Feature will be back in next version");
+            log.info(prefix + "XP price support has been temporaly disabled. Feature will be back in next version");
         characterLimit = getConfig().getInt("CharacterLimit");
-        prefix = getConfig().getString("Prefix");
+        
         nameBlackList = getConfig().getStringList("BlackList");
         itemBlackList = getConfig().getStringList("BlackListID");
         log.info("SimpleRename enabled!");
@@ -96,10 +99,10 @@ public class SimpleRename extends JavaPlugin{
             if(args.length == 1 && cmd.getName().equalsIgnoreCase("sr")&& args[0].equalsIgnoreCase("reload") ){
                 reloadConfig();
                 onEnable();
-                sender.sendMessage("[SimpleRename]" + "Plugin reloaded");
+                sender.sendMessage(prefix + "Plugin reloaded");
                 return true;
             }else{
-                sender.sendMessage("[SimpleRename]" + "Commands can only be run by players");
+                sender.sendMessage(prefix + "Commands can only be run by players");
                 return true; 
             }
         }
@@ -431,7 +434,7 @@ public class SimpleRename extends JavaPlugin{
         if (messages.getString(path) == null){
             msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
         }else{
-            msg = prefix + " " + messages.getString(path);
+            msg = prefix + messages.getString(path);
             msg = ChatColor.translateAlternateColorCodes('&', msg);
         }
         return msg;
