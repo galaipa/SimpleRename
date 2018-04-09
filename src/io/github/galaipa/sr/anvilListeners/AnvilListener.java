@@ -17,7 +17,7 @@ public class AnvilListener implements Listener {
     
     
    @EventHandler
-   public void AnvilListener(PrepareAnvilEvent event){
+   public void anvilListener(PrepareAnvilEvent event){
        Inventory inv = event.getInventory();
        try{
             HumanEntity p = event.getViewers().get(0);

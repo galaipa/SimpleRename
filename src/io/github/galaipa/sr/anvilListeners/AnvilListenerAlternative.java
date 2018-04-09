@@ -18,7 +18,7 @@ public class AnvilListenerAlternative implements Listener {
     
     
    @EventHandler
-   public void AnvilListenerAlternative(InventoryClickEvent event){
+   public void anvilListenerAlternative(InventoryClickEvent event){
        try{
             Inventory inv = event.getInventory();
             HumanEntity p = event.getWhoClicked();
