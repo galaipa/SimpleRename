@@ -68,7 +68,7 @@ public class SimpleRename extends JavaPlugin{
         // Load economy
         econEn = getConfig().getBoolean("Economy");
         if (econEn){
-            log.info(prefix + "Economy support has been temporaly disabled. Feature will be back in next version ");
+            log.info(prefix + "Economy support has been temporarily disabled. Feature will be back in next version ");
             /*if(!setupEconomy()){
                 econEn = false;
                 log.info(prefix + "Economy disabled, Vault not found!");
@@ -84,7 +84,7 @@ public class SimpleRename extends JavaPlugin{
         // Other config
         xpEn = getConfig().getBoolean("XPprices.Enable");
         if(xpEn)
-            log.info(prefix + "XP price support has been temporaly disabled. Feature will be back in next version");
+            log.info(prefix + "XP price support has been temporarily disabled. Feature will be back in next version");
         characterLimit = getConfig().getInt("CharacterLimit");
         
         nameBlackList = getConfig().getStringList("BlackList");
