@@ -162,14 +162,17 @@ public class Methods {
         Listeners.mobs.put(p, name);
         p.sendMessage(ChatColor.GREEN+(getTranslation("17")));
     }
-    public static void glowItem(Player p){
-      ItemStack item = p.getItemInHand(); 
+    public static void glowItem(ItemStack item){
       ItemMeta itemStackMeta = item.getItemMeta(); 
       itemStackMeta.addEnchant(Enchantment.LURE, 0, true);
       itemStackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
       item.setItemMeta(itemStackMeta);
-      p.updateInventory();
-      p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
+    }
+    
+    public static void unGlowItem(ItemStack item){
+      ItemMeta itemStackMeta = item.getItemMeta();
+      itemStackMeta.removeEnchant(Enchantment.LURE);
+      item.setItemMeta(itemStackMeta);
     }
     public static void hideFlags(Player p){
       ItemStack item = p.getItemInHand(); 

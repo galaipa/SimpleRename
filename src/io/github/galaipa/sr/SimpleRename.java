@@ -200,6 +200,9 @@ public class SimpleRename extends JavaPlugin{
                 case "glow":
                     cmdSR_Glow(player);
                     break;
+                case "unglow":
+                    cmdSR_UnGlow(player);
+                    break;
                 case "mob":
                     cmdSR_Mob(player,args);
                     break;
@@ -308,7 +311,16 @@ public class SimpleRename extends JavaPlugin{
     
     public void cmdSR_Glow(Player player){
         if(Utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())){
-            Methods.glowItem(player);
+            Methods.glowItem(player.getItemInHand());
+            player.updateInventory();
+            player.sendMessage(ChatColor.GREEN+(getTranslation("5")));
+        }
+    }
+    public void cmdSR_UnGlow(Player player){
+        if(Utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())){
+            Methods.unGlowItem(player.getItemInHand());
+            player.updateInventory();
+            player.sendMessage(ChatColor.GREEN+(getTranslation("5")));
         }
     }
     
