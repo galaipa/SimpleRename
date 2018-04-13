@@ -26,6 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -131,14 +132,14 @@ public class SimpleRename extends JavaPlugin{
     
     public static void cmdRename(Player player, String[] args){
         if(Utils.checkEverything(player, Args(0,args), "sr.name", 1,player.getItemInHand())){
-            Methods.setName(player,(Args(0,args)));
+            Methods.setName(player.getItemInHand(),(Args(0,args)));
             player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
         }
     }
     
     public static void cmdAddLore(Player player, String[] args){
         if(Utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
-            Methods.addLore(player,(Args(0,args)));
+            Methods.addLore(player.getItemInHand(),(Args(0,args)));
             player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
         }
     }
@@ -146,16 +147,17 @@ public class SimpleRename extends JavaPlugin{
     public static void cmdRemoveLore(Player player, String[] args){
         if(Utils.checkEverything(player, null, "sr.removeLore", 0, player.getItemInHand())){
             if(args.length != 0 && Utils.isInt(args[0]))
-                Methods.removeLore(player, Integer.parseInt(args[0])-1);
+                Methods.removeLore(player.getItemInHand(), Integer.parseInt(args[0])-1);
             else 
-                Methods.removeLore(player, -1);
+                Methods.removeLore(player.getItemInHand(), -1);
             player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
+            player.updateInventory();
         }
     }
     
     public static void cmdRelore(Player player, String[] args){
         if(Utils.checkEverything(player, Args(0,args), "sr.lore", 1, player.getItemInHand())){
-            Methods.setLore(player,(Args(0,args)));
+            Methods.setLore(player.getItemInHand(),(Args(0,args)));
             player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
         }
     }
@@ -236,13 +238,16 @@ public class SimpleRename extends JavaPlugin{
         }else if (Utils.checkEverything(player, Args(2,args), "sr.book", 0, null)){
             switch(args[1].toLowerCase()){
                 case "setauthor":
-                    Methods.setBookAuthor(player, Args(2,args));
+                    Methods.setBookAuthor(player.getItemInHand(), Args(2,args));
+                    player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
                     break;
                 case "settitle":
-                    Methods.setBookTitle(player, Args(2,args));
+                    Methods.setBookTitle(player.getItemInHand(), Args(2,args));
+                    player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
                     break;
                 case "unsign":
-                    Methods.unSignBook(player);
+                    player.getInventory().setItem(player.getInventory().getHeldItemSlot(),Methods.unSignBook(player.getItemInHand()));
+                    player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
                     break;
                 default:
                     cmdInvalid(player);
@@ -254,7 +259,7 @@ public class SimpleRename extends JavaPlugin{
     
     public void cmdSR_Clear(Player player){
         if(Utils.checkEverything(player, null, "sr.clear", 0, player.getItemInHand())){
-            Methods.clearItem(player);
+            Methods.clearItem(player.getItemInHand());
             player.sendMessage(ChatColor.GREEN +(getTranslation("5")));
         }
     }
@@ -262,18 +267,19 @@ public class SimpleRename extends JavaPlugin{
     public void cmdSR_Duplicate(Player player, String[] args){
         if(Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
             if(args.length >= 2 && Utils.isInt(args[1]))
-                Methods.duplicateItem(player,Integer.parseInt(args[1]));
+                Methods.duplicateItem(player.getItemInHand(),Integer.parseInt(args[1]));
             else
-                Methods.duplicateItem(player,2);
+                Methods.duplicateItem(player.getItemInHand(),2);
+            player.sendMessage(ChatColor.GREEN+(getTranslation("10")));
         }
     }
     
     public void cmdSR_GetAmount(Player player, String[] args){
         if(Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())){
              if(args.length >= 2 && Utils.isInt(args[1]))
-                 Methods.getAmount(player,Integer.parseInt(args[1]));
+                player.getItemInHand().setAmount(Integer.parseInt(args[1]));
              else
-                 Methods.getAmount(player,2);
+                player.getItemInHand().setAmount(2);
         }
     }
     
@@ -299,7 +305,8 @@ public class SimpleRename extends JavaPlugin{
     
     public void cmdSR_GetSkull(Player player, String[] args){
         if(Utils.checkEverything(player, Args(0,args), "sr.skull", 2, null)){
-            Methods.getSkull(player, args[1]);
+            ItemStack skull = Methods.getSkull(args[1]);
+            player.getInventory().addItem(skull);
         }
     }
     
@@ -326,7 +333,9 @@ public class SimpleRename extends JavaPlugin{
     
     public void cmdSR_Hideflags(Player player){
         if(Utils.checkEverything(player, null, "sr.hide", 1, player.getItemInHand())){
-            Methods.hideFlags(player);
+            Methods.hideFlags(player.getItemInHand());
+            player.updateInventory();
+            player.sendMessage(ChatColor.GREEN+(getTranslation("5")));
         }
     }
     

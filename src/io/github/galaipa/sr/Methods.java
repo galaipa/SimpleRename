@@ -3,6 +3,7 @@ package io.github.galaipa.sr;
 
 import static io.github.galaipa.sr.SimpleRename.getTranslation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import org.bukkit.ChatColor;
@@ -22,90 +23,67 @@ public class Methods {
         plugin = instance;
     }
     //Rename
-    public static void setName(Player player, String name){
-      ItemStack item = player.getItemInHand(); 
+    public static void setName(ItemStack item, String name){
       ItemMeta itemStackMeta = item.getItemMeta();
       itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));           
       item.setItemMeta(itemStackMeta);
     }
     //Set a one line lore
-    public static void setLore(Player player, String name){
-        String[] splittedName = name.split("/n");    
-        ItemStack itemStack = player.getItemInHand();
-        List<String> lore = new ArrayList();
-        for(String s : splittedName){
-        lore.add(ChatColor.translateAlternateColorCodes('&', s));
-        }
+    public static void setLore(ItemStack itemStack, String name){
+        String lore = ChatColor.translateAlternateColorCodes('&', name);
+        String[] loreArray = lore.split("/n");
+
         ItemMeta itemStackMeta = itemStack.getItemMeta();
-        itemStackMeta.setLore(lore);
+        itemStackMeta.setLore(Arrays.asList(loreArray));
         itemStack.setItemMeta(itemStackMeta);
     }
     //Add a new lore line
-    public static void addLore(Player player, String name){
+    public static void addLore(ItemStack itemStack, String name){
         String[] splittedName = name.split("/n");    
-        ItemStack itemStack = player.getItemInHand();
         List<String> lore = itemStack.getItemMeta().getLore();
         if(lore == null){
-            setLore(player, name);
+            setLore(itemStack, name);
         }
         else {
-        for(String s : splittedName){
-        lore.add(ChatColor.translateAlternateColorCodes('&', s));
-        }
-        ItemMeta itemStackMeta = itemStack.getItemMeta();
-        itemStackMeta.setLore(lore);
-        itemStack.setItemMeta(itemStackMeta);
+            for(String s : splittedName){
+                lore.add(ChatColor.translateAlternateColorCodes('&', s));
+            }
+            ItemMeta itemStackMeta = itemStack.getItemMeta();
+            itemStackMeta.setLore(lore);
+            itemStack.setItemMeta(itemStackMeta);
         }
         }
     // Set book author
-    public static void setBookAuthor(Player player, String name){
-          ItemStack liburua = player.getItemInHand();
-          BookMeta meta = (BookMeta) liburua.getItemMeta();
+    public static void setBookAuthor(ItemStack book, String name){
+          BookMeta meta = (BookMeta) book.getItemMeta();
           meta.setAuthor(name);
-          liburua.setItemMeta(meta);
+          book.setItemMeta(meta);
     }
     // Set book title
-    public static void setBookTitle(Player player, String name){
-          ItemStack liburua = player.getItemInHand();
-          BookMeta meta = (BookMeta) liburua.getItemMeta();
+    public static void setBookTitle(ItemStack book, String name){
+          BookMeta meta = (BookMeta) book.getItemMeta();
           meta.setTitle(name);
-          liburua.setItemMeta(meta);
+          book.setItemMeta(meta);
     }
-    // Set book title
-    public static void unSignBook(Player player){
-        ItemStack liburua = player.getItemInHand();
-        BookMeta metaZaharra = (BookMeta) liburua.getItemMeta();
-        ItemStack sinatugabea = new ItemStack(Material.BOOK_AND_QUILL, 1);
-        BookMeta metaBerria = (BookMeta) sinatugabea.getItemMeta();
-        metaBerria.setPages(metaZaharra.getPages());
-        sinatugabea.setItemMeta(metaBerria);
-        player.getInventory().setItem(player.getInventory().getHeldItemSlot(),sinatugabea);
+    // Unsign book
+    public static ItemStack  unSignBook(ItemStack book){
+        BookMeta oldMeta = (BookMeta) book.getItemMeta();
+        ItemStack unsigned = new ItemStack(Material.BOOK_AND_QUILL, 1);
+        BookMeta newMeta = (BookMeta) unsigned.getItemMeta();
+        newMeta.setPages(oldMeta.getPages());
+        unsigned.setItemMeta(newMeta);
+        return unsigned;
+        
     }
     // Clear Meta
-    public static void clearItem(Player player){
-        ItemStack item = player.getItemInHand();
-        int slot = player.getInventory().getHeldItemSlot();
+    public static void clearItem(ItemStack item){
         item.setItemMeta(null);
-        player.getInventory().removeItem(item);
-        player.getInventory().setItem(slot, item);
     }
     // Duplicate item
-    public static void duplicateItem(Player player, int amount){
-        ItemStack item = player.getItemInHand();      
-        player.getInventory().removeItem(item);
+    public static void duplicateItem(ItemStack item, int amount){
         int amountInHand = item.getAmount();
         int result = amountInHand*amount;
         item.setAmount(result);
-        player.getInventory().addItem(item);
-        player.sendMessage(ChatColor.GREEN+(getTranslation("10")));
-    }
-    // Get amount
-    public static void getAmount(Player player, int amount){
-        ItemStack item = player.getItemInHand();      
-        player.getInventory().removeItem(item);
-        item.setAmount(amount);
-        player.getInventory().addItem(item);
-        player.sendMessage(ChatColor.GREEN+(getTranslation("10")));
     }
     //Copy / paste
     public static HashMap<String, ItemMeta > copy = new HashMap<String, ItemMeta>();
@@ -148,14 +126,14 @@ public class Methods {
         sender.sendMessage(ChatColor.BLUE + "/sr hideflags" );
     }
     //Get Skull
-    public  static void getSkull(Player p,String owner){
-              ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
-              skull.setDurability((short)3);
-              SkullMeta meta = (SkullMeta)skull.getItemMeta();
-             // meta.setDisplayName(name);
-              meta.setOwner(owner);
-              skull.setItemMeta(meta);
-              p.getInventory().addItem(skull);
+    public static ItemStack getSkull(String owner){
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
+        skull.setDurability((short)3);
+        SkullMeta meta = (SkullMeta)skull.getItemMeta();
+       // meta.setDisplayName(name);
+        meta.setOwner(owner);
+        skull.setItemMeta(meta);
+        return skull;      
     }
     //Rename mobs
     public static void renameMobs(Player p, String name){
@@ -174,18 +152,14 @@ public class Methods {
       itemStackMeta.removeEnchant(Enchantment.LURE);
       item.setItemMeta(itemStackMeta);
     }
-    public static void hideFlags(Player p){
-      ItemStack item = p.getItemInHand(); 
+    public static void hideFlags(ItemStack item){ 
       ItemMeta itemStackMeta = item.getItemMeta(); 
       itemStackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
       itemStackMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
       itemStackMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
       item.setItemMeta(itemStackMeta);
-      p.updateInventory();
-      p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
     }
-    public static void removeLore(Player p, int n){
-      ItemStack item = p.getItemInHand(); 
+    public static void removeLore(ItemStack item, int n){
       ItemMeta itemStackMeta = item.getItemMeta(); 
       if(itemStackMeta.hasLore() && (n != -1)){
         List<String> list =itemStackMeta.getLore();
@@ -197,11 +171,6 @@ public class Methods {
           itemStackMeta.setLore(null);
       }
       item.setItemMeta(itemStackMeta);
-      p.updateInventory();
-      p.sendMessage(ChatColor.GREEN+(getTranslation("5")));
-    }
-   
-    
-    
+    } 
      
 }
