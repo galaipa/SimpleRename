@@ -27,10 +27,10 @@ public class AnvilListener implements Listener {
             ItemMeta newMeta = newItem.getItemMeta();
             String newName = newMeta.getDisplayName();
             
-            if(oldName.equals("§" + newName)) {
+            if(oldName != null && oldName.equals("§" + newName)) {
                  newMeta.setDisplayName(oldName);
             }else{
-                if(oldName.startsWith("§") && newName.startsWith(oldName.substring(1))) //recover lost color code
+                if(oldName != null && oldName.startsWith("§") && newName.startsWith(oldName.substring(1))) //recover lost color code
                     newName = "&" + newName;
                 
                 if(Utils.checkEverything((Player) p, newName, null, 1,newItem)){
