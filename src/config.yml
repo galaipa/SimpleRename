@@ -4,8 +4,6 @@
 Language: en
 #METRICS: Enable or Disable Metrics
 Metrics: true
-#UPDATER: Enable or Disable the update notifier
-Updater: true
 #ECONOMY:(If you set it to "true" yo need to have Vault installed)
 Economy: false
 #PRICES: Price to rename and relore items 
