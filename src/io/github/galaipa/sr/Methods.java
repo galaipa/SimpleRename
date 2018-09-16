@@ -68,7 +68,7 @@ public class Methods {
     // Unsign book
     public static ItemStack  unSignBook(ItemStack book){
         BookMeta oldMeta = (BookMeta) book.getItemMeta();
-        ItemStack unsigned = new ItemStack(Material.BOOK_AND_QUILL, 1);
+        ItemStack unsigned = new ItemStack(Material.WRITABLE_BOOK, 1);
         BookMeta newMeta = (BookMeta) unsigned.getItemMeta();
         newMeta.setPages(oldMeta.getPages());
         unsigned.setItemMeta(newMeta);
@@ -127,7 +127,7 @@ public class Methods {
     }
     //Get Skull
     public static ItemStack getSkull(String owner){
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         skull.setDurability((short)3);
         SkullMeta meta = (SkullMeta)skull.getItemMeta();
        // meta.setDisplayName(name);
