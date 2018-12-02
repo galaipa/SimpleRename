@@ -16,15 +16,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class Listeners implements Listener {
     public static HashMap<Player, String> mobs = new HashMap<Player, String>();
     
-    //Updater
-    @EventHandler
-    public void UpdateListener(PlayerJoinEvent event){
-      Player player = event.getPlayer();
-      if(player.hasPermission("sr.update") && (SimpleRename.updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE)){
-        player.sendMessage(ChatColor.GREEN + "An update is available: " + ChatColor.YELLOW + SimpleRename.updater.getLatestName() + ChatColor.GREEN +  " for " + SimpleRename.updater.getLatestGameVersion() + " available at " +  ChatColor.YELLOW + "http://goo.gl/hAf1QV");
-        //player.sendMessage(ChatColor.RED + "Type /sr update if you would like to update it automatically.");
-      }
-    }
     // Animal renaming
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {

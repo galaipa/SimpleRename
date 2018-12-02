@@ -34,7 +34,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class SimpleRename extends JavaPlugin{
     public static final Logger log = Logger.getLogger("Minecraft");
-    public static Updater updater;
 
     public static Economy econ;
     public static boolean econEn, xpEn;
@@ -75,9 +74,6 @@ public class SimpleRename extends JavaPlugin{
                 log.info(prefix + "Economy disabled, Vault not found!");
             }   */
         }             
-        // Load updater
-        if ((getConfig().getBoolean("Updater")))
-            updater = new Updater(this, 75680, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
             
         // Load metrics
          if (getConfig().getBoolean("Metrics"))
