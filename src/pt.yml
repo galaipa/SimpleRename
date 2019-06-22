@@ -1,0 +1,18 @@
+#LANGUAGE? FILE SIMPLE RENAME (Portuguese)
+3: Use /commando + nome 
+4: Precisas de um item na tua mão
+5: Item renomeado com sucesso!
+6: Não tens permissão para isso!
+7: Não tens permissão para usar codigo de cor!
+8: Não tens dinheiro suficiente!
+9: Preço
+10: Item duplicado com sucesso!
+11: Nome/Descrição do item copiado. Usa "/sr paste" para colar
+12: Nome/Descrição colado com sucesso!
+13: Item resetado!
+14: Palavra bloqueada
+15: Não tens permissão para editar este item.
+16: Precisas de um livro na tua mão
+17: Clique direito para renomear o mob
+18: Precisas de especificar o nome do jogador
+19: Mensagem muito longa. Maximo de letras: ' 
