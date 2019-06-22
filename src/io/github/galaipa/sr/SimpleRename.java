@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.List;
@@ -17,8 +18,7 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.CharSequenceReader;
+import org.bstats.bukkit.MetricsLite;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -423,7 +423,7 @@ public class SimpleRename extends JavaPlugin{
             InputStream defaultStream = getResource(language +".yml");
             Reader r;
             try {
-                r = this.getReaderFromStream(defaultStream);
+                r = new InputStreamReader(defaultStream);
                 yaml =  YamlConfiguration.loadConfiguration(r);
                 r.close();
             } catch (IOException e) {
@@ -432,13 +432,7 @@ public class SimpleRename extends JavaPlugin{
         }
         return yaml;
     }
-    
-    public Reader getReaderFromStream(InputStream initialStream) throws IOException {
-          byte[] buffer = IOUtils.toByteArray(initialStream);
-          Reader targetReader = new CharSequenceReader(new String(buffer));
-          return targetReader;
-    }
-    
+
     private void copyTranslation(String trans) {
         File file = new File(getDataFolder().getAbsolutePath() + File.separator + "lang" + File.separator + trans + ".yml");
         if (!file.exists()) {

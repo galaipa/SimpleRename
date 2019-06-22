@@ -13,10 +13,6 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class Utils {
-  /*  public static SimpleRename plugin;
-    public Utils(SimpleRename instance) {
-        plugin = instance;
-    } */
    
     public static boolean checkEverything(Player p, String message, String perm, int lenght, ItemStack item){
         if(message == null){
@@ -26,7 +22,7 @@ public class Utils {
         if(perm != null && !p.hasPermission(perm)){ // CHEK PERMS
             p.sendMessage(ChatColor.RED+(getTranslation("6")));
             return false;
-        }else if((message.contains("&") || message.contains(("§"))) && !p.hasPermission("sr.color")){ //CHECK COLOR PERM
+        }else if((message.contains("&") || message.contains(("ï¿½"))) && !p.hasPermission("sr.color")){ //CHECK COLOR PERM
             p.sendMessage(ChatColor.RED +(getTranslation("7")));
             return false;
         }else if(message.split(" ").length  < lenght) { // CHECK ARGUMENT LENGTH
@@ -109,79 +105,6 @@ public class Utils {
         return allArgs;
     }
     
-   /* public static Boolean xpPay(Player player, String what){
-        if (player.hasPermission("sr.free")){
-            player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
-            return true;
-        }
-        if(SimpleRename.xpEn){
-            int XPprice = plugin.getConfig().getInt("XPprices."+ what);
-            int amount = player.getInventory().getItemInHand().getAmount();
-            int totalPrice = amount * XPprice ;
-            
-            if (player.getTotalExperience() < totalPrice){
-                player.sendMessage(ChatColor.RED + (getTranslation("8"))+ (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + totalPrice + ("XP"));
-                return false;
-            }else{
-                player.sendMessage(ChatColor.GREEN + (getTranslation("5")) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + totalPrice + ("XP"));
-                setXP(player, player.getTotalExperience() - totalPrice);
-                return true;
-            } 
-        }
-        
-        return false;        
-    }*/
-    
-    
-     /*   public static Boolean ordainketa(Player player, String zer,String mezua, String zer2){
-              if (player.hasPermission("sr.free")) {
-                    player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)));
-                    return true;
-                }
-              else if ((plugin.econEn && plugin.xpEn)) {
-                   int Kantitatea = player.getInventory().getItemInHand().getAmount();
-                   int XPprezioa = plugin.getConfig().getInt("XPprices."+ zer2);
-                   int Prezioa = plugin.getConfig().getInt("Prices."+ zer);
-                   int Guztira= Kantitatea * Prezioa ;
-                   int XPGuztira= Kantitatea * XPprezioa ;
-                   EconomyResponse r = plugin.econ.withdrawPlayer(player, Guztira); 
-                    if ((!r.transactionSuccess()) || (player.getTotalExperience() < XPGuztira)){
-                        player.sendMessage(ChatColor.RED + (getTranslation("8"))+ (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + Guztira + ("$")+ (" & ") + XPGuztira + ("XP"));
-                        return false;
-                    }else{
-                        player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + Guztira + ("$")+ (" & ") + XPGuztira + ("XP"));
-                        setXP(player, player.getTotalExperience() - XPGuztira);
-                        return true;
-                    }  
-            }else if (plugin.xpEn) {
-                        int XPprezioa = plugin.getConfig().getInt("XPprices."+ zer2);
-                        int Kantitatea = player.getInventory().getItemInHand().getAmount();
-                        int XPGuztira= Kantitatea * XPprezioa ;
-                    if (player.getTotalExperience() < XPGuztira){
-                        player.sendMessage(ChatColor.RED + (getTranslation("8"))+ (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + XPGuztira + ("XP"));
-                        return false;
-                    }else{
-                        player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + XPGuztira + ("XP"));
-                        setXP(player, player.getTotalExperience() - XPGuztira);
-                        return true;
-                    } 
-            }else if (plugin.econEn) {
-                    int Prezioa = plugin.getConfig().getInt("Prices."+ zer);
-                    int Kantitatea = player.getInventory().getItemInHand().getAmount();
-                    int Guztira= Kantitatea * Prezioa ;
-                    EconomyResponse r = plugin.econ.withdrawPlayer(player, Guztira);    
-                    if (!r.transactionSuccess()){
-                        player.sendMessage(ChatColor.RED + (getTranslation("8"))+ (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + Guztira + ("$"));
-                        return false;
-                    }else{
-                        player.sendMessage(ChatColor.GREEN + (getTranslation(mezua)) + (" ") + ChatColor.RED + (getTranslation("9")) + (":") + (" ") + Guztira + ("$"));
-                        return true;
-                    } 
-            } else{
-                player.sendMessage(ChatColor.GREEN +(getTranslation(mezua)));
-                return true;
-            }
-        }*/
 protected static void setXP (Player p, int amount) {      
     p.setExp(0);
     p.setLevel(0);

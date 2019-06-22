@@ -2,7 +2,6 @@ package io.github.galaipa.sr;
 
 
 import static io.github.galaipa.sr.SimpleRename.getTranslation;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
