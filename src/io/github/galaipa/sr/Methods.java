@@ -32,20 +32,20 @@ public class Methods {
     //Set a one line lore
     public static void setLore(ItemStack itemStack, String name){
         String lore = ChatColor.translateAlternateColorCodes('&', name);
-        String[] loreArray = lore.split("/n");
+        String[] loreArray = lore.split("\\\\n");
 
         ItemMeta itemStackMeta = itemStack.getItemMeta();
         itemStackMeta.setLore(Arrays.asList(loreArray));
         itemStack.setItemMeta(itemStackMeta);
     }
     //Add a new lore line
-    public static void addLore(ItemStack itemStack, String name){
-        String[] splittedName = name.split("/n");    
+    public static void addLore(ItemStack itemStack, String name){   
         List<String> lore = itemStack.getItemMeta().getLore();
         if(lore == null){
             setLore(itemStack, name);
         }
         else {
+        	String[] splittedName = name.split("\\\\n");
             for(String s : splittedName){
                 lore.add(ChatColor.translateAlternateColorCodes('&', s));
             }
@@ -53,7 +53,7 @@ public class Methods {
             itemStackMeta.setLore(lore);
             itemStack.setItemMeta(itemStackMeta);
         }
-        }
+    }
     // Set book author
     public static void setBookAuthor(ItemStack book, String name){
           BookMeta meta = (BookMeta) book.getItemMeta();
