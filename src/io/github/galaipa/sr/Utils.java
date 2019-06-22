@@ -22,7 +22,7 @@ public class Utils {
 		if(perm != null && !p.hasPermission(perm)){ // CHEK PERMS
 			p.sendMessage(ChatColor.RED+(getTranslation("6")));
 			return false;
-		}else if((message.contains("&") || message.contains(("�"))) && !p.hasPermission("sr.color")){ //CHECK COLOR PERM
+		}else if((message.contains("&") || message.contains(("§"))) && !checkColorPerms(p,item)){ //CHECK COLOR PERM
 			p.sendMessage(ChatColor.RED +(getTranslation("7")));
 			return false;
 		}else if(message.split(" ").length  < lenght) { // CHECK ARGUMENT LENGTH
@@ -37,16 +37,24 @@ public class Utils {
 		}else if(!p.hasPermission("sr.blacklist") && !checkName(message)){ //CHECK MESSAGE BLACKLIST
 			p.sendMessage(ChatColor.RED+(getTranslation("14")) );
 			return false;
-		}else if(!p.hasPermission("sr.blacklist") && item != null && !checkItem(item)){ //CHECK ITEM BLACKLIST
+		}else if(item != null && !checkItem(p,item)){ //CHECK ITEM BLACKLIST
 			p.sendMessage(ChatColor.RED+(getTranslation("15")));
 			return false;
 		}
 		return true;
 
 	}
+	
+	public static boolean checkColorPerms(Player p, ItemStack item) {
+		if(p.hasPermission("sr.color"))return true;
+		try {
+			return p.hasPermission("sr.color." + item.getType().toString());
+		}catch (Exception e) {
+			return false;
+		}
+	}
 
 	public static boolean checkName(String message){
-
 		List<String> blackListLowerCase = listToLowerCase(SimpleRename.nameBlackList);
 		for (String word : message.split(" ")) {
 			word = word.toLowerCase();
@@ -58,7 +66,9 @@ public class Utils {
 		return true;
 	}
 
-	public static boolean checkItem(ItemStack item){
+	public static boolean checkItem(Player p, ItemStack item){
+		if(p.hasPermission("sr.blacklist")) return true;
+		if(p.hasPermission("sr.blacklist." + item.getType().toString())) return true;
 		List<String> blackList = SimpleRename.itemBlackList;
 
 		for(String material : blackList){
