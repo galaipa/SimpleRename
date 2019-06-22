@@ -26,7 +26,6 @@ public class AnvilListenerAlternative implements Listener {
                 ItemStack item = event.getCurrentItem();
                 ItemMeta meta = item.getItemMeta();
                 String name = meta.getDisplayName();
-                System.out.println("aa");
                 if(Utils.checkEverything((Player) p, name, null, 1,item)){
                     name = ChatColor.translateAlternateColorCodes('&', name);
                     meta.setDisplayName(name);

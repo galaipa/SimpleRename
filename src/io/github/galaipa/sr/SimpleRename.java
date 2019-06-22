@@ -48,7 +48,6 @@ public class SimpleRename extends JavaPlugin{
     public static List<String> nameBlackList, itemBlackList;
     
     public static String version;
-    public static boolean backCompatibility;
     @Override
     public void onDisable() {
         log.info("SimpleRename disabled!");
@@ -58,8 +57,6 @@ public class SimpleRename extends JavaPlugin{
     public void onEnable() {    
     	//Check Spigot/Bukkit version
     	version = getServer().getBukkitVersion();
-    	backCompatibility = !version.contains("1.13");
-    	if(backCompatibility)System.out.println("You are using MC <1.13, some features may not work as intended. You can use SimpleRename v10.7 instead");
         //Load configuration file
         getConfig().options().copyDefaults(true);
         saveConfig();
@@ -74,7 +71,7 @@ public class SimpleRename extends JavaPlugin{
         // Load economy
         econEn = getConfig().getBoolean("Economy");
         if (econEn){
-            log.info(prefix + "Economy support has been temporarily disabled. Feature will be back in next version ");
+            log.info(prefix + "Economy support has been temporarily disabled. Feature will be back in a future version ");
             /*if(!setupEconomy()){
                 econEn = false;
                 log.info(prefix + "Economy disabled, Vault not found!");
@@ -237,12 +234,7 @@ public class SimpleRename extends JavaPlugin{
         }
     }
     
-    public void cmdSR_Book(Player player, String[] args){
-    	if(backCompatibility) {
-    		player.sendMessage("Feature not available for MC <1.13 and SimpleRename 10.8+. You can use SimpleRename v10.7 instead");
-    		return;
-    	}
-    		
+    public void cmdSR_Book(Player player, String[] args){   		
         if(player.getItemInHand().getType() != Material.WRITTEN_BOOK){
             player.sendMessage(ChatColor.RED + getTranslation("16"));
         }else if (Utils.checkEverything(player, Args(2,args), "sr.book", 0, null)){
@@ -313,12 +305,7 @@ public class SimpleRename extends JavaPlugin{
         }
     }
     
-    public void cmdSR_GetSkull(Player player, String[] args){
-    	if(backCompatibility) {
-    		player.sendMessage("Feature not available for MC <1.13 and SR 10.8+. You can use SimpleRename v10.7 instead");
-    		return;
-    	}
-    		
+    public void cmdSR_GetSkull(Player player, String[] args){   		
         if(Utils.checkEverything(player, Args(0,args), "sr.skull", 2, null)){
             ItemStack skull = Methods.getSkull(args[1]);
             player.getInventory().addItem(skull);
@@ -461,7 +448,7 @@ public class SimpleRename extends JavaPlugin{
         if (messages.getString(path) == null){
             msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
         }else{
-            msg = prefix + messages.getString(path);
+            msg = prefix + " " +  messages.getString(path);
             msg = ChatColor.translateAlternateColorCodes('&', msg);
         }
         return msg;

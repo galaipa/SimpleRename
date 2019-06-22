@@ -6,10 +6,6 @@
   <name>SimpleRename</name>
   <url>https://github.com/galaipa/SimpleRename</url>
   <packaging>jar</packaging>
-  <properties>
-    <mainClass>io.github.galaipa.sr.SimpleRename</mainClass>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
   <repositories>
     <repository>
       <id>spigot-repo</id>
@@ -47,6 +43,7 @@
   <build>
     <finalName>SimpleRename</finalName>
     <sourceDirectory>src</sourceDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
     <resources>
       <resource>
         <directory>src</directory>

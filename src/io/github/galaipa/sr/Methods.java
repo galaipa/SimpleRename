@@ -2,18 +2,20 @@ package io.github.galaipa.sr;
 
 
 import static io.github.galaipa.sr.SimpleRename.getTranslation;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.enchantments.Enchantment;
 
 
 public class Methods {
@@ -67,7 +69,12 @@ public class Methods {
     // Unsign book
     public static ItemStack  unSignBook(ItemStack book){
         BookMeta oldMeta = (BookMeta) book.getItemMeta();
-        ItemStack unsigned = new ItemStack(Material.WRITABLE_BOOK, 1);
+        ItemStack unsigned;
+        try {
+        	unsigned = new ItemStack(Material.WRITABLE_BOOK, 1);
+        }catch (NoSuchFieldError e) {
+        	unsigned = new ItemStack(Material.matchMaterial("BOOK_AND_QUILL"), 1);
+        }
         BookMeta newMeta = (BookMeta) unsigned.getItemMeta();
         newMeta.setPages(oldMeta.getPages());
         unsigned.setItemMeta(newMeta);
@@ -126,10 +133,14 @@ public class Methods {
     }
     //Get Skull
     public static ItemStack getSkull(String owner){
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+    	ItemStack skull = null;
+    	try {
+    		skull = new ItemStack(Material.PLAYER_HEAD, 1);
+    	}catch(NoSuchFieldError e){
+    		skull = new ItemStack(Material.matchMaterial("SKULL_ITEM"), 1);
+    	}
         skull.setDurability((short)3);
         SkullMeta meta = (SkullMeta)skull.getItemMeta();
-       // meta.setDisplayName(name);
         meta.setOwner(owner);
         skull.setItemMeta(meta);
         return skull;      
