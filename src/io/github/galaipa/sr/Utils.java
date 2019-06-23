@@ -19,10 +19,10 @@ public class Utils {
 			message = "";
 		}
 
-		if(perm != null && !p.hasPermission(perm)){ // CHEK PERMS
+		if(!checkPermissions(perm,p,item)){ // CHEK PERMS
 			p.sendMessage(ChatColor.RED+(getTranslation("6")));
 			return false;
-		}else if((message.contains("&") || message.contains(("§"))) && !checkColorPerms(p,item)){ //CHECK COLOR PERM
+		}else if((message.contains("&") || message.contains(("§"))) && !checkPermissions("sr.color",p,item)){ //CHECK COLOR PERM
 			p.sendMessage(ChatColor.RED +(getTranslation("7")));
 			return false;
 		}else if(message.split(" ").length  < lenght) { // CHECK ARGUMENT LENGTH
@@ -45,10 +45,11 @@ public class Utils {
 
 	}
 	
-	public static boolean checkColorPerms(Player p, ItemStack item) {
-		if(p.hasPermission("sr.color"))return true;
+	public static boolean checkPermissions(String perm,Player p, ItemStack item) {
+		if(perm == null) return true;
+		if(p.hasPermission(perm))return true;
 		try {
-			return p.hasPermission("sr.color." + item.getType().toString());
+			return p.hasPermission(perm + "." + item.getType().toString());
 		}catch (Exception e) {
 			return false;
 		}
@@ -70,7 +71,7 @@ public class Utils {
 		if(p.hasPermission("sr.blacklist")) return true;
 		if(p.hasPermission("sr.blacklist." + item.getType().toString())) return true;
 		List<String> blackList = SimpleRename.itemBlackList;
-
+		
 		for(String material : blackList){
 			if(Material.matchMaterial(material) == item.getType())
 				return false;
