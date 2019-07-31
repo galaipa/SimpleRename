@@ -1,18 +1,18 @@
 #LANGUAGE? FILE SIMPLE RENAME (FRENCH)
-3: Utilise /command + name
-4: Tu ‡ besoin d'avoir un objet en main 
-5: Objet renommer / relored ‡ ÈtÈ fais avec succÈs!
-6: Tu n'a pas la permission de faire Áa ! 
-7: Tu n'a pas la permission d'utiliser les codes couleurs! 
-8: Tu n'a pas assez de money ! 
-9: Price 
-10: Objet dupliquÈ avec succÈs ! 
-11: Item name and lore copyed. Maintenant utilise "/sr paste" pour le coller 
-12: Nom de l'objet copiÈ avec succÈs 
-13: Objet nÈttoyer !
-14: Blacklisted word
-15: You don't have permission to edit this block/item
-16: You need to have a book in your hand
+3: Utilise /command + nom
+4: Tu as besoin d'avoir un objet en main 
+5: Objet renomm√©/relored avec succ√®s!
+6: Tu n'as pas la permission de faire √ßa ! 
+7: Tu n'as pas la permission d'utiliser les codes couleurs! 
+8: Tu n'as pas assez de money ! 
+9: Prix 
+10: Objet dupliqu√© avec succ√©s ! 
+11: Le nom et le lore de l'item ont √©t√© copi√©. Maintenant utilise "/sr paste" pour le coller 
+12: Nom de l'objet copi√© avec succ√®s 
+13: Objet r√©initialis√© !
+14: Mot blacklist√©
+15: Tu n'as pas la permission d'√©diter ce bloc ou cet item
+16: Tu as besoin d'avoir un livre en main
 17: Clic droit sur le mob que vous souhaitez renommer
-18: Vous devez spÈcifier le propriÈtaire du cr‚ne
-19: 'Le message est trop long. Max caractËres:'
+18: Vous devez sp√©cifier le propri√©taire du cr√¢ne
+19: 'Le message est trop long. Caract√®res max:'
