@@ -13,7 +13,12 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class Utils {
-
+	
+	public static String removeColorCodes(String string) {
+		String str = ChatColor.stripColor(string).replaceAll("[§&][0-9a-f-A-Fk-rK-R]","");
+		return str;
+	}
+    
 	public static boolean checkEverything(Player p, String message, String perm, int lenght, ItemStack item){
 		if(message == null){
 			message = "";
@@ -28,7 +33,7 @@ public class Utils {
 		}else if(message.split(" ").length  < lenght) { // CHECK ARGUMENT LENGTH
 			p.sendMessage(ChatColor.RED +(getTranslation("3")));
 			return false;
-		}else if(SimpleRename.characterLimit != 0 && message.length() > SimpleRename.characterLimit){
+		}else if(SimpleRename.characterLimit != 0 && removeColorCodes(message).length() > SimpleRename.characterLimit){
 			p.sendMessage(ChatColor.RED +(getTranslation("19")) + SimpleRename.characterLimit);
 			return false;
 		}else if(item != null &&item.getType().equals(Material.AIR)){ // CHECK ITEM IN HAND IS NOT AIR
