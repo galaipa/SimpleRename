@@ -92,7 +92,10 @@ public class Methods {
     }
     // Clear Meta
     public static void clearItem(ItemStack item){
-        item.setItemMeta(null);
+    	ItemMeta itemStackMeta = item.getItemMeta();
+    	itemStackMeta.setDisplayName(null);
+    	itemStackMeta.setLore(null);         
+        item.setItemMeta(itemStackMeta);
     }
     // Duplicate item
     public static void duplicateItem(ItemStack item, int amount){
