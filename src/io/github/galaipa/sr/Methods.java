@@ -71,6 +71,7 @@ public class Methods {
     // Set book title
     public static void setBookTitle(ItemStack book, String name){
           BookMeta meta = (BookMeta) book.getItemMeta();
+          meta.setDisplayName(null);
           meta.setTitle(name);
           book.setItemMeta(meta);
     }
