@@ -18,6 +18,11 @@ public class Utils {
 		String str = ChatColor.stripColor(string).replaceAll("[§&][0-9a-f-A-Fk-rK-R]","");
 		return str;
 	}
+	
+	public static String formatString(String string) {
+		// The &r is added at the beginning to remove default formatting
+		return ChatColor.translateAlternateColorCodes('&', "&r" + string);
+	}
     
 	public static boolean checkEverything(Player p, String message, String perm, int lenght, ItemStack item){
 		if(message == null){

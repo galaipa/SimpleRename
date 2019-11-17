@@ -6,6 +6,7 @@ import static io.github.galaipa.sr.SimpleRename.getTranslation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,29 +27,36 @@ public class Methods {
     //Rename
     public static void setName(ItemStack item, String name){
       ItemMeta itemStackMeta = item.getItemMeta();
-      itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));           
+      itemStackMeta.setDisplayName(Utils.formatString(name));           
       item.setItemMeta(itemStackMeta);
     }
-    //Set a one line lore
+    
+    private static List<String> multiLineLore(String lore){
+        List<String> loreList = Arrays.asList(lore.split("\\\\n"));
+        ListIterator<String> itr = loreList.listIterator();
+        while(itr.hasNext()) {
+        	itr.set(Utils.formatString(itr.next()));
+        }
+        return loreList;
+    }
+    //Set lore
     public static void setLore(ItemStack itemStack, String name){
-        String lore = ChatColor.translateAlternateColorCodes('&', name);
-        String[] loreArray = lore.split("\\\\n");
-
+        String lore = Utils.formatString(name);
+        List<String> loreList = multiLineLore(lore);
         ItemMeta itemStackMeta = itemStack.getItemMeta();
-        itemStackMeta.setLore(Arrays.asList(loreArray));
+        itemStackMeta.setLore(loreList);
         itemStack.setItemMeta(itemStackMeta);
     }
     //Add a new lore line
-    public static void addLore(ItemStack itemStack, String name){   
+    public static void addLore(ItemStack itemStack, String loreString){   
         List<String> lore = itemStack.getItemMeta().getLore();
+        
         if(lore == null){
-            setLore(itemStack, name);
+            setLore(itemStack, loreString);
         }
         else {
-        	String[] splittedName = name.split("\\\\n");
-            for(String s : splittedName){
-                lore.add(ChatColor.translateAlternateColorCodes('&', s));
-            }
+        	List<String> newLore = multiLineLore(loreString);
+        	lore.addAll(newLore);
             ItemMeta itemStackMeta = itemStack.getItemMeta();
             itemStackMeta.setLore(lore);
             itemStack.setItemMeta(itemStackMeta);
