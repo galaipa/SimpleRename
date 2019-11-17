@@ -47,6 +47,7 @@ public class SimpleRename extends JavaPlugin{
     
     public static List<String> nameBlackList, itemBlackList;
     
+    public static boolean anvilFeatures = true;
     public static String version;
     @Override
     public void onDisable() {
@@ -89,6 +90,7 @@ public class SimpleRename extends JavaPlugin{
         
         nameBlackList = getConfig().getStringList("BlackList");
         itemBlackList = getConfig().getStringList("BlackListID");
+        anvilFeatures = getConfig().getBoolean("AnvilFeatures",true);
         log.info("SimpleRename enabled!");
     }
     
