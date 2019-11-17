@@ -101,6 +101,9 @@ permissions:
   sr.glow:
     description: Perm to use /sr glow command
     default: op
+  sr.unbreakable:
+    description: Perm to use /sr unbreakable command
+    default: op
   sr.hide:
     description: Perm to use /sr hideflags command
     default: op

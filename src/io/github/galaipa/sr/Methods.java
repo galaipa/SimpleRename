@@ -99,6 +99,12 @@ public class Methods {
         int result = amountInHand*amount;
         item.setAmount(result);
     }
+    // Make item unbreakable
+    public static void makeUnbreakable(ItemStack item, boolean unbreakable){
+      ItemMeta itemStackMeta = item.getItemMeta();
+      itemStackMeta.setUnbreakable(unbreakable);          
+      item.setItemMeta(itemStackMeta);
+    }
     //Copy / paste
     public static HashMap<String, ItemMeta > copy = new HashMap<String, ItemMeta>();
         // Copy
@@ -138,6 +144,8 @@ public class Methods {
         sender.sendMessage(ChatColor.BLUE + "/sr reload");
         sender.sendMessage(ChatColor.BLUE + "/removelore <lineN>");
         sender.sendMessage(ChatColor.BLUE + "/sr hideflags" );
+        sender.sendMessage(ChatColor.BLUE + "/sr glow/unglow" );
+        sender.sendMessage(ChatColor.BLUE + "/sr breakable/unbreakable" );
     }
     //Get Skull
     public static ItemStack getSkull(String owner){

@@ -207,6 +207,12 @@ public class SimpleRename extends JavaPlugin{
                 case "unglow":
                     cmdSR_UnGlow(player);
                     break;
+                case "breakable":
+                    cmdSR_Breakable(player);
+                    break;
+                case "unbreakable":
+                    cmdSR_Unbreakable(player);
+                    break;
                 case "mob":
                     cmdSR_Mob(player,args);
                     break;
@@ -336,6 +342,21 @@ public class SimpleRename extends JavaPlugin{
     public void cmdSR_Hideflags(Player player){
         if(Utils.checkEverything(player, null, "sr.hide", 1, player.getItemInHand())){
             Methods.hideFlags(player.getItemInHand());
+            player.updateInventory();
+            player.sendMessage(ChatColor.GREEN+(getTranslation("5")));
+        }
+    }
+    
+    public void cmdSR_Breakable(Player player){
+        if(Utils.checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())){
+        	 Methods.makeUnbreakable(player.getItemInHand(),false);
+            player.updateInventory();
+            player.sendMessage(ChatColor.GREEN+(getTranslation("5")));
+        }
+    }
+    public void cmdSR_Unbreakable(Player player){
+        if(Utils.checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())){
+            Methods.makeUnbreakable(player.getItemInHand(),true);
             player.updateInventory();
             player.sendMessage(ChatColor.GREEN+(getTranslation("5")));
         }
