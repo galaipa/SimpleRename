@@ -36,7 +36,7 @@ public class Utils {
 		if(!checkPermissions(perm,p,item)){ // CHEK PERMS
 			p.sendMessage(ChatColor.RED+(getTranslation("6")));
 			return false;
-		}else if((message.contains("&") || message.contains(("§"))) && !checkPermissions("sr.color",p,item)){ //CHECK COLOR PERM
+		}else if(message.matches(".*[§&][0-9a-f-A-Fk-oK-O].*") && !checkPermissions("sr.color",p,item)){ 
 			p.sendMessage(ChatColor.RED +(getTranslation("7")));
 			return false;
 		}else if(message.split(" ").length  < lenght) { // CHECK ARGUMENT LENGTH
