@@ -61,7 +61,6 @@ public class AnvilListener implements Listener {
 	    	   }  
 	       }catch (NullPointerException e){}
 	   }
-	   event.setResult(event.getResult());
    }
    
    @EventHandler
@@ -82,6 +81,5 @@ public class AnvilListener implements Listener {
 		       }		   
 		   }catch (NullPointerException e) {}
 	   }
-	   event.setResult(Result.DEFAULT);
    }
 }
