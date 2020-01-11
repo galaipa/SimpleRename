@@ -1,9 +1,8 @@
 package io.github.galaipa.sr;
 
-import static io.github.galaipa.sr.SimpleRename.getTranslation;
-
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -24,38 +23,6 @@ public class Utils {
         }
     }
 
-    public static boolean checkEverything(Player p, String message, String perm, int length, ItemStack item) {
-        if (message == null) {
-            message = "";
-        }
-
-        if (!checkPermissions(perm, p, item)) { // CHEK PERMS
-            p.sendMessage(ChatColor.RED + (getTranslation("6")));
-            return false;
-        } else if (message.matches(".*[§&][0-9a-f-A-Fk-oK-O].*") && !checkPermissions("sr.color", p, item)) {
-            p.sendMessage(ChatColor.RED + (getTranslation("7")));
-            return false;
-        } else if (message.split(" ").length < length) { // CHECK ARGUMENT LENGTH
-            p.sendMessage(ChatColor.RED + (getTranslation("3")));
-            return false;
-        } else if (SimpleRename.characterLimit != 0
-                && removeColorCodes(message).length() > SimpleRename.characterLimit) {
-            p.sendMessage(ChatColor.RED + (getTranslation("19")) + SimpleRename.characterLimit);
-            return false;
-        } else if (item != null && item.getType().equals(Material.AIR)) { // CHECK ITEM IN HAND IS NOT AIR
-            p.sendMessage(ChatColor.RED + (getTranslation("4")));
-            return false;
-        } else if (!p.hasPermission("sr.blacklist") && !checkName(message)) { // CHECK MESSAGE BLACKLIST
-            p.sendMessage(ChatColor.RED + (getTranslation("14")));
-            return false;
-        } else if (item != null && !checkItem(p, item)) { // CHECK ITEM BLACKLIST
-            p.sendMessage(ChatColor.RED + (getTranslation("15")));
-            return false;
-        }
-        return true;
-
-    }
-
     public static boolean checkPermissions(String perm, Player p, ItemStack item) {
         if (perm == null)
             return true;
@@ -68,8 +35,8 @@ public class Utils {
         }
     }
 
-    public static boolean checkName(String message) {
-        List<String> blackListLowerCase = listToLowerCase(SimpleRename.nameBlackList);
+    public static boolean checkName(List<String> blackList, String message) {
+        List<String> blackListLowerCase = listToLowerCase(blackList);
         for (String word : message.split(" ")) {
             word = word.toLowerCase();
             word = ChatColor.stripColor(word);
@@ -80,12 +47,11 @@ public class Utils {
         return true;
     }
 
-    public static boolean checkItem(Player p, ItemStack item) {
+    public static boolean checkItem(List<String> blackList, Player p, ItemStack item) {
         if (p.hasPermission("sr.blacklist"))
             return true;
         if (p.hasPermission("sr.blacklist." + item.getType().toString()))
             return true;
-        List<String> blackList = SimpleRename.itemBlackList;
 
         for (String material : blackList) {
             if (Material.matchMaterial(material) == item.getType())

@@ -1,7 +1,5 @@
 package io.github.galaipa.sr;
 
-import static io.github.galaipa.sr.SimpleRename.getTranslation;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -121,7 +119,6 @@ public class Methods {
         ItemStack item = player.getItemInHand();
         ItemMeta meta = item.getItemMeta();
         copy.put(player.getName(), meta);
-        player.sendMessage(ChatColor.GREEN + (getTranslation("11")));
     }
 
     // Paste
@@ -173,7 +170,6 @@ public class Methods {
     // Rename mobs
     public static void renameMobs(Player p, String name) {
         Listeners.mobs.put(p, name);
-        p.sendMessage(ChatColor.GREEN + (getTranslation("17")));
     }
 
     public static void glowItem(ItemStack item) {

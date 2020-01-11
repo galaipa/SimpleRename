@@ -1,10 +1,8 @@
 
 package io.github.galaipa.sr.anvilListeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -17,11 +15,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import io.github.galaipa.sr.Methods;
 import io.github.galaipa.sr.SimpleRename;
-import io.github.galaipa.sr.Utils;
 
 public class AnvilListener implements Listener {
 
     private static char COLOR_CODE = '§';
+    SimpleRename plugin;
+
+    public AnvilListener(SimpleRename plugin) {
+        this.plugin = plugin;
+    }
 
     public static String recoverColorCodes(String newName, String oldName) {
         int iOld = 1;
@@ -41,50 +43,46 @@ public class AnvilListener implements Listener {
 
     @EventHandler
     public void anvilListener(PrepareAnvilEvent event) {
-        if (SimpleRename.anvilFeatures) {
-            AnvilInventory inv = (AnvilInventory) event.getInventory();
-            try {
-                if (inv.getItem(0) != null) {
-                    String oldName = inv.getItem(0).getItemMeta().getDisplayName();
-                    ItemStack newItem = event.getResult();
-                    if (newItem.getItemMeta() != null) {
-                        ItemMeta newMeta = newItem.getItemMeta();
-                        String newName = newMeta.getDisplayName();
+        AnvilInventory inv = (AnvilInventory) event.getInventory();
+        try {
+            if (inv.getItem(0) != null) {
+                String oldName = inv.getItem(0).getItemMeta().getDisplayName();
+                ItemStack newItem = event.getResult();
+                if (newItem.getItemMeta() != null) {
+                    ItemMeta newMeta = newItem.getItemMeta();
+                    String newName = newMeta.getDisplayName();
 
-                        if (!newName.equals(oldName)) {
-                            if (oldName.contains(String.valueOf(COLOR_CODE))) {
-                                newName = recoverColorCodes(inv.getRenameText(), oldName);
-                            }
-                            Methods.setName(newItem, newName);
-                            event.setResult(newItem);
-                            return;
+                    if (!newName.equals(oldName)) {
+                        if (oldName.contains(String.valueOf(COLOR_CODE))) {
+                            newName = recoverColorCodes(inv.getRenameText(), oldName);
                         }
+                        Methods.setName(newItem, newName);
+                        event.setResult(newItem);
+                        return;
                     }
                 }
-            } catch (NullPointerException e) {
             }
+        } catch (NullPointerException e) {
         }
     }
 
     @EventHandler
     public void anvilListenerGetResult(InventoryClickEvent event) {
-        if (SimpleRename.anvilFeatures) {
-            try {
-                Inventory inv = event.getInventory();
-                HumanEntity p = event.getWhoClicked();
-                if (inv.getType().equals(InventoryType.ANVIL) && event.getSlotType() == InventoryType.SlotType.RESULT) {
-                    if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                        ItemStack item = event.getCurrentItem();
-                        String newName = item.getItemMeta().getDisplayName();
-                        String oldName = inv.getItem(0).getItemMeta().getDisplayName();
-                        if (newName != null && !newName.equals(oldName)
-                                && !Utils.checkEverything((Player) p, newName, null, 1, item)) {
-                            p.closeInventory();
-                        }
+        try {
+            Inventory inv = event.getInventory();
+            HumanEntity p = event.getWhoClicked();
+            if (inv.getType().equals(InventoryType.ANVIL) && event.getSlotType() == InventoryType.SlotType.RESULT) {
+                if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
+                    ItemStack item = event.getCurrentItem();
+                    String newName = item.getItemMeta().getDisplayName();
+                    String oldName = inv.getItem(0).getItemMeta().getDisplayName();
+                    if (newName != null && !newName.equals(oldName)
+                            && !plugin.checkEverything((Player) p, newName, null, 1, item)) {
+                        p.closeInventory();
                     }
                 }
-            } catch (NullPointerException e) {
             }
+        } catch (NullPointerException e) {
         }
     }
 }

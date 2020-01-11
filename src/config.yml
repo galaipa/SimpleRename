@@ -2,22 +2,6 @@
 Language: en
 #METRICS: Enable or Disable Metrics
 Metrics: true
-#ECONOMY:(If you set it to "true" yo need to have Vault installed)
-Economy: false
-#PRICES: Price to rename and relore items 
-Prices:
-  Nprice: 10 
-  Lprice: 10
-  BookPrice: 10
-  ClearPrice: 10
-  PastePrice: 10
-XPprices:
-  Enable: false
-  NameXP: 5
-  LoreXP: 5
-  BookXP: 5
-  ClearXP: 5
-  PasteXP: 5
 #Blacklisted words
 BlackList:
   - blaclistedwords

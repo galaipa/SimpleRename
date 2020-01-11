@@ -4,7 +4,6 @@ version: 12.2
 api-version: 1.13
 authors: [Galaipa, EnergizerBEAST1, ScarabCoder]
 description: Simple plugin to rename and relore items
-softdepend: [Vault]
 commands:
   rename:
     description: Name command for items

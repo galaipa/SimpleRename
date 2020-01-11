@@ -1,8 +1,6 @@
 package io.github.galaipa.sr;
 
 import static io.github.galaipa.sr.Utils.extractArgs;
-import io.github.galaipa.sr.anvilListeners.AnvilListener;
-import io.github.galaipa.sr.anvilListeners.AnvilListenerAlternative;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,8 +12,6 @@ import java.io.Reader;
 import java.util.List;
 import java.util.logging.Logger;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bstats.bukkit.MetricsLite;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,25 +22,21 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import io.github.galaipa.sr.anvilListeners.AnvilListener;
+import io.github.galaipa.sr.anvilListeners.AnvilListenerAlternative;
 
 public class SimpleRename extends JavaPlugin {
     public static final Logger log = Logger.getLogger("Minecraft");
 
-    public static Economy econ;
-    public static boolean econEn, xpEn;
+    String prefix;
+    String language;
+    YamlConfiguration messages;
 
-    public static int characterLimit;
-    public static String prefix;
-
-    public static String language;
-    public static YamlConfiguration messages;
-
-    public static List<String> nameBlackList, itemBlackList;
-
-    public static boolean anvilFeatures = true;
-    public static String version;
+    List<String> nameBlackList;
+    List<String> itemBlackList;
+    int characterLimit;
 
     @Override
     public void onDisable() {
@@ -53,42 +45,25 @@ public class SimpleRename extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Check Spigot/Bukkit version
-        version = getServer().getBukkitVersion();
         // Load configuration file
         getConfig().options().copyDefaults(true);
         saveConfig();
         // Load prefix from config and add a space
         // so that messages will not be clumped with prefix
         prefix = getConfig().getString("Prefix");
-        // Register events
-        registerEvents();
         // Load translations
         language = getConfig().getString("Language");
         messages = loadTranslation(language);
-        // Load economy
-        econEn = getConfig().getBoolean("Economy");
-        if (econEn) {
-            log.info(prefix
-                    + "Economy support has been temporarily disabled. Feature will be back in a future version ");
-            /*
-             * if(!setupEconomy()){ econEn = false; log.info(prefix +
-             * "Economy disabled, Vault not found!"); }
-             */
-        }
 
         // Load metrics
         if (getConfig().getBoolean("Metrics"))
             new MetricsLite(this);
-        // Other config
-        xpEn = getConfig().getBoolean("XPprices.Enable");
-        if (xpEn)
-            log.info(prefix + "XP price support has been temporarily disabled. Feature will be back in next version");
+
         characterLimit = getConfig().getInt("CharacterLimit");
 
         nameBlackList = getConfig().getStringList("BlackList");
         itemBlackList = getConfig().getStringList("BlackListID");
-        anvilFeatures = getConfig().getBoolean("AnvilFeatures", true);
+        registerEvents();
         log.info("SimpleRename enabled!");
     }
 
@@ -132,22 +107,22 @@ public class SimpleRename extends JavaPlugin {
         return true;
     }
 
-    public static void cmdRename(Player player, String[] args) {
-        if (Utils.checkEverything(player, extractArgs(0, args), "sr.name", 1, player.getItemInHand())) {
+    public void cmdRename(Player player, String[] args) {
+        if (checkEverything(player, extractArgs(0, args), "sr.name", 1, player.getItemInHand())) {
             Methods.setName(player.getItemInHand(), (extractArgs(0, args)));
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
     }
 
-    public static void cmdAddLore(Player player, String[] args) {
-        if (Utils.checkEverything(player, extractArgs(0, args), "sr.lore", 1, player.getItemInHand())) {
+    public void cmdAddLore(Player player, String[] args) {
+        if (checkEverything(player, extractArgs(0, args), "sr.lore", 1, player.getItemInHand())) {
             Methods.addLore(player.getItemInHand(), (extractArgs(0, args)));
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
     }
 
-    public static void cmdRemoveLore(Player player, String[] args) {
-        if (Utils.checkEverything(player, null, "sr.removeLore", 0, player.getItemInHand())) {
+    public void cmdRemoveLore(Player player, String[] args) {
+        if (checkEverything(player, null, "sr.removeLore", 0, player.getItemInHand())) {
             if (args.length != 0 && Utils.isInt(args[0]))
                 Methods.removeLore(player.getItemInHand(), Integer.parseInt(args[0]) - 1);
             else
@@ -157,8 +132,8 @@ public class SimpleRename extends JavaPlugin {
         }
     }
 
-    public static void cmdRelore(Player player, String[] args) {
-        if (Utils.checkEverything(player, extractArgs(0, args), "sr.lore", 1, player.getItemInHand())) {
+    public void cmdRelore(Player player, String[] args) {
+        if (checkEverything(player, extractArgs(0, args), "sr.lore", 1, player.getItemInHand())) {
             Methods.setLore(player.getItemInHand(), (extractArgs(0, args)));
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
@@ -242,7 +217,7 @@ public class SimpleRename extends JavaPlugin {
     public void cmdBook(Player player, String[] args) {
         if (player.getItemInHand().getType() != Material.WRITTEN_BOOK) {
             player.sendMessage(ChatColor.RED + getTranslation("16"));
-        } else if (Utils.checkEverything(player, extractArgs(2, args), "sr.book", 0, null)) {
+        } else if (checkEverything(player, extractArgs(2, args), "sr.book", 0, null)) {
             switch (args[1].toLowerCase()) {
             case "setauthor":
                 Methods.setBookAuthor(player.getItemInHand(), extractArgs(2, args));
@@ -266,14 +241,14 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdClear(Player player) {
-        if (Utils.checkEverything(player, null, "sr.clear", 0, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.clear", 0, player.getItemInHand())) {
             Methods.clearItem(player.getItemInHand());
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
     }
 
     public void cmdDuplicate(Player player, String[] args) {
-        if (Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())) {
             if (args.length >= 2 && Utils.isInt(args[1]))
                 Methods.duplicateItem(player.getItemInHand(), Integer.parseInt(args[1]));
             else
@@ -283,7 +258,7 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdGetAmount(Player player, String[] args) {
-        if (Utils.checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())) {
             if (args.length >= 2 && Utils.isInt(args[1]))
                 player.getItemInHand().setAmount(Integer.parseInt(args[1]));
             else
@@ -292,20 +267,21 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdCopy(Player player, String[] args) {
-        if (Utils.checkEverything(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1,
+        if (checkEverything(player, player.getItemInHand().getItemMeta().getDisplayName(), "sr.copy", 1,
                 player.getItemInHand())) {
             Methods.copyMeta(player);
+            player.sendMessage(ChatColor.GREEN + (getTranslation("11")));
         }
     }
 
     public void cmdPaste(Player player, String[] args) {
-        if (Utils.checkEverything(player, null, "sr.copy", 1, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.copy", 1, player.getItemInHand())) {
             Methods.pasteMeta(player);
         }
     }
 
     public void cmdReload(Player player) {
-        if (Utils.checkEverything(player, null, "sr.reload", 1, null)) {
+        if (checkEverything(player, null, "sr.reload", 1, null)) {
             reloadConfig();
             onEnable();
             player.sendMessage(ChatColor.BLUE + "SimpleRename reloaded");
@@ -313,20 +289,22 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdSkull(Player player, String[] args) {
-        if (Utils.checkEverything(player, null, "sr.skull", 2, null)) {
+        if (checkEverything(player, null, "sr.skull", 1, null)) {
             ItemStack skull = Methods.getSkull(args[1]);
             player.getInventory().addItem(skull);
+            player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
     }
 
     public void cmdMob(Player player, String[] args) {
-        if (Utils.checkEverything(player, extractArgs(0, args), "sr.mob", 2, null)) {
+        if (checkEverything(player, extractArgs(0, args), "sr.mob", 2, null)) {
             Methods.renameMobs(player, args[1]);
+            player.sendMessage(ChatColor.GREEN + (getTranslation("17")));
         }
     }
 
     public void cmdGlow(Player player) {
-        if (Utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.glow", 1, player.getItemInHand())) {
             Methods.glowItem(player.getItemInHand());
             player.updateInventory();
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
@@ -334,7 +312,7 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdUnGlow(Player player) {
-        if (Utils.checkEverything(player, null, "sr.glow", 1, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.glow", 1, player.getItemInHand())) {
             Methods.unGlowItem(player.getItemInHand());
             player.updateInventory();
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
@@ -342,7 +320,7 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdHideFlags(Player player) {
-        if (Utils.checkEverything(player, null, "sr.hide", 1, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.hide", 1, player.getItemInHand())) {
             Methods.hideFlags(player.getItemInHand());
             player.updateInventory();
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
@@ -350,7 +328,7 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdBreakable(Player player) {
-        if (Utils.checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())) {
             Methods.makeUnbreakable(player.getItemInHand(), false);
             player.updateInventory();
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
@@ -358,7 +336,7 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdUnbreakable(Player player) {
-        if (Utils.checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())) {
             Methods.makeUnbreakable(player.getItemInHand(), true);
             player.updateInventory();
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
@@ -386,31 +364,9 @@ public class SimpleRename extends JavaPlugin {
     public void cmdCharacters(Player player) {
         player.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + "SPECIAL CHARACTERS");
         for (String[] character : CHARACTERS) {
-            player.sendMessage(ChatColor.WHITE + String.format("%-5s", character[1]) + ChatColor.RED + "|   " + ChatColor.BLUE  +  character[0]);
+            player.sendMessage(ChatColor.WHITE + String.format("%-5s", character[1]) + ChatColor.RED + "|   "
+                    + ChatColor.BLUE + character[0]);
         }
-    }
-
-    public Economy loadEconomy() {
-        Economy econonmy;
-        try {
-            getServer().getPluginManager().getPlugin("Vault");
-            RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager()
-                    .getRegistration(net.milkbowl.vault.economy.Economy.class);
-            econonmy = rsp.getProvider();
-        } catch (NullPointerException e) {
-            return null;
-        }
-        return econonmy;
-    }
-
-    private boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager()
-                .getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            econ = economyProvider.getProvider();
-        }
-
-        return (econ != null);
     }
 
     // LANGUAGE RELATED
@@ -454,7 +410,7 @@ public class SimpleRename extends JavaPlugin {
         }
     }
 
-    public static String getTranslation(String path) {
+    public String getTranslation(String path) {
         String msg;
         if (messages.getString(path) == null) {
             msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
@@ -467,9 +423,43 @@ public class SimpleRename extends JavaPlugin {
 
     public void registerEvents() {
         getServer().getPluginManager().registerEvents(new Listeners(), this);
-        if (version.contains("1.8"))
-            getServer().getPluginManager().registerEvents(new AnvilListenerAlternative(), this);
-        else
-            getServer().getPluginManager().registerEvents(new AnvilListener(), this);
+        if (getConfig().getBoolean("AnvilFeatures", true)) {
+            if (getServer().getBukkitVersion().contains("1.8"))
+                getServer().getPluginManager().registerEvents(new AnvilListenerAlternative(this), this);
+            else
+                getServer().getPluginManager().registerEvents(new AnvilListener(this), this);
+        }
+    }
+
+    public boolean checkEverything(Player p, String message, String perm, int length, ItemStack item) {
+        // TODO: This need a heavy refactor
+        if (message == null) {
+            message = "";
+        }
+
+        if (!Utils.checkPermissions(perm, p, item)) { // CHEK PERMS
+            p.sendMessage(ChatColor.RED + (getTranslation("6")));
+            return false;
+        } else if (message.matches(".*[§&][0-9a-f-A-Fk-oK-O].*") && !Utils.checkPermissions("sr.color", p, item)) {
+            p.sendMessage(ChatColor.RED + (getTranslation("7")));
+            return false;
+        } else if (message.split(" ").length < length) { // CHECK ARGUMENT LENGTH
+            p.sendMessage(ChatColor.RED + (getTranslation("3")));
+            return false;
+        } else if (characterLimit != 0 && Utils.removeColorCodes(message).length() > characterLimit) {
+            p.sendMessage(ChatColor.RED + (getTranslation("19")) + characterLimit);
+            return false;
+        } else if (item != null && item.getType().equals(Material.AIR)) { // CHECK ITEM IN HAND IS NOT AIR
+            p.sendMessage(ChatColor.RED + (getTranslation("4")));
+            return false;
+        } else if (!p.hasPermission("sr.blacklist") && !Utils.checkName(nameBlackList, message)) { // CHECK MESSAGE
+                                                                                                   // BLACKLIST
+            p.sendMessage(ChatColor.RED + (getTranslation("14")));
+            return false;
+        } else if (item != null && !Utils.checkItem(itemBlackList, p, item)) { // CHECK ITEM BLACKLIST
+            p.sendMessage(ChatColor.RED + (getTranslation("15")));
+            return false;
+        }
+        return true;
     }
 }
