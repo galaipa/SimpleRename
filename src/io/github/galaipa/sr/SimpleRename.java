@@ -1,4 +1,3 @@
-
 package io.github.galaipa.sr;
 
 
@@ -313,7 +312,7 @@ public class SimpleRename extends JavaPlugin{
         }
     }
     
-    public void cmdSR_GetSkull(Player player, String[] args){   		
+    public void cmdSR_GetSkull(Player player, String[] args){
         if(Utils.checkEverything(player, Args(0,args), "sr.skull", 2, null)){
             ItemStack skull = Methods.getSkull(args[1]);
             player.getInventory().addItem(skull);
@@ -477,7 +476,6 @@ public class SimpleRename extends JavaPlugin{
         return msg;
     }
     
-    
     public void registerEvents(){
         getServer().getPluginManager().registerEvents(new Listeners(), this);
         if(version.contains("1.8"))
@@ -485,7 +483,4 @@ public class SimpleRename extends JavaPlugin{
         else
             getServer().getPluginManager().registerEvents(new AnvilListener(), this);
     }
-    
-    
-
 }

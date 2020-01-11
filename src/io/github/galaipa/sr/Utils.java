@@ -1,4 +1,3 @@
-
 package io.github.galaipa.sr;
 
 
@@ -28,7 +27,7 @@ public class Utils {
 		}
 	}
     
-	public static boolean checkEverything(Player p, String message, String perm, int lenght, ItemStack item){
+	public static boolean checkEverything(Player p, String message, String perm, int length, ItemStack item){
 		if(message == null){
 			message = "";
 		}
@@ -39,13 +38,13 @@ public class Utils {
 		}else if(message.matches(".*[§&][0-9a-f-A-Fk-oK-O].*") && !checkPermissions("sr.color",p,item)){ 
 			p.sendMessage(ChatColor.RED +(getTranslation("7")));
 			return false;
-		}else if(message.split(" ").length  < lenght) { // CHECK ARGUMENT LENGTH
+		}else if(message.split(" ").length  < length) { // CHECK ARGUMENT LENGTH
 			p.sendMessage(ChatColor.RED +(getTranslation("3")));
 			return false;
 		}else if(SimpleRename.characterLimit != 0 && removeColorCodes(message).length() > SimpleRename.characterLimit){
 			p.sendMessage(ChatColor.RED +(getTranslation("19")) + SimpleRename.characterLimit);
 			return false;
-		}else if(item != null &&item.getType().equals(Material.AIR)){ // CHECK ITEM IN HAND IS NOT AIR
+		}else if(item != null && item.getType().equals(Material.AIR)){ // CHECK ITEM IN HAND IS NOT AIR
 			p.sendMessage(ChatColor.RED+(getTranslation("4")));
 			return false;
 		}else if(!p.hasPermission("sr.blacklist") && !checkName(message)){ //CHECK MESSAGE BLACKLIST
@@ -92,7 +91,6 @@ public class Utils {
 		}
 		return true;      
 	}
-
 
 	public static List<String> listToLowerCase(List<String> list){
 		List<String> newList = new ArrayList<>();
@@ -167,8 +165,4 @@ public class Utils {
 		return true;
 	}
 
-
 }
-
-
-

@@ -20,17 +20,13 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 
 public class Methods {
-    public static SimpleRename plugin;
-    public Methods(SimpleRename instance) {
-        plugin = instance;
-    }
+	
     //Rename
     public static void setName(ItemStack item, String name){
       ItemMeta itemStackMeta = item.getItemMeta();
       itemStackMeta.setDisplayName(Utils.formatString(name));           
       item.setItemMeta(itemStackMeta);
     }
-    
     private static List<String> multiLineLore(String lore){
         List<String> loreList = Arrays.asList(lore.split("\\\\n"));
         ListIterator<String> itr = loreList.listIterator();
