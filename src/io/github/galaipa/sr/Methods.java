@@ -104,6 +104,16 @@ public class Methods {
         item.setAmount(result);
     }
 
+    // Get specific amount of an item
+    public static void getAmountItem(ItemStack item, int amount) {
+        int max = item.getMaxStackSize();
+        if (max < amount) {
+            item.setAmount(max);
+        } else {
+            item.setAmount(amount);
+        }
+    }
+
     // Make item unbreakable
     public static void makeUnbreakable(ItemStack item, boolean unbreakable) {
         ItemMeta itemStackMeta = item.getItemMeta();

@@ -258,11 +258,13 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdGetAmount(Player player, String[] args) {
-        if (checkEverything(player, null, "sr.duplicate", 0, player.getItemInHand())) {
-            if (args.length >= 2 && Utils.isInt(args[1]))
-                player.getItemInHand().setAmount(Integer.parseInt(args[1]));
-            else
-                player.getItemInHand().setAmount(2);
+        if (checkEverything(player, null, "sr.duplicate", 1, player.getItemInHand())) {
+            try {
+                Methods.getAmountItem(player.getItemInHand(), Integer.parseInt(args[1]));
+                player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
+            } catch (NumberFormatException e) {
+                player.sendMessage(ChatColor.GREEN + (getTranslation("3")));
+            }
         }
     }
 
