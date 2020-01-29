@@ -1,18 +1,18 @@
 #LANGUAGE? FILE SIMPLE RENAME (DUTCH)
-3: Gebruik /commando + naam
-4: Je moet een Item in je hand hebben
-5: Item succesvol vernoemt / verlored!
-6: Je hebt geen rechten om dat te doen!
-7: Je hebt geen rechten om kleuren codes te gebruiken!
-8: Je hebt niet genoeg geld!
+3: Gebruik /commando + naam 
+4: Je moet een item in je hand hebben
+5: Succes!
+6: Je hebt geen permissie om dit te doen!
+7: Je hebt geen permissie om kleurencodes te gebruiken!
+8: Je hebt niet genoeg geld & XP!
 9: Prijs
-10: Item succesvol verdubbelt!
-11: Item naam en lore gekopieerd. Gebruik "/sr paste' om het te plakken
-12: Item naam en lore succesvol geplakt!
-13: Item leeggemaakt!
-14: Verboden woord?
-15: Je hebt geen permissie om deze blok/item aan te passen?
-16: Je moet een boek in je hand hebben?
-17: Rechtermuisknop op de mob die je wil hernoemen
-18: Je moet een eigenaar van het hoofd benoemen
-19: 'Bericht is te lang. Max karakters:'
+10: Item succesvol gedupliceerd!
+11: Item naam en lore gekopieerd. Gebruik "/sr paste" om te plakken
+12: Item naam en lore succesvol geplakt.
+13: Item geleegd!
+14: Verboden woord
+15: Je hebt geen permissie om dit blok/item aan te passen
+16: Je moet een boek in je hand hebben
+17: Klik met rechtermuisknop op een mob om hem te hernoemen
+18: Je moet de eigenaar van het hoofd opgegeven
+19: 'Bericht is te lang. Maximaal aantal karakters: ' 
