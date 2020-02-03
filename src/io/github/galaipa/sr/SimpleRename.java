@@ -299,8 +299,8 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdMob(Player player, String[] args) {
-        if (checkEverything(player, extractArgs(0, args), "sr.mob", 2, null)) {
-            Methods.renameMobs(player, args[1]);
+        if (checkEverything(player, extractArgs(1, args), "sr.mob", 2, null)) {
+            Methods.renameMobs(player, extractArgs(1, args));
             player.sendMessage(ChatColor.GREEN + (getTranslation("17")));
         }
     }
