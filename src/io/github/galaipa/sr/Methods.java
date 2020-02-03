@@ -179,7 +179,7 @@ public class Methods {
 
     // Rename mobs
     public static void renameMobs(Player p, String name) {
-        Listeners.mobs.put(p, name);
+        Listeners.mobs.put(p, ChatColor.translateAlternateColorCodes('&', name));
     }
 
     public static void glowItem(ItemStack item) {
