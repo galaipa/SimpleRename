@@ -177,11 +177,6 @@ public class Methods {
         return skull;
     }
 
-    // Rename mobs
-    public static void renameMobs(Player p, String name) {
-        Listeners.mobs.put(p, ChatColor.translateAlternateColorCodes('&', name));
-    }
-
     public static void glowItem(ItemStack item) {
         ItemMeta itemStackMeta = item.getItemMeta();
         itemStackMeta.addEnchant(Enchantment.LURE, 0, true);

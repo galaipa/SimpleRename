@@ -38,6 +38,8 @@ public class SimpleRename extends JavaPlugin {
     List<String> itemBlackList;
     int characterLimit;
 
+    MobRenamer mobRenamer;
+
     @Override
     public void onDisable() {
         log.info("SimpleRename disabled!");
@@ -299,8 +301,9 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdMob(Player player, String[] args) {
-        if (checkEverything(player, extractArgs(1, args), "sr.mob", 2, null)) {
-            Methods.renameMobs(player, extractArgs(1, args));
+        String name = extractArgs(1, args);
+        if (checkEverything(player, name, "sr.mob", 1, null)) {
+            mobRenamer.addToQueue(player, name);
             player.sendMessage(ChatColor.GREEN + (getTranslation("17")));
         }
     }
@@ -424,7 +427,8 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void registerEvents() {
-        getServer().getPluginManager().registerEvents(new Listeners(), this);
+        mobRenamer = new MobRenamer();
+        getServer().getPluginManager().registerEvents(mobRenamer, this);
         if (getConfig().getBoolean("AnvilFeatures", true)) {
             if (getServer().getBukkitVersion().contains("1.8"))
                 getServer().getPluginManager().registerEvents(new AnvilListenerAlternative(this), this);
