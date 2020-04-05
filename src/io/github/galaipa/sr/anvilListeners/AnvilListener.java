@@ -1,6 +1,7 @@
 
 package io.github.galaipa.sr.anvilListeners;
 
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,6 +45,12 @@ public class AnvilListener implements Listener {
     @EventHandler
     public void anvilListener(PrepareAnvilEvent event) {
         AnvilInventory inv = (AnvilInventory) event.getInventory();
+
+        if(!isRealAnvil(inv)) {
+        	// ignore this inventory, it could be a dummy for a GUI plugin.
+        	return;
+        }
+        
         try {
             if (inv.getItem(0) != null) {
                 String oldName = inv.getItem(0).getItemMeta().getDisplayName();
@@ -63,11 +70,17 @@ public class AnvilListener implements Listener {
                 }
             }
         } catch (NullPointerException e) {
+        	e.printStackTrace();
         }
     }
 
     @EventHandler
     public void anvilListenerGetResult(InventoryClickEvent event) {
+        if(event.getInventory() instanceof AnvilInventory && !isRealAnvil((AnvilInventory) event.getInventory())) {
+        	// ignore this inventory, it could be a dummy for a GUI plugin.
+        	return;
+        }
+        
         try {
             Inventory inv = event.getInventory();
             HumanEntity p = event.getWhoClicked();
@@ -83,6 +96,21 @@ public class AnvilListener implements Listener {
                 }
             }
         } catch (NullPointerException e) {
+        	e.printStackTrace();
         }
+    }
+    
+    /**
+     * Checks whether or not an anvil inventory is actually connected with a real world anvil
+     * @param anvilInventory
+     * @return
+     */
+    public boolean isRealAnvil(AnvilInventory anvilInventory) {
+    	if (anvilInventory.getLocation().getBlockX() == 0 && anvilInventory.getLocation().getBlockY() == 0 && anvilInventory.getLocation().getBlockZ() == 0) {
+    		if(anvilInventory.getLocation().getBlock().getType() != Material.ANVIL) {
+    			return false;
+    		}
+    	}
+    	return true;
     }
 }
