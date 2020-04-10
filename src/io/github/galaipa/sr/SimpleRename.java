@@ -443,11 +443,17 @@ public class SimpleRename extends JavaPlugin {
             message = "";
         }
 
-        if (!Utils.checkPermissions(perm, p, item)) { // CHEK PERMS
+        if (!Utils.checkPermissions(perm, p, item)) { // CHECK PERMS
             p.sendMessage(ChatColor.RED + (getTranslation("6")));
             return false;
-        } else if (message.matches(".*[§&][0-9a-f-A-Fk-oK-O].*") && !Utils.checkPermissions("sr.color", p, item)) {
+        } else if (message.matches(Utils.COLOR_CODE_REGEX) && !Utils.checkPermissions("sr.color", p, item)) {
             p.sendMessage(ChatColor.RED + (getTranslation("7")));
+            return false;
+        } else if (message.matches(Utils.FORMAT_CODE_REGEX) && !Utils.checkPermissions("sr.format", p, item)) {
+            p.sendMessage(ChatColor.RED + (getTranslation("20")));
+            return false;
+        } else if (message.matches(Utils.MAGIC_CODE_REGEX) && !Utils.checkPermissions("sr.magic", p, item)) {
+            p.sendMessage(ChatColor.RED + (getTranslation("21")));
             return false;
         } else if (message.split(" ").length < length) { // CHECK ARGUMENT LENGTH
             p.sendMessage(ChatColor.RED + (getTranslation("3")));

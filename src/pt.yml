@@ -3,7 +3,7 @@
 4: Precisas de um item na tua mão
 5: Item renomeado com sucesso!
 6: Não tens permissão para isso!
-7: Não tens permissão para usar codigo de cor!
+7: Não tens permissão para usar codigos de cor!
 8: Não tens dinheiro suficiente!
 9: Preço
 10: Item duplicado com sucesso!
@@ -16,3 +16,5 @@
 17: Clique direito para renomear o mob
 18: Precisas de especificar o nome do jogador
 19: Mensagem muito longa. Maximo de letras: ' 
+20: Você não tem permissão para utilizar códigos de formato.
+21: Você não tem permissão para utilizar códigos mágicos.

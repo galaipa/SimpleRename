@@ -10,8 +10,13 @@ import org.bukkit.inventory.ItemStack;
 
 public class Utils {
 
+    static final String COLOR_CODE_REGEX = ".*[§&][0-9a-f-A-F].*";
+    static final String FORMAT_CODE_REGEX = ".*[§&][l-rL-R].*";
+    static final String MAGIC_CODE_REGEX = ".*[§&][kK].*";
+    static final String ALL_CODE_REGEX = "[§&][0-9a-f-A-Fk-rK-R]";
+
     public static String removeColorCodes(String string) {
-        return ChatColor.stripColor(string).replaceAll("[§&][0-9a-f-A-Fk-rK-R]", "");
+        return ChatColor.stripColor(string).replaceAll(ALL_CODE_REGEX, "");
     }
 
     public static String formatString(String string) {

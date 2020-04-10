@@ -3,7 +3,7 @@
 4: Debes tener un item en la mano para poder renombrarlo
 5: Exito!
 6: No tienes permiso para renombrar items
-7: No tienes permisos para renombrar con codigos de colores!
+7: No tienes permiso para utilizar códigos de colores!
 8: No tienes suficiente dinero o experiencia!
 9: Coste
 10: Has duplicado el item
@@ -16,3 +16,5 @@
 17: Haz click derecho en el mob que quieres renombrar
 18: Tienes que especificar el dueño
 19: 'El mensaje es demasiado largo. Numero máximo de carácteres:'
+20: No tienes permiso para utilizar códigos de formato!
+21: No tienes permiso para utilizar óodigos mágicos!
