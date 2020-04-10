@@ -42,75 +42,69 @@ public class AnvilListener implements Listener {
         return name.replace(COLOR_CODE, '&');
     }
 
+    public static String getDisplayName(ItemStack item) {
+        if (item != null && item.hasItemMeta()) {
+            return item.getItemMeta().getDisplayName();
+        }
+        return "";
+    }
+
     @EventHandler
     public void anvilListener(PrepareAnvilEvent event) {
-        AnvilInventory inv = (AnvilInventory) event.getInventory();
+        AnvilInventory inv = event.getInventory();
 
-        if(!isRealAnvil(inv)) {
-        	// ignore this inventory, it could be a dummy for a GUI plugin.
-        	return;
+        if (!isRealAnvil(inv)) {
+            // ignore this inventory, it could be a dummy for a GUI plugin.
+            return;
         }
-        
-        try {
-            if (inv.getItem(0) != null) {
-                String oldName = inv.getItem(0).getItemMeta().getDisplayName();
-                ItemStack newItem = event.getResult();
-                if (newItem.getItemMeta() != null) {
-                    ItemMeta newMeta = newItem.getItemMeta();
-                    String newName = newMeta.getDisplayName();
 
-                    if (!newName.equals(oldName)) {
-                        if (oldName.contains(String.valueOf(COLOR_CODE))) {
-                            newName = recoverColorCodes(inv.getRenameText(), oldName);
-                        }
-                        Methods.setName(newItem, newName);
-                        event.setResult(newItem);
-                        return;
-                    }
-                }
+        String oldName = getDisplayName(inv.getItem(0));
+        ItemStack newItem = event.getResult();
+        String newName = getDisplayName(newItem);
+
+        if (!newName.equals(oldName)) {
+            if (oldName.contains(String.valueOf(COLOR_CODE))) {
+                newName = recoverColorCodes(inv.getRenameText(), oldName);
             }
-        } catch (NullPointerException e) {
-        	e.printStackTrace();
+            Methods.setName(newItem, newName);
+            event.setResult(newItem);
         }
     }
 
     @EventHandler
     public void anvilListenerGetResult(InventoryClickEvent event) {
-        if(event.getInventory() instanceof AnvilInventory && !isRealAnvil((AnvilInventory) event.getInventory())) {
-        	// ignore this inventory, it could be a dummy for a GUI plugin.
-        	return;
+        if (event.getInventory() instanceof AnvilInventory && !isRealAnvil((AnvilInventory) event.getInventory())) {
+            // ignore this inventory, it could be a dummy for a GUI plugin.
+            return;
         }
-        
-        try {
-            Inventory inv = event.getInventory();
-            HumanEntity p = event.getWhoClicked();
-            if (inv.getType().equals(InventoryType.ANVIL) && event.getSlotType() == InventoryType.SlotType.RESULT) {
-                if (event.getCurrentItem() != null && event.getCurrentItem().getItemMeta() != null) {
-                    ItemStack item = event.getCurrentItem();
-                    String newName = item.getItemMeta().getDisplayName();
-                    String oldName = inv.getItem(0).getItemMeta().getDisplayName();
-                    if (newName != null && !newName.equals(oldName)
-                            && !plugin.checkEverything((Player) p, newName, null, 1, item)) {
-                        p.closeInventory();
-                    }
-                }
+        Inventory inv = event.getInventory();
+        HumanEntity p = event.getWhoClicked();
+        if (inv.getType().equals(InventoryType.ANVIL) && event.getSlotType() == InventoryType.SlotType.RESULT
+                && event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && inv.getItem(0) != null) {
+            ItemStack item = event.getCurrentItem();
+            String newName = getDisplayName(item);
+            String oldName = getDisplayName(inv.getItem(0));
+            String plainNewName = newName.replaceFirst(COLOR_CODE + "r", "");
+            if (!newName.equals(oldName) && !plugin.checkEverything((Player) p, plainNewName, null, 1, item)) {
+                p.closeInventory();
             }
-        } catch (NullPointerException e) {
-        	e.printStackTrace();
         }
     }
-    
+
     /**
-     * Checks whether or not an anvil inventory is actually connected with a real world anvil
+     * Checks whether or not an anvil inventory is actually connected with a real
+     * world anvil
+     * 
      * @param anvilInventory
      * @return
      */
     public boolean isRealAnvil(AnvilInventory anvilInventory) {
-    	if (anvilInventory.getLocation().getBlockX() == 0 && anvilInventory.getLocation().getBlockY() == 0 && anvilInventory.getLocation().getBlockZ() == 0) {
-    		if(anvilInventory.getLocation().getBlock().getType() != Material.ANVIL) {
-    			return false;
-    		}
-    	}
-    	return true;
+        if (anvilInventory.getLocation().getBlockX() == 0 && anvilInventory.getLocation().getBlockY() == 0
+                && anvilInventory.getLocation().getBlockZ() == 0) {
+            if (anvilInventory.getLocation().getBlock().getType() != Material.ANVIL) {
+                return false;
+            }
+        }
+        return true;
     }
 }
