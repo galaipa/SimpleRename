@@ -12,8 +12,6 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import io.github.galaipa.sr.Methods;
 import io.github.galaipa.sr.SimpleRename;
 
@@ -42,19 +40,23 @@ public class AnvilListener implements Listener {
         return name.replace(COLOR_CODE, '&');
     }
 
-    public static String getDisplayName(ItemStack item) {
+    public String getDisplayName(ItemStack item) {
         if (item != null && item.hasItemMeta()) {
             return item.getItemMeta().getDisplayName();
         }
         return "";
     }
 
+    public boolean checkPreConditions(Inventory inv, HumanEntity p) {
+        return (inv instanceof AnvilInventory && isRealAnvil((AnvilInventory) inv) && p.hasPermission("sr.anvil"));
+    }
+
     @EventHandler
     public void anvilListener(PrepareAnvilEvent event) {
         AnvilInventory inv = event.getInventory();
-
-        if (!isRealAnvil(inv)) {
-            // ignore this inventory, it could be a dummy for a GUI plugin.
+        HumanEntity p = event.getViewers().get(0);
+        
+        if (!checkPreConditions(inv, p)) {
             return;
         }
 
@@ -73,12 +75,13 @@ public class AnvilListener implements Listener {
 
     @EventHandler
     public void anvilListenerGetResult(InventoryClickEvent event) {
-        if (event.getInventory() instanceof AnvilInventory && !isRealAnvil((AnvilInventory) event.getInventory())) {
-            // ignore this inventory, it could be a dummy for a GUI plugin.
-            return;
-        }
         Inventory inv = event.getInventory();
         HumanEntity p = event.getWhoClicked();
+        
+        if (!(checkPreConditions(inv, p))) {
+            return;
+        }
+        
         if (inv.getType().equals(InventoryType.ANVIL) && event.getSlotType() == InventoryType.SlotType.RESULT
                 && event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && inv.getItem(0) != null) {
             ItemStack item = event.getCurrentItem();

@@ -106,6 +106,9 @@ permissions:
   sr.hide:
     description: Perm to use /sr hideflags command
     default: op
-sr.removeLore:
+  sr.removeLore:
     description: Perm to use /sr removelore command
     default: op
+  sr.anvil:
+    description: Perm to use the anvil features
+    default: true
