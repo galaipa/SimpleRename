@@ -41,7 +41,7 @@ public class AnvilListener implements Listener {
     }
 
     public String getDisplayName(ItemStack item) {
-        if (item != null && item.hasItemMeta()) {
+        if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
             return item.getItemMeta().getDisplayName();
         }
         return "";
