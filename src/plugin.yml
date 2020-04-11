@@ -1,6 +1,6 @@
 name: SimpleRename
 main: io.github.galaipa.sr.SimpleRename
-version: 13.0
+version: 13.5
 api-version: 1.13
 authors: [Galaipa, EnergizerBEAST1, ScarabCoder]
 description: Simple plugin to rename and relore items
