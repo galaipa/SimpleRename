@@ -40,6 +40,8 @@ public class SimpleRename extends JavaPlugin {
 
     MobRenamer mobRenamer;
 
+    boolean overrideDefaultFormat;
+
     @Override
     public void onDisable() {
         log.info("SimpleRename disabled!");
@@ -65,6 +67,7 @@ public class SimpleRename extends JavaPlugin {
 
         nameBlackList = getConfig().getStringList("BlackList");
         itemBlackList = getConfig().getStringList("BlackListID");
+        overrideDefaultFormat = getConfig().getBoolean("OverrideDefaultFormat", true);
         registerEvents();
         log.info("SimpleRename enabled!");
     }
@@ -111,14 +114,14 @@ public class SimpleRename extends JavaPlugin {
 
     public void cmdRename(Player player, String[] args) {
         if (checkEverything(player, extractArgs(0, args), "sr.name", 1, player.getItemInHand())) {
-            Methods.setName(player.getItemInHand(), (extractArgs(0, args)));
+            Methods.setName(player.getItemInHand(), extractArgs(0, args), overrideDefaultFormat);
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
     }
 
     public void cmdAddLore(Player player, String[] args) {
         if (checkEverything(player, extractArgs(0, args), "sr.lore", 1, player.getItemInHand())) {
-            Methods.addLore(player.getItemInHand(), (extractArgs(0, args)));
+            Methods.addLore(player.getItemInHand(), extractArgs(0, args), overrideDefaultFormat);
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
     }
@@ -136,7 +139,7 @@ public class SimpleRename extends JavaPlugin {
 
     public void cmdRelore(Player player, String[] args) {
         if (checkEverything(player, extractArgs(0, args), "sr.lore", 1, player.getItemInHand())) {
-            Methods.setLore(player.getItemInHand(), (extractArgs(0, args)));
+            Methods.setLore(player.getItemInHand(), extractArgs(0, args), overrideDefaultFormat);
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
     }
@@ -473,5 +476,9 @@ public class SimpleRename extends JavaPlugin {
             return false;
         }
         return true;
+    }
+
+    public boolean isOverrideDefaultFormat() {
+        return overrideDefaultFormat;
     }
 }

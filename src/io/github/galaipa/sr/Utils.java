@@ -19,9 +19,9 @@ public class Utils {
         return ChatColor.stripColor(string).replaceAll(ALL_CODE_REGEX, "");
     }
 
-    public static String formatString(String string) {
+    public static String formatString(String string, boolean overrideDefaultFormat) {
         // The &r is added at the beginning to remove default formatting
-        if (string.startsWith("&r")) {
+        if (!overrideDefaultFormat || string.startsWith("&r")) {
             return ChatColor.translateAlternateColorCodes('&', string);
         } else {
             return ChatColor.translateAlternateColorCodes('&', "&r" + string);

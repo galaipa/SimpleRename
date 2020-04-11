@@ -55,7 +55,7 @@ public class AnvilListener implements Listener {
     public void anvilListener(PrepareAnvilEvent event) {
         AnvilInventory inv = event.getInventory();
         HumanEntity p = event.getViewers().get(0);
-        
+
         if (!checkPreConditions(inv, p)) {
             return;
         }
@@ -63,12 +63,11 @@ public class AnvilListener implements Listener {
         String oldName = getDisplayName(inv.getItem(0));
         ItemStack newItem = event.getResult();
         String newName = getDisplayName(newItem);
-
-        if (!newName.equals(oldName)) {
+        if (!newItem.getType().equals(Material.AIR) && !newName.equals(oldName)) {
             if (oldName.contains(String.valueOf(COLOR_CODE))) {
                 newName = recoverColorCodes(inv.getRenameText(), oldName);
             }
-            Methods.setName(newItem, newName);
+            Methods.setName(newItem, newName, plugin.isOverrideDefaultFormat());
             event.setResult(newItem);
         }
     }
@@ -77,11 +76,11 @@ public class AnvilListener implements Listener {
     public void anvilListenerGetResult(InventoryClickEvent event) {
         Inventory inv = event.getInventory();
         HumanEntity p = event.getWhoClicked();
-        
+
         if (!(checkPreConditions(inv, p))) {
             return;
         }
-        
+
         if (inv.getType().equals(InventoryType.ANVIL) && event.getSlotType() == InventoryType.SlotType.RESULT
                 && event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && inv.getItem(0) != null) {
             ItemStack item = event.getCurrentItem();

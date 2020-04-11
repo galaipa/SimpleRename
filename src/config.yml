@@ -12,4 +12,6 @@ BlackListID:
 CharacterLimit: 0
 Prefix: '[SimpleRename]'
 AnvilFeatures: true
+# Add &r at the beginning of all the renamed items to avoid Italics
+OverrideDefaultFormat: true
 

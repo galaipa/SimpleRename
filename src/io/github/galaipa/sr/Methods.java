@@ -19,38 +19,38 @@ import org.bukkit.inventory.meta.SkullMeta;
 public class Methods {
 
     // Rename
-    public static void setName(ItemStack item, String name) {
+    public static void setName(ItemStack item, String name, boolean overrideDefaultFormat) {
         ItemMeta itemStackMeta = item.getItemMeta();
-        itemStackMeta.setDisplayName(Utils.formatString(name));
+        itemStackMeta.setDisplayName(Utils.formatString(name, overrideDefaultFormat));
         item.setItemMeta(itemStackMeta);
     }
 
-    private static List<String> multiLineLore(String lore) {
+    private static List<String> multiLineLore(String lore, boolean overrideDefaultFormat) {
         List<String> loreList = Arrays.asList(lore.split("\\\\n"));
         ListIterator<String> itr = loreList.listIterator();
         while (itr.hasNext()) {
-            itr.set(Utils.formatString(itr.next()));
+            itr.set(Utils.formatString(itr.next(), overrideDefaultFormat));
         }
         return loreList;
     }
 
     // Set lore
-    public static void setLore(ItemStack itemStack, String name) {
-        String lore = Utils.formatString(name);
-        List<String> loreList = multiLineLore(lore);
+    public static void setLore(ItemStack itemStack, String name, boolean overrideDefaultFormat) {
+        String lore = Utils.formatString(name, overrideDefaultFormat);
+        List<String> loreList = multiLineLore(lore, overrideDefaultFormat);
         ItemMeta itemStackMeta = itemStack.getItemMeta();
         itemStackMeta.setLore(loreList);
         itemStack.setItemMeta(itemStackMeta);
     }
 
     // Add a new lore line
-    public static void addLore(ItemStack itemStack, String loreString) {
+    public static void addLore(ItemStack itemStack, String loreString, boolean overrideDefaultFormat) {
         List<String> lore = itemStack.getItemMeta().getLore();
 
         if (lore == null) {
-            setLore(itemStack, loreString);
+            setLore(itemStack, loreString, overrideDefaultFormat);
         } else {
-            List<String> newLore = multiLineLore(loreString);
+            List<String> newLore = multiLineLore(loreString, overrideDefaultFormat);
             lore.addAll(newLore);
             ItemMeta itemStackMeta = itemStack.getItemMeta();
             itemStackMeta.setLore(lore);
