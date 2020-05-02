@@ -54,8 +54,10 @@ public class AnvilListener implements Listener {
     @EventHandler
     public void anvilListener(PrepareAnvilEvent event) {
         AnvilInventory inv = event.getInventory();
+        if (event.getViewers().isEmpty()) {
+            return;
+        }
         HumanEntity p = event.getViewers().get(0);
-
         if (!checkPreConditions(inv, p)) {
             return;
         }
