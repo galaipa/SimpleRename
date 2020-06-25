@@ -1,17 +1,19 @@
 package io.github.galaipa.sr;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
+import com.comphenix.protocol.utility.MinecraftReflection;
+import com.comphenix.protocol.wrappers.nbt.*;
+import javafx.util.Builder;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.StructureType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -116,9 +118,25 @@ public class Methods {
 
     // Make item unbreakable
     public static void makeUnbreakable(ItemStack item, boolean unbreakable) {
-        ItemMeta itemStackMeta = item.getItemMeta();
-        itemStackMeta.setUnbreakable(unbreakable);
-        item.setItemMeta(itemStackMeta);
+        String version = Bukkit.getServer().getBukkitVersion().split("-")[0];
+        if (Integer.parseInt(version.split("\\.")[1])<9){ //Check server version to choose method to use
+            //Old versions Protocollib Implementation
+            item = MinecraftReflection.getBukkitItemStack(item);
+            NbtCompound compound = (NbtCompound)NbtFactory.fromItemTag(MinecraftReflection.getBukkitItemStack(item));
+            if (unbreakable){
+                compound.put("Unbreakable",1);
+            }
+            else {
+                compound.remove("Unbreakable");
+            }
+            NbtFactory.setItemTag(item,compound);
+            item.setDurability((short) 0); //Set item damage to 0 to prevent its texture from becoming pink
+        }else {
+            //New Bukkit API Method
+            ItemMeta itemStackMeta = item.getItemMeta();
+            itemStackMeta.setUnbreakable(unbreakable);
+            item.setItemMeta(itemStackMeta);
+        }
     }
 
     // Copy / paste

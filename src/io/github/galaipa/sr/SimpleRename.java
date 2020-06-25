@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.bstats.bukkit.MetricsLite;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -337,17 +338,37 @@ public class SimpleRename extends JavaPlugin {
 
     public void cmdBreakable(Player player) {
         if (checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())) {
-            Methods.makeUnbreakable(player.getItemInHand(), false);
-            player.updateInventory();
-            player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
+            String version = Bukkit.getServer().getBukkitVersion().split("-")[0];
+            if (Integer.parseInt(version.split("\\.")[1])<9 && Bukkit.getPluginManager().getPlugin("ProtocolLib")!=null || Integer.parseInt(version.split("\\.")[1])>=9) {
+                Methods.makeUnbreakable(player.getItemInHand(), false);
+                player.updateInventory();
+                player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
+            } else {
+                if (player.hasPermission("sr.*")){
+                    player.sendMessage(ChatColor.RED + "ProtocolLib is required to use this feature in version " + version);
+                }
+                else{
+                    player.sendMessage(ChatColor.RED + getTranslation("22"));
+                }
+            }
         }
     }
 
     public void cmdUnbreakable(Player player) {
         if (checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())) {
-            Methods.makeUnbreakable(player.getItemInHand(), true);
-            player.updateInventory();
-            player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
+            String version = Bukkit.getServer().getBukkitVersion().split("-")[0];
+            if (Integer.parseInt(version.split("\\.")[1])<9 && Bukkit.getPluginManager().getPlugin("ProtocolLib")!=null || Integer.parseInt(version.split("\\.")[1])>=9) {
+                Methods.makeUnbreakable(player.getItemInHand(), true);
+                player.updateInventory();
+                player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
+            } else {
+                if (player.hasPermission("sr.*")){
+                    player.sendMessage(ChatColor.RED + "ProtocolLib is required to use this feature in version " + version);
+                }
+                else{
+                    player.sendMessage(ChatColor.RED + getTranslation("22"));
+                }
+            }
         }
     }
 

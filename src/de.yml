@@ -1,8 +1,8 @@
 #LANGUAGE FILE SIMPLE RENAME (GERMAN/DEUTSCH)
-3: Verwende /command + Name 
+3: Verwende /command + Name
 4: Du musst ein Item in der Hand halten
 5: Item/Beschreibung erfolgreich umbenannt!
-6: Du hast dafür nicht genügend Permissions!
+6: Du hast dafÃ¼r nicht genÃ¼gend Permissions!
 7: Du hast keine Permissions, um Color Codes zu verwenden!
 8: Du hast nicht genug Geld & Erfahrung!
 9: Preis
@@ -18,3 +18,4 @@
 19: 'Nachricht ist zu lang. Max Zeichen:'
 20: You don't have permission to use format codes!
 21: You don't have permission to use magic codes!
+22: This feature is disabled!

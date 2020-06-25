@@ -3,6 +3,7 @@ main: io.github.galaipa.sr.SimpleRename
 version: 13.6
 api-version: 1.13
 authors: [Galaipa, EnergizerBEAST1, ScarabCoder]
+softdepend: [ProtocolLib]
 description: Simple plugin to rename and relore items
 commands:
   rename:
