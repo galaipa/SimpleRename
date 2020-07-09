@@ -64,6 +64,9 @@ public class AnvilListener implements Listener {
 
         String oldName = getDisplayName(inv.getItem(0));
         ItemStack newItem = event.getResult();
+        if (newItem == null) {
+            return;
+        }
         String newName = getDisplayName(newItem);
         if (!newItem.getType().equals(Material.AIR) && !newName.equals(oldName)) {
             if (oldName.contains(String.valueOf(COLOR_CODE))) {
