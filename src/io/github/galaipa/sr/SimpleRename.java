@@ -339,15 +339,17 @@ public class SimpleRename extends JavaPlugin {
     public void cmdBreakable(Player player) {
         if (checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())) {
             String version = Bukkit.getServer().getBukkitVersion().split("-")[0];
-            if (Integer.parseInt(version.split("\\.")[1])<9 && Bukkit.getPluginManager().getPlugin("ProtocolLib")!=null || Integer.parseInt(version.split("\\.")[1])>=9) {
+            if (Integer.parseInt(version.split("\\.")[1]) < 9
+                    && Bukkit.getPluginManager().getPlugin("ProtocolLib") != null
+                    || Integer.parseInt(version.split("\\.")[1]) >= 9) {
                 Methods.makeUnbreakable(player.getItemInHand(), false);
                 player.updateInventory();
                 player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
             } else {
-                if (player.hasPermission("sr.*")){
-                    player.sendMessage(ChatColor.RED + "ProtocolLib is required to use this feature in version " + version);
-                }
-                else{
+                if (player.hasPermission("sr.*")) {
+                    player.sendMessage(
+                            ChatColor.RED + "ProtocolLib is required to use this feature in version " + version);
+                } else {
                     player.sendMessage(ChatColor.RED + getTranslation("22"));
                 }
             }
@@ -357,15 +359,17 @@ public class SimpleRename extends JavaPlugin {
     public void cmdUnbreakable(Player player) {
         if (checkEverything(player, null, "sr.unbreakable", 1, player.getItemInHand())) {
             String version = Bukkit.getServer().getBukkitVersion().split("-")[0];
-            if (Integer.parseInt(version.split("\\.")[1])<9 && Bukkit.getPluginManager().getPlugin("ProtocolLib")!=null || Integer.parseInt(version.split("\\.")[1])>=9) {
+            if (Integer.parseInt(version.split("\\.")[1]) < 9
+                    && Bukkit.getPluginManager().getPlugin("ProtocolLib") != null
+                    || Integer.parseInt(version.split("\\.")[1]) >= 9) {
                 Methods.makeUnbreakable(player.getItemInHand(), true);
                 player.updateInventory();
                 player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
             } else {
-                if (player.hasPermission("sr.*")){
-                    player.sendMessage(ChatColor.RED + "ProtocolLib is required to use this feature in version " + version);
-                }
-                else{
+                if (player.hasPermission("sr.*")) {
+                    player.sendMessage(
+                            ChatColor.RED + "ProtocolLib is required to use this feature in version " + version);
+                } else {
                     player.sendMessage(ChatColor.RED + getTranslation("22"));
                 }
             }

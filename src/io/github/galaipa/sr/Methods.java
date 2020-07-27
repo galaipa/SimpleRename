@@ -116,20 +116,19 @@ public class Methods {
     // Make item unbreakable
     public static void makeUnbreakable(ItemStack item, boolean unbreakable) {
         String version = Bukkit.getServer().getBukkitVersion().split("-")[0];
-        if (Integer.parseInt(version.split("\\.")[1])<9){ //Check server version to choose method to use
-            //Old versions Protocollib Implementation
+        if (Integer.parseInt(version.split("\\.")[1]) < 9) { // Check server version to choose method to use
+            // Old versions Protocollib Implementation
             item = MinecraftReflection.getBukkitItemStack(item);
-            NbtCompound compound = (NbtCompound)NbtFactory.fromItemTag(MinecraftReflection.getBukkitItemStack(item));
-            if (unbreakable){
-                compound.put("Unbreakable",1);
-            }
-            else {
+            NbtCompound compound = (NbtCompound) NbtFactory.fromItemTag(MinecraftReflection.getBukkitItemStack(item));
+            if (unbreakable) {
+                compound.put("Unbreakable", 1);
+            } else {
                 compound.remove("Unbreakable");
             }
-            NbtFactory.setItemTag(item,compound);
-            item.setDurability((short) 0); //Set item damage to 0 to prevent its texture from becoming pink
-        }else {
-            //New Bukkit API Method
+            NbtFactory.setItemTag(item, compound);
+            item.setDurability((short) 0); // Set item damage to 0 to prevent its texture from becoming pink
+        } else {
+            // New Bukkit API Method
             ItemMeta itemStackMeta = item.getItemMeta();
             itemStackMeta.setUnbreakable(unbreakable);
             item.setItemMeta(itemStackMeta);
