@@ -200,6 +200,9 @@ public class SimpleRename extends JavaPlugin {
             case "hideflags":
                 cmdHideFlags(player);
                 break;
+            case "showflags":
+                cmdShowFlags(player);
+                break;
             case "characters":
             case "character":
                 cmdCharacters(player);
@@ -331,6 +334,14 @@ public class SimpleRename extends JavaPlugin {
     public void cmdHideFlags(Player player) {
         if (checkEverything(player, null, "sr.hide", 1, player.getItemInHand())) {
             Methods.hideFlags(player.getItemInHand());
+            player.updateInventory();
+            player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
+        }
+    }
+
+    public void cmdShowFlags(Player player) {
+        if (checkEverything(player, null, "sr.hide", 1, player.getItemInHand())) {
+            Methods.showFlags(player.getItemInHand());
             player.updateInventory();
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
         }
