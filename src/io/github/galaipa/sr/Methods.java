@@ -172,6 +172,7 @@ public class Methods {
         sender.sendMessage(ChatColor.BLUE + "/sr reload");
         sender.sendMessage(ChatColor.BLUE + "/removelore <lineN>");
         sender.sendMessage(ChatColor.BLUE + "/sr hideflags");
+        sender.sendMessage(ChatColor.BLUE + "/sr showflags");
         sender.sendMessage(ChatColor.BLUE + "/sr glow/unglow");
         sender.sendMessage(ChatColor.BLUE + "/sr breakable/unbreakable");
     }
@@ -209,6 +210,14 @@ public class Methods {
         itemStackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemStackMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStackMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        item.setItemMeta(itemStackMeta);
+    }
+
+    public static void showFlags(ItemStack item) {
+        ItemMeta itemStackMeta = item.getItemMeta();
+        itemStackMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemStackMeta.removeItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemStackMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         item.setItemMeta(itemStackMeta);
     }
 
