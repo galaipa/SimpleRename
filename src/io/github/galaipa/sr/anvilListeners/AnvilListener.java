@@ -81,11 +81,9 @@ public class AnvilListener implements Listener {
     public void anvilListenerGetResult(InventoryClickEvent event) {
         Inventory inv = event.getInventory();
         HumanEntity p = event.getWhoClicked();
-
         if (!(checkPreConditions(inv, p))) {
             return;
         }
-
         if (inv.getType().equals(InventoryType.ANVIL) && event.getSlotType() == InventoryType.SlotType.RESULT
                 && event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && inv.getItem(0) != null) {
             ItemStack item = event.getCurrentItem();
@@ -93,7 +91,10 @@ public class AnvilListener implements Listener {
             String oldName = getDisplayName(inv.getItem(0));
             String plainNewName = newName.replaceFirst(COLOR_CODE + "r", "");
             if (!newName.equals(oldName) && !plugin.checkEverything((Player) p, plainNewName, null, 1, item)) {
-                p.closeInventory();
+                event.setCancelled(true);
+                Player pl = (Player) p;
+                pl.closeInventory();
+                pl.updateInventory();
             }
         }
     }
