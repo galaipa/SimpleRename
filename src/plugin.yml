@@ -36,6 +36,7 @@ permissions:
             sr.book: true
             sr.glow: true
             sr.hide: true
+            sr.show: true
             sr.removeLore: true
   sr.user:
         description: Gives access to all user commands
@@ -61,6 +62,7 @@ permissions:
             sr.mob: true
             sr.glow: true
             sr.hide: true
+            sr.show: true
             sr.removeLore: true
   sr.name:
     description: Perm to use /rename /setname
@@ -106,6 +108,9 @@ permissions:
     default: op
   sr.hide:
     description: Perm to use /sr hideflags command
+    default: op
+  sr.show:
+    description: Perm to use /sr showflags command
     default: op
   sr.removeLore:
     description: Perm to use /sr removelore command

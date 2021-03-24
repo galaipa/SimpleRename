@@ -340,7 +340,7 @@ public class SimpleRename extends JavaPlugin {
     }
 
     public void cmdShowFlags(Player player) {
-        if (checkEverything(player, null, "sr.hide", 1, player.getItemInHand())) {
+        if (checkEverything(player, null, "sr.show", 1, player.getItemInHand())) {
             Methods.showFlags(player.getItemInHand());
             player.updateInventory();
             player.sendMessage(ChatColor.GREEN + (getTranslation("5")));
