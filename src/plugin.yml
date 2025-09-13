@@ -1,6 +1,6 @@
 name: SimpleRename
 main: io.github.galaipa.sr.SimpleRename
-version: 13.9
+version: 14.0-SNAPSHOT
 api-version: 1.13
 authors: [Galaipa, EnergizerBEAST1, ScarabCoder]
 softdepend: [ProtocolLib]
@@ -8,21 +8,21 @@ description: Simple plugin to rename and relore items
 commands:
   rename:
     description: Name command for items
-    usage: /<command>  
+    usage: /<command>
     aliases: [setname]
   relore:
     description: Lore command for items
-    usage: /<command> 
+    usage: /<command>
     aliases: [setlore]
   addlore:
     description: Add multiple lore lines
-    usage: /<command> 
+    usage: /<command>
   removelore:
     description: Remove lore lines
     usage: /<command> <line>
   sr:
     description: SimpleRename main command
-    usage: /<command>    
+    usage: /<command>
     aliases: [simplerename]
 permissions:
   sr.use:

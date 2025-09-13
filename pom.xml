@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.galaipa</groupId>
   <artifactId>SimpleRename</artifactId>
-  <version>13.8</version>
+  <version>14.0-SNAPSHOT</version>
   <name>SimpleRename</name>
   <url>https://github.com/galaipa/SimpleRename</url>
   <packaging>jar</packaging>
