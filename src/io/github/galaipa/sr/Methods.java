@@ -209,7 +209,7 @@ public class Methods {
         ItemMeta itemStackMeta = item.getItemMeta();
         itemStackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemStackMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemStackMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemStackMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         item.setItemMeta(itemStackMeta);
     }
 
@@ -217,7 +217,7 @@ public class Methods {
         ItemMeta itemStackMeta = item.getItemMeta();
         itemStackMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemStackMeta.removeItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemStackMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemStackMeta.removeItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         item.setItemMeta(itemStackMeta);
     }
 

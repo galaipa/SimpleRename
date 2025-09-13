@@ -11,42 +11,24 @@
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
-    <repository>
-      <id>dmulloy2-repo</id>
-      <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
-    </repository>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-	</repository>
-	<repository>
-	  <id>CodeMC</id>
-	  <url>https://repo.codemc.org/repository/maven-public</url>
-	</repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.16.1-R0.1-SNAPSHOT</version>
+      <version>1.21.8-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.comphenix.protocol</groupId>
+      <groupId>net.dmulloy2</groupId>
       <artifactId>ProtocolLib</artifactId>
-      <version>4.5.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.github.MilkBowl</groupId>
-      <artifactId>VaultAPI</artifactId>
-      <version>1.7</version>
+      <version>5.4.0</version>
       <scope>provided</scope>
     </dependency>
 	<dependency>
 	  <groupId>org.bstats</groupId>
-	  <artifactId>bstats-bukkit-lite</artifactId>
-	  <version>1.5</version>
+	  <artifactId>bstats-bukkit</artifactId>
+	  <version>3.0.2</version>
 	  <scope>compile</scope>
 	</dependency>
   </dependencies>

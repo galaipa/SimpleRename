@@ -12,7 +12,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.bstats.bukkit.MetricsLite;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -62,7 +62,7 @@ public class SimpleRename extends JavaPlugin {
 
         // Load metrics
         if (getConfig().getBoolean("Metrics"))
-            new MetricsLite(this);
+            new Metrics(this, 1324);
 
         characterLimit = getConfig().getInt("CharacterLimit");
 
